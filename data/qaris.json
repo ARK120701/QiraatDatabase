@@ -6,204 +6,237 @@
       "qaris": [
         {
           "id": "ny-001",
-          "name": "Sheikh Mahmoud Khalil Al-Hussary",
-          "title": "Imam & Master Qari",
-          "location": "Brooklyn, NY",
+          "name": "Qari Nazrul Islam",
+          "title": "Hafiz & Qari",
+          "location": "New York, NY",
           "specialization": "Hafs 'an 'Asim",
-          "tagline": "Renowned for his precise Tajweed and melodious recitation",
-          "bio": "Sheikh Mahmoud Khalil Al-Hussary is one of the most respected Quranic reciters in the New York Muslim community. Born in Egypt, he memorized the Holy Quran at a young age under the tutelage of senior scholars at Al-Azhar. He immigrated to the United States in 1998 and has since served as Imam at Masjid At-Taqwa in Brooklyn.\n\nOver the past two decades, Sheikh Al-Hussary has trained hundreds of students in the art of Quran recitation, many of whom have gone on to lead congregational prayers across the country. He is known for his patient teaching style and his meticulous attention to the rules of Tajweed.\n\nHe hosts weekly Quran recitation circles every Saturday morning open to students of all levels. His recitation of Surah Al-Baqarah has been widely shared online and has been praised by scholars worldwide for its accuracy and beauty.",
+          "tagline": "Dedicated to spreading the recitation of the Quran throughout the New York community",
+          "bio": "Qari Nazrul Islam has been a pillar of Quranic education in the New York Muslim community for many years. He completed his hifz at a young age and went on to pursue formal training in the rules of Tajweed under senior scholars.\n\nHe is known for his warm teaching style and his dedication to students of all ages and backgrounds. His classes draw students from across the city who seek to improve their recitation and connection with the Quran.\n\nQari Nazrul is actively involved in the local masjid community and regularly leads Taraweeh prayers during the blessed month of Ramadan.",
           "education": {
             "institutions": [
-              "Al-Azhar University, Cairo — Faculty of Islamic Studies",
-              "Ma'had Al-Qira'at Al-Qur'aniyya, Cairo",
-              "Dar Al-Quran, Brooklyn, NY (faculty member)"
+              "Islamic institution — details to be updated",
+              "Local Quran circle, New York, NY"
             ],
             "ijazah": [
               {
-                "from": "Sheikh Ibrahim Al-Sha'sha'i",
+                "from": "Details to be updated",
                 "qiraat": "Hafs 'an 'Asim",
-                "year": "1994"
-              },
-              {
-                "from": "Sheikh Ahmad Al-Ziyyat",
-                "qiraat": "Warsh 'an Nafi'",
-                "year": "1996"
+                "year": "—"
               }
             ],
             "degrees": [
-              "B.A. in Quran and Islamic Sciences — Al-Azhar University (1993)",
-              "Diploma in Tajweed — Ma'had Al-Qira'at Al-Qur'aniyya (1994)"
+              "Hifz certification — details to be updated"
             ],
-            "additional": "Sheikh Al-Hussary holds full Ijazah in 10 Qira'at with a connected chain (Sanad) to the Prophet Muhammad ﷺ through an unbroken chain of transmitters spanning over 1,400 years."
+            "additional": "Further details about Qari Nazrul's scholarly background and ijazah chain to be added."
           }
         },
         {
           "id": "ny-002",
-          "name": "Sheikh Ismail Marzouq",
+          "name": "Qari Muajul Islam",
           "title": "Hafiz & Tajweed Instructor",
-          "location": "Astoria, Queens, NY",
-          "specialization": "Qalun 'an Nafi' & Hafs 'an 'Asim",
-          "tagline": "Bridging classical Quranic education with the American Muslim experience",
-          "bio": "Sheikh Ismail Marzouq was born in Alexandria, Egypt, into a family deeply rooted in Quranic sciences. He completed his memorization of the Quran by age twelve and pursued formal Tajweed studies at the prestigious Ma'had Al-Qira'at in Alexandria before emigrating to the United States in 2003.\n\nBased in Astoria, Queens — one of New York's most diverse Muslim neighborhoods — Sheikh Marzouq founded the Queens Quran Institute in 2009, which now serves over 300 students annually. The institute offers classes for children, adults, and even seniors, with a special program for new Muslims learning to read Arabic.\n\nSheikh Marzouq is particularly known for his work with youth, having helped dozens of young men and women complete their Hifz (memorization) in the New York area. He regularly judges at regional and national Quran competitions and is a sought-after speaker at Islamic conferences.",
+          "location": "New York, NY",
+          "specialization": "Hafs 'an 'Asim",
+          "tagline": "Committed to nurturing the next generation of Quranic reciters in New York",
+          "bio": "Qari Muajul Islam is a respected Hafiz and Tajweed instructor serving the Muslim community of New York. Having completed his memorization of the Holy Quran, he pursued further studies in the sciences of Tajweed and Qiraat under qualified scholars.\n\nHe is known for his patient approach to teaching and his ability to connect with students at every level — from complete beginners learning the Arabic alphabet to advanced students refining the finer points of their recitation.\n\nQari Muajul is a regular presence at Islamic events and competitions in the New York area, often serving as a reciter and judge.",
           "education": {
             "institutions": [
-              "Ma'had Al-Qira'at, Alexandria, Egypt",
-              "Islamic University of Madinah — Faculty of Quran",
-              "Queens Quran Institute, NY (founder & director)"
+              "Islamic institution — details to be updated",
+              "Quran program, New York, NY"
             ],
             "ijazah": [
               {
-                "from": "Sheikh Muhammad Al-Minshawi",
+                "from": "Details to be updated",
                 "qiraat": "Hafs 'an 'Asim",
-                "year": "1999"
-              },
-              {
-                "from": "Sheikh Ali Al-Huzaifi",
-                "qiraat": "Qalun 'an Nafi'",
-                "year": "2002"
+                "year": "—"
               }
             ],
             "degrees": [
-              "B.A. in Quran Studies — Islamic University of Madinah (2001)",
-              "Ijazah in 7 Qira'at — Ma'had Al-Qira'at Alexandria (2002)"
+              "Hifz certification — details to be updated"
             ],
-            "additional": "Sheikh Marzouq is the co-author of 'Tajweed Made Easy,' an English-language workbook used in Islamic schools across the United States and Canada."
+            "additional": "Further details about Qari Muajul's scholarly background and ijazah chain to be added."
           }
         },
         {
           "id": "ny-003",
-          "name": "Sheikh Abdul-Rahman Al-Sudais Jr.",
-          "title": "Qari & Community Educator",
-          "location": "The Bronx, NY",
+          "name": "Qari Zuhaib Ahmed",
+          "title": "Hafiz & Quran Teacher",
+          "location": "New York, NY",
           "specialization": "Hafs 'an 'Asim",
-          "tagline": "Inspired by the Grand Mosque, serving the community of the Bronx",
-          "bio": "Sheikh Abdul-Rahman Al-Sudais Jr. carries on a proud legacy of Quranic excellence, having studied directly under senior scholars at the Masjid Al-Haram complex in Makkah before relocating to New York City. He has been serving as a Quran teacher at Masjid Al-Ikhlas in the South Bronx since 2010.\n\nWith a background in Islamic pedagogy, Sheikh Abdul-Rahman has developed innovative curricula that blend traditional Tajweed instruction with modern educational techniques. His classes use interactive exercises, recording technology, and peer review methods to accelerate student progress.\n\nHe is actively involved in interfaith dialogue initiatives in the Bronx and regularly collaborates with community organizations to provide Islamic educational resources to underserved Muslim communities. He also runs a free weekend Hifz program for children aged 6–16.",
+          "tagline": "Passionate about making Quranic education accessible to all in New York",
+          "bio": "Qari Zuhaib Ahmed completed his memorization of the Holy Quran at a young age, and his love for the Book of Allah led him to dedicate his life to its teaching and dissemination. He trained in Tajweed under experienced scholars and received formal certification in Quranic recitation.\n\nBased in New York, Qari Zuhaib teaches Quran to students of varying ages, with a special focus on children's programs designed to instill a lifelong love of the Quran from an early age.\n\nHe participates actively in his local mosque community and is known for his beautiful recitation during congregational prayers.",
           "education": {
             "institutions": [
-              "Masjid Al-Haram Quran Schools, Makkah Al-Mukarramah",
-              "Umm Al-Qura University, Makkah",
-              "Masjid Al-Ikhlas, Bronx, NY (lead instructor)"
+              "Islamic institution — details to be updated",
+              "Quran program, New York, NY"
             ],
             "ijazah": [
               {
-                "from": "Sheikh Saud Al-Shuraim",
+                "from": "Details to be updated",
                 "qiraat": "Hafs 'an 'Asim",
-                "year": "2006"
-              },
-              {
-                "from": "Sheikh Bandar Baleela",
-                "qiraat": "Hafs 'an 'Asim — Riwayat Shu'bah",
-                "year": "2008"
+                "year": "—"
               }
             ],
             "degrees": [
-              "B.A. in Sharia and Islamic Studies — Umm Al-Qura University (2007)",
-              "Diploma in Quran Pedagogy — Masjid Al-Haram Institute (2008)"
+              "Hifz certification — details to be updated"
             ],
-            "additional": "Sheikh Abdul-Rahman has completed Ijazah verification audits with scholars in Saudi Arabia and Egypt, maintaining a documented sanad connecting to Imam Hafs ibn Sulayman himself through a chain of 34 transmitters."
+            "additional": "Further details about Qari Zuhaib's scholarly background and ijazah chain to be added."
           }
         },
         {
           "id": "ny-004",
-          "name": "Ustadha Fatima Al-Zahraa",
-          "title": "Hafiza & Women's Quran Teacher",
-          "location": "Manhattan, NY",
-          "specialization": "Hafs 'an 'Asim & Warsh 'an Nafi'",
-          "tagline": "Pioneering Quranic education for Muslim women in New York City",
-          "bio": "Ustadha Fatima Al-Zahraa is a leading figure in women's Quranic education in New York City. A Hafiza since the age of sixteen, she pursued advanced studies in Tajweed and Qiraat in Morocco and Egypt before settling in Manhattan, where she established the first dedicated women's Hifz circle in lower Manhattan in 2012.\n\nHer program, 'Noor Al-Quran Sisters Circle,' has helped over 150 women complete partial or full memorization of the Quran. The circle meets three times weekly and includes students ranging from university students to grandmothers, all united by their love of the Quran.\n\nUstadha Fatima is a passionate advocate for women's access to classical Islamic education and frequently speaks at national Islamic conferences on the topic. She has also contributed to the development of female Quranic scholarship networks across the United States.",
+          "name": "Qari Ridwan Hossain",
+          "title": "Hafiz & Community Qari",
+          "location": "New York, NY",
+          "specialization": "Hafs 'an 'Asim",
+          "tagline": "Serving the New York community through the beauty of Quranic recitation",
+          "bio": "Qari Ridwan Hossain is a Hafiz of the Holy Quran who has dedicated himself to serving the Muslim community of New York through teaching and leading prayers. After completing his hifz, he pursued studies in Tajweed to deepen his mastery of the rules of proper Quranic recitation.\n\nHe is widely appreciated in the community for the beauty of his recitation and the care he takes in preserving the rules of Tajweed. He leads Taraweeh prayers each Ramadan and is frequently invited to recite at Islamic events across the city.\n\nQari Ridwan is also involved in mentoring younger students on their journey to memorize and master the recitation of the Quran.",
           "education": {
             "institutions": [
-              "Dar Al-Hadith Al-Hassaniyya, Rabat, Morocco",
-              "Al-Azhar Institute for Women's Studies, Cairo",
-              "Columbia University (Graduate Studies in Education)"
+              "Islamic institution — details to be updated",
+              "Quran program, New York, NY"
             ],
             "ijazah": [
               {
-                "from": "Ustadha Khadija Al-Ifrani",
-                "qiraat": "Warsh 'an Nafi'",
-                "year": "2007"
-              },
-              {
-                "from": "Sheikh Muhammad Tayyib Al-Najjar",
+                "from": "Details to be updated",
                 "qiraat": "Hafs 'an 'Asim",
-                "year": "2009"
+                "year": "—"
               }
             ],
             "degrees": [
-              "Ijazah in Quran and Qiraat — Dar Al-Hadith Al-Hassaniyya (2008)",
-              "Diploma in Tajweed — Al-Azhar Institute for Women (2009)",
-              "M.A. in Education — Columbia University (2014)"
+              "Hifz certification — details to be updated"
             ],
-            "additional": "Ustadha Fatima is one of fewer than fifty women in North America holding authenticated Ijazah in two separate Qira'at with verified sanad chains."
+            "additional": "Further details about Qari Ridwan's scholarly background and ijazah chain to be added."
           }
         },
         {
           "id": "ny-005",
-          "name": "Sheikh Khalid Abdullah Hussain",
-          "title": "Imam & Quranic Scholar",
-          "location": "Staten Island, NY",
+          "name": "Qari Mujeeb Rahman",
+          "title": "Hafiz & Tajweed Scholar",
+          "location": "New York, NY",
           "specialization": "Hafs 'an 'Asim",
-          "tagline": "Serving Staten Island's Muslim community with knowledge and humility",
-          "bio": "Sheikh Khalid Abdullah Hussain has been the resident Imam at Masjid Darul Quran on Staten Island since 2005. A Pakistani-American scholar trained in both Pakistan and the Arab world, he represents a unique synthesis of South Asian and Arab Quranic traditions.\n\nSheikh Khalid completed his memorization of the Quran at Jamia Darul Uloom Karachi before traveling to Egypt for advanced study in Tajweed and the sciences of the Quran. He is deeply committed to making Quranic education accessible to the growing Muslim population of Staten Island.\n\nBeyond his teaching duties, Sheikh Khalid serves as a chaplain for Muslim inmates at Rikers Island and collaborates with local schools to provide Islamic education programs for Muslim youth. He is known for his eloquent Friday sermons that blend Quranic wisdom with practical guidance for Muslims living in the West.",
+          "tagline": "Bringing precision and beauty to Quranic recitation in the New York community",
+          "bio": "Qari Mujeeb Rahman is a distinguished Hafiz and Tajweed scholar based in New York. He completed his Quranic memorization under the supervision of learned teachers and subsequently dedicated years to perfecting the science of Tajweed.\n\nKnown for his precise and melodious recitation, Qari Mujeeb has taught numerous students in the New York area and helped many complete their journey to becoming Huffaz. He is respected among his peers for his knowledge of the rules of recitation and his ability to identify and correct errors with kindness.\n\nHe is a frequent guest reciter at mosques and Islamic centers throughout New York and the surrounding tri-state area.",
           "education": {
             "institutions": [
-              "Jamia Darul Uloom, Karachi, Pakistan",
-              "Al-Azhar University, Cairo, Egypt",
-              "Masjid Darul Quran, Staten Island (head imam)"
+              "Islamic institution — details to be updated",
+              "Quran program, New York, NY"
             ],
             "ijazah": [
               {
-                "from": "Sheikh Muhammad Tayyib Qasimi",
+                "from": "Details to be updated",
                 "qiraat": "Hafs 'an 'Asim",
-                "year": "1998"
-              },
-              {
-                "from": "Sheikh Jamal Al-Din Muhammad",
-                "qiraat": "Hafs 'an 'Asim — Egyptian tradition",
-                "year": "2003"
+                "year": "—"
               }
             ],
             "degrees": [
-              "Alimiyyah Degree — Jamia Darul Uloom Karachi (1997)",
-              "Diploma in Tajweed — Al-Azhar University (2003)",
-              "Ijazah in Hafs 'an 'Asim (Dual-tradition)"
+              "Hifz certification — details to be updated"
             ],
-            "additional": "Sheikh Khalid holds the rare distinction of having Ijazah in both the Arab (Egyptian) and South Asian (Deoband) traditions of Hafs 'an 'Asim, allowing him to teach students from both backgrounds with authentic authority."
+            "additional": "Further details about Qari Mujeeb's scholarly background and ijazah chain to be added."
           }
         },
         {
           "id": "ny-006",
-          "name": "Sheikh Omar Abdel-Hafiz",
-          "title": "Hafiz & Youth Mentor",
-          "location": "Long Island, NY",
+          "name": "Qari Abdul Muqtadir",
+          "title": "Hafiz & Quran Educator",
+          "location": "New York, NY",
           "specialization": "Hafs 'an 'Asim",
-          "tagline": "Inspiring the next generation of Huffaz on Long Island",
-          "bio": "Sheikh Omar Abdel-Hafiz is a second-generation Egyptian-American who completed his Hifz at age fourteen under his father's guidance and went on to earn formal Ijazah in Egypt and Saudi Arabia. He returned to Long Island — where he grew up — determined to build the kind of Quranic education infrastructure he wished had existed for him as a child.\n\nIn 2015, he co-founded the Long Island Quran Academy, which now operates out of three locations across Nassau County. The academy runs a full-time Hifz school as well as part-time evening and weekend programs. Over 40 students have completed their full Hifz through the academy since its founding.\n\nSheikh Omar is a dynamic speaker and is especially gifted at connecting with young Muslims who feel disconnected from Islamic tradition. He runs an annual 'Quran Summer Camp' that attracts students from across the tri-state area.",
+          "tagline": "Guiding students through the Quran with knowledge, patience, and sincerity",
+          "bio": "Qari Abdul Muqtadir is a respected Hafiz and Quran educator who has been serving the Muslim community of New York with dedication and sincerity. He completed his memorization of the Holy Quran and received training in the proper recitation and rules of Tajweed from qualified scholars.\n\nOver the years, Qari Abdul Muqtadir has built a reputation as a patient and thorough teacher, guiding students through every aspect of Quranic recitation from basic pronunciation to advanced Tajweed rules.\n\nHe is a beloved figure in his local mosque community and regularly participates in Quran competitions, Islamic educational programs, and community outreach efforts.",
           "education": {
             "institutions": [
-              "Studied under his father Sheikh Abdel-Hafiz Sr. (NY)",
-              "Ma'had Al-Qira'at, Cairo",
-              "King Fahad Quran Complex, Madinah",
-              "Long Island Quran Academy (co-founder)"
+              "Islamic institution — details to be updated",
+              "Quran program, New York, NY"
             ],
             "ijazah": [
               {
-                "from": "Sheikh Abdel-Hafiz Sr.",
+                "from": "Details to be updated",
                 "qiraat": "Hafs 'an 'Asim",
-                "year": "2008"
-              },
-              {
-                "from": "Sheikh Ayman Rushdi Swayd",
-                "qiraat": "Hafs 'an 'Asim with full Sanad",
-                "year": "2012"
+                "year": "—"
               }
             ],
             "degrees": [
-              "Ijazah in Hifz — Ma'had Al-Qira'at Cairo (2010)",
-              "Ijazah with Sanad — King Fahad Quran Complex (2012)",
-              "B.S. in Computer Science — Stony Brook University (2013)"
+              "Hifz certification — details to be updated"
             ],
-            "additional": "Sheikh Omar uniquely combines his background in technology with Islamic education, developing custom software tools for Hifz tracking used by over 20 Islamic schools nationwide."
+            "additional": "Further details about Qari Abdul Muqtadir's scholarly background and ijazah chain to be added."
+          }
+        },
+        {
+          "id": "ny-007",
+          "name": "Qari Abdullah Sikander",
+          "title": "Hafiz & Islamic Studies Teacher",
+          "location": "New York, NY",
+          "specialization": "Hafs 'an 'Asim",
+          "tagline": "Combining Quranic memorization with broader Islamic education in New York",
+          "bio": "Qari Abdullah Sikander is a Hafiz of the Quran and Islamic studies teacher based in New York. He completed his hifz under the guidance of senior scholars and continued his education in Islamic sciences, developing a well-rounded foundation in both Quranic recitation and broader religious knowledge.\n\nHe teaches at local Islamic schools and runs Quran circles for students of all ages. His approach integrates Quranic memorization with understanding of the meanings and context of the verses being learned, making for a richer educational experience.\n\nQari Abdullah is known in the community for his sincerity, his broad knowledge, and his commitment to the holistic Islamic education of the next generation.",
+          "education": {
+            "institutions": [
+              "Islamic institution — details to be updated",
+              "Quran and Islamic studies program, New York, NY"
+            ],
+            "ijazah": [
+              {
+                "from": "Details to be updated",
+                "qiraat": "Hafs 'an 'Asim",
+                "year": "—"
+              }
+            ],
+            "degrees": [
+              "Hifz certification — details to be updated",
+              "Islamic studies — details to be updated"
+            ],
+            "additional": "Further details about Qari Abdullah Sikander's scholarly background and ijazah chain to be added."
+          }
+        },
+        {
+          "id": "ny-008",
+          "name": "Qari Rohan Uddin",
+          "title": "Hafiz & Youth Quran Mentor",
+          "location": "New York, NY",
+          "specialization": "Hafs 'an 'Asim",
+          "tagline": "Inspiring young Muslims to develop a deep and lasting bond with the Quran",
+          "bio": "Qari Rohan Uddin is a young and energetic Hafiz who has channeled his love for the Quran into mentoring the next generation of Muslim youth in New York. Having memorized the Quran at a young age himself, he understands the challenges faced by young students and is uniquely positioned to guide and inspire them.\n\nHe runs youth-focused Quran programs at local mosques and Islamic centers, using engaging and age-appropriate teaching methods to make the journey of hifz accessible and enjoyable for children and teenagers.\n\nQari Rohan is a dynamic reciter who has represented the New York Muslim community at regional and national Quran competitions, earning recognition for the quality and beauty of his recitation.",
+          "education": {
+            "institutions": [
+              "Islamic institution — details to be updated",
+              "Youth Quran program, New York, NY"
+            ],
+            "ijazah": [
+              {
+                "from": "Details to be updated",
+                "qiraat": "Hafs 'an 'Asim",
+                "year": "—"
+              }
+            ],
+            "degrees": [
+              "Hifz certification — details to be updated"
+            ],
+            "additional": "Further details about Qari Rohan's scholarly background and ijazah chain to be added."
+          }
+        },
+        {
+          "id": "ny-009",
+          "name": "Qari Junayed Ahmed",
+          "title": "Hafiz & Quran Recitation Specialist",
+          "location": "New York, NY",
+          "specialization": "Hafs 'an 'Asim",
+          "tagline": "Dedicated to the art and science of Quranic recitation in the New York area",
+          "bio": "Qari Junayed Ahmed is a specialist in Quranic recitation with a deep passion for the art of Tajweed. He completed his memorization of the Holy Quran and went on to study the science of recitation in depth, mastering the rules that govern the proper pronunciation and flow of Quranic Arabic.\n\nBased in New York, Qari Junayed offers lessons to students at various levels, from those just beginning their journey with the Quran to experienced reciters seeking to refine their skills. He brings both knowledge and enthusiasm to every session.\n\nHe is a valued member of the New York Muslim community, regularly leading prayers and participating in Islamic educational events. His commitment to the Quran and to those who seek to learn it is a source of inspiration to all who know him.",
+          "education": {
+            "institutions": [
+              "Islamic institution — details to be updated",
+              "Quran recitation program, New York, NY"
+            ],
+            "ijazah": [
+              {
+                "from": "Details to be updated",
+                "qiraat": "Hafs 'an 'Asim",
+                "year": "—"
+              }
+            ],
+            "degrees": [
+              "Hifz certification — details to be updated"
+            ],
+            "additional": "Further details about Qari Junayed's scholarly background and ijazah chain to be added."
           }
         }
       ]
