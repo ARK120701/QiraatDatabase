@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>US Qaris Database — Quranic Reciters Across America</title>
+  <meta name="description" content="A comprehensive directory of Quranic reciters (Qaris) across the United States, organized by state." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;500;700;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <style>
+    /* Home-page specific */
+    .hero-home {
+      background-color: var(--green-dark);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cg fill='none' stroke='rgba(255,255,255,0.06)' stroke-width='1'%3E%3Cpolygon points='40,4 76,20 76,60 40,76 4,60 4,20'/%3E%3Cpolygon points='40,14 66,25 66,55 40,66 14,55 14,25'/%3E%3Cline x1='40' y1='4' x2='40' y2='76'/%3E%3Cline x1='4' y1='20' x2='76' y2='60'/%3E%3Cline x1='76' y1='20' x2='4' y2='60'/%3E%3C/g%3E%3C/svg%3E");
+      padding: 80px 2rem 70px;
+      text-align: center;
+      color: var(--white);
+    }
+    .hero-arabic {
+      font-size: 2rem;
+      color: var(--gold);
+      letter-spacing: 2px;
+      margin-bottom: 12px;
+      font-family: 'Amiri', serif;
+    }
+    .hero-home h1 {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 900;
+      line-height: 1.1;
+      margin-bottom: 16px;
+    }
+    .hero-home p {
+      font-size: 1.1rem;
+      color: rgba(255,255,255,0.78);
+      max-width: 620px;
+      margin: 0 auto 32px;
+    }
+    .hero-chips {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .hero-chip {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: var(--white);
+      border-radius: 20px;
+      padding: 6px 16px;
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+    .legend {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .legend-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+    .legend-dot.active { background: var(--green-mid); }
+    .legend-dot.coming { background: var(--border); }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="index.html" class="navbar-brand">
+      <div class="logo-icon">&#9632;</div>
+      US Qaris Database
+    </a>
+    <ul class="navbar-nav">
+      <li><a href="index.html" class="active">States</a></li>
+      <li><a href="states/new-york.html">New York</a></li>
+    </ul>
+  </nav>
+
+  <div class="hero-home">
+    <div class="hero-arabic">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</div>
+    <h1>Quranic Reciters<br>Across America</h1>
+    <p>A comprehensive directory of Huffaz and Qaris serving Muslim communities throughout the United States — organized state by state.</p>
+    <div class="hero-chips">
+      <span class="hero-chip">&#9670; Ijazah Chains</span>
+      <span class="hero-chip">&#9670; Multiple Qira'at</span>
+      <span class="hero-chip">&#9670; Community Leaders</span>
+    </div>
+  </div>
+
+  <main>
+    <section class="states-section">
+      <div class="container">
+        <div class="section-header">
+          <h2>Browse by State</h2>
+          <p>Select a state to explore its Quranic reciters and scholars</p>
+        </div>
+
+        <div class="legend">
+          <div class="legend-item">
+            <div class="legend-dot active"></div>
+            <span>Active — profiles available</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot coming"></div>
+            <span>Coming soon</span>
+          </div>
+        </div>
+
+        <div class="states-grid" id="statesGrid">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p><strong>US Qaris Database</strong> &mdash; Preserving and celebrating Quranic scholarship in America</p>
+    <p style="margin-top:8px;font-size:0.8rem;">For additions or corrections, please reach out to your local Islamic center.</p>
+  </footer>
+
+  <script>
+    async function init() {
+      const res = await fetch('data/qaris.json');
+      const data = await res.json();
+      const grid = document.getElementById('statesGrid');
+
+      Object.entries(data.states).forEach(([abbr, state]) => {
+        const count = state.qaris.length;
+        const isActive = state.active;
+
+        const card = document.createElement('div');
+        card.className = `state-card ${isActive ? 'active' : 'inactive'}`;
+        card.innerHTML = `
+          <div class="abbr">${abbr}</div>
+          <div class="state-name">${state.name}</div>
+          <span class="badge">${isActive ? `${count} Qar${count === 1 ? 'i' : 'is'}` : 'Coming Soon'}</span>
+        `;
+
+        if (isActive) {
+          card.addEventListener('click', () => {
+            window.location.href = `states/new-york.html`;
+          });
+          card.title = `View Qaris in ${state.name}`;
+        }
+
+        grid.appendChild(card);
+      });
+    }
+
+    init();
+  </script>
+</body>
+</html>

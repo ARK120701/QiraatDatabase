@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>New York Qaris — US Qaris Database</title>
+  <meta name="description" content="Directory of Quranic reciters and Huffaz serving Muslim communities across New York State." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;500;700;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <style>
+    /* NY page extras */
+    .filter-bar {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 0;
+    }
+    .filter-inner {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .filter-label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+    .filter-chips {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .filter-chip {
+      background: var(--off-white);
+      border: 1.5px solid var(--border);
+      border-radius: 20px;
+      padding: 5px 14px;
+      font-size: 0.82rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      color: var(--text-mid);
+    }
+    .filter-chip:hover,
+    .filter-chip.active {
+      background: var(--green-light);
+      border-color: var(--green-mid);
+      color: var(--green-dark);
+    }
+    .no-results {
+      grid-column: 1 / -1;
+      text-align: center;
+      color: var(--text-muted);
+      padding: 48px;
+      font-size: 0.95rem;
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="../index.html" class="navbar-brand">
+      <div class="logo-icon">&#9632;</div>
+      US Qaris Database
+    </a>
+    <ul class="navbar-nav">
+      <li><a href="../index.html">All States</a></li>
+      <li><a href="new-york.html" class="active">New York</a></li>
+    </ul>
+  </nav>
+
+  <!-- Breadcrumb -->
+  <div class="breadcrumb">
+    <div class="container">
+      <div class="breadcrumb-inner">
+        <a href="../index.html">States</a>
+        <span class="sep">›</span>
+        <span>New York</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Page Hero -->
+  <div class="page-hero">
+    <h1>New York</h1>
+    <div class="gold-divider"></div>
+    <p class="subtitle">Quranic reciters and scholars serving the diverse Muslim communities of the Empire State</p>
+  </div>
+
+  <!-- Stats bar -->
+  <div class="stats-bar">
+    <div class="container">
+      <div class="stats-inner">
+        <div class="stat-item">
+          <div class="stat-number" id="statTotal">—</div>
+          <div class="stat-label">Qaris Listed</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">5</div>
+          <div class="stat-label">NYC Boroughs</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">3+</div>
+          <div class="stat-label">Qira'at Traditions</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">150+</div>
+          <div class="stat-label">Students Taught</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filter bar -->
+  <div class="filter-bar">
+    <div class="container">
+      <div class="filter-inner">
+        <span class="filter-label">Filter:</span>
+        <div class="filter-chips">
+          <button class="filter-chip active" data-filter="all">All</button>
+          <button class="filter-chip" data-filter="Brooklyn">Brooklyn</button>
+          <button class="filter-chip" data-filter="Queens">Queens</button>
+          <button class="filter-chip" data-filter="Bronx">Bronx</button>
+          <button class="filter-chip" data-filter="Manhattan">Manhattan</button>
+          <button class="filter-chip" data-filter="Staten Island">Staten Island</button>
+          <button class="filter-chip" data-filter="Long Island">Long Island</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Qari Grid -->
+  <main>
+    <section class="state-section">
+      <div class="container">
+        <div class="qari-grid" id="qariGrid">
+          <!-- Cards populated by JS -->
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p><strong>US Qaris Database</strong> &mdash; Preserving and celebrating Quranic scholarship in America</p>
+    <p style="margin-top:8px;font-size:0.8rem;">To suggest a Qari or update information, please contact your local Islamic center.</p>
+  </footer>
+
+  <script src="../js/app.js"></script>
+  <script>
+    let allQaris = [];
+    let activeFilter = 'all';
+
+    function pinIconSm() {
+      return `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 6-9 13-9 13S3 16 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>`;
+    }
+
+    function buildCard(qari) {
+      const initials = getInitials(qari.name);
+      return `
+        <div class="qari-card" data-id="${qari.id}" data-location="${qari.location}">
+          <div class="qari-card-header">
+            <div class="qari-avatar">${initials}</div>
+            <div class="qari-card-header-info">
+              <h3>${qari.name}</h3>
+              <div class="title">${qari.title}</div>
+            </div>
+          </div>
+          <div class="qari-card-body">
+            <div class="qari-location">${pinIconSm()} ${qari.location}</div>
+            <span class="qari-spec-tag">&#9670; ${qari.specialization}</span>
+            <p class="qari-tagline">${qari.tagline}</p>
+          </div>
+          <div class="qari-card-footer">
+            <button class="btn-view">
+              View Biography
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderQaris(qaris) {
+      const grid = document.getElementById('qariGrid');
+      const filtered = activeFilter === 'all'
+        ? qaris
+        : qaris.filter(q => q.location.includes(activeFilter));
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `<div class="no-results">No Qaris found for this filter. More entries coming soon.</div>`;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(buildCard).join('');
+
+      grid.querySelectorAll('.qari-card').forEach(card => {
+        card.addEventListener('click', () => {
+          const id = card.dataset.id;
+          const qari = allQaris.find(q => q.id === id);
+          if (qari) openModal(qari);
+        });
+      });
+    }
+
+    async function init() {
+      const res = await fetch('../data/qaris.json');
+      const data = await res.json();
+      allQaris = data.states.NY.qaris;
+
+      document.getElementById('statTotal').textContent = allQaris.length;
+
+      renderQaris(allQaris);
+
+      document.querySelectorAll('.filter-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+          document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+          chip.classList.add('active');
+          activeFilter = chip.dataset.filter;
+          renderQaris(allQaris);
+        });
+      });
+    }
+
+    init();
+  </script>
+</body>
+</html>
