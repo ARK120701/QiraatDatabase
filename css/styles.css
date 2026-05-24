@@ -2,18 +2,18 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --green-dark:   #1a4d2e;
-  --green-mid:    #2e7d52;
-  --green-light:  #e8f5ee;
+  --green-dark:   #0d2b5e;
+  --green-mid:    #1a4fa3;
+  --green-light:  #e8eefc;
   --gold:         #c9962a;
   --gold-light:   #fdf4e3;
   --gold-pale:    #fefaf3;
   --white:        #ffffff;
-  --off-white:    #f9f7f4;
+  --off-white:    #f7f8fc;
   --text-dark:    #1c1c1c;
   --text-mid:     #444444;
   --text-muted:   #777777;
-  --border:       #e0dbd0;
+  --border:       #d8dce8;
   --shadow-sm:    0 2px 8px rgba(0,0,0,0.08);
   --shadow-md:    0 6px 24px rgba(0,0,0,0.12);
   --shadow-lg:    0 16px 48px rgba(0,0,0,0.18);
