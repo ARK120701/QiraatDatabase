@@ -50,7 +50,6 @@ function buildModal(qari) {
             <div class="modal-avatar">${initials}</div>
             <div class="modal-header-info">
               <h2>${qari.name}</h2>
-              <div class="modal-title">${qari.title}</div>
               <div class="modal-location">${pinIcon(13)} ${qari.location}</div>
             </div>
           </div>
