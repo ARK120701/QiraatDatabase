@@ -212,7 +212,7 @@
         },
         {
           "id": "ny-008",
-          "name": "Qārī Rohan Qadud",
+          "name": "Qārī Rohan Wadud",
           "title": "Ḥāfiẓ & Youth Quran Mentor",
           "location": "New York, NY",
           "specialization": "Hafs 'an 'Asim",
@@ -408,6 +408,66 @@
             "degrees": [
               "Details to be added soon"
             ],
+            "additional": ""
+          }
+        },
+        {
+          "id": "ny-016",
+          "name": "Qārī Ehsaanullah",
+          "title": "Ḥāfiẓ & Qārī",
+          "location": "New York, NY",
+          "specialization": "Hafs 'an 'Asim",
+          "tagline": "Serving the Muslim community of New York through the recitation of the Quran",
+          "bio": "Coming soon.",
+          "education": {
+            "institutions": [ "Details to be added soon" ],
+            "ijazah": [ { "from": "Details to be added soon", "qiraat": "—", "year": "—" } ],
+            "degrees": [ "Details to be added soon" ],
+            "additional": ""
+          }
+        },
+        {
+          "id": "ny-017",
+          "name": "Qārī Adnan Uddin",
+          "title": "Ḥāfiẓ & Qārī",
+          "location": "New York, NY",
+          "specialization": "Hafs 'an 'Asim",
+          "tagline": "Dedicated to the Quran and its sciences in the New York community",
+          "bio": "Coming soon.",
+          "education": {
+            "institutions": [ "Details to be added soon" ],
+            "ijazah": [ { "from": "Details to be added soon", "qiraat": "—", "year": "—" } ],
+            "degrees": [ "Details to be added soon" ],
+            "additional": ""
+          }
+        },
+        {
+          "id": "ny-018",
+          "name": "Qārī Mahdi Chowdhury",
+          "title": "Ḥāfiẓ & Qārī",
+          "location": "New York, NY",
+          "specialization": "Hafs 'an 'Asim",
+          "tagline": "Contributing to Quranic education and recitation in New York",
+          "bio": "Coming soon.",
+          "education": {
+            "institutions": [ "Details to be added soon" ],
+            "ijazah": [ { "from": "Details to be added soon", "qiraat": "—", "year": "—" } ],
+            "degrees": [ "Details to be added soon" ],
+            "additional": ""
+          }
+        },
+        {
+          "id": "ny-019",
+          "name": "Qārī Shohed Mia",
+          "title": "Ḥāfiẓ & Qārī",
+          "location": "New York, NY",
+          "specialization": "Hafs 'an 'Asim",
+          "tagline": "Preserving the tradition of Quranic recitation in the New York area",
+          "bio": "Coming soon.",
+          "education": {
+            "institutions": [ "Details to be added soon" ],
+            "ijazah": [ { "from": "Details to be added soon", "qiraat": "—", "year": "—" } ],
+            "degrees": [ "Details to be added soon" ],
             "additional": ""
           }
         }
