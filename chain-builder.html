@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chain Builder — US Qaris Database</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Lato:wght@400;500;700;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <style>
+    .builder-hero {
+      background-color: var(--green-dark);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cg fill='none' stroke='rgba(255,255,255,0.06)' stroke-width='1'%3E%3Cpolygon points='40,4 76,20 76,60 40,76 4,60 4,20'/%3E%3Cpolygon points='40,14 66,25 66,55 40,66 14,55 14,25'/%3E%3Cline x1='40' y1='4' x2='40' y2='76'/%3E%3Cline x1='4' y1='20' x2='76' y2='60'/%3E%3Cline x1='76' y1='20' x2='4' y2='60'/%3E%3C/g%3E%3C/svg%3E");
+      padding: 52px 2rem;
+      text-align: center;
+      color: var(--white);
+    }
+    .builder-hero h1 { font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 900; margin-bottom: 8px; }
+    .builder-hero p { color: rgba(255,255,255,0.75); font-size: 0.95rem; margin-top: 8px; }
+
+    .builder-main { padding: 40px 0 80px; }
+
+    .builder-layout {
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      gap: 28px;
+      align-items: flex-start;
+    }
+
+    /* ── Form panel ── */
+    .builder-panel {
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      position: sticky;
+      top: 16px;
+    }
+    .builder-panel h3 {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--green-dark);
+      margin-bottom: 18px;
+    }
+    .builder-field { margin-bottom: 14px; }
+    .builder-field label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      margin-bottom: 5px;
+    }
+    .builder-field input,
+    .builder-field textarea {
+      width: 100%;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      padding: 9px 12px;
+      font-family: 'Lato', sans-serif;
+      font-size: 0.88rem;
+      color: var(--text-dark);
+      background: var(--off-white);
+      box-sizing: border-box;
+      resize: vertical;
+    }
+    .builder-field input:focus,
+    .builder-field textarea:focus {
+      outline: none;
+      border-color: var(--green-mid);
+      background: var(--white);
+    }
+    .builder-field textarea { min-height: 260px; line-height: 1.75; }
+    .builder-hint {
+      font-size: 0.73rem;
+      color: var(--text-muted);
+      margin-top: 5px;
+      line-height: 1.55;
+    }
+    .builder-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 18px;
+    }
+    .btn-build {
+      flex: 1;
+      background: var(--green-mid);
+      color: var(--white);
+      border: none;
+      border-radius: 8px;
+      padding: 10px 16px;
+      font-size: 0.86rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-build:hover { background: var(--green-dark); }
+    .btn-save {
+      background: var(--gold-light);
+      color: #7a5000;
+      border: 1.5px solid var(--gold);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 0.86rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .btn-save:hover { background: var(--gold); color: var(--white); }
+
+    /* ── Saved chains ── */
+    .saved-chains {
+      margin-top: 22px;
+      border-top: 1px solid var(--border);
+      padding-top: 14px;
+    }
+    .saved-chains h4 {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      margin-bottom: 10px;
+    }
+    .sc-item {
+      display: flex;
+      align-items: center;
+      padding: 8px 10px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      margin-bottom: 6px;
+      background: var(--off-white);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .sc-item:hover { border-color: var(--green-mid); background: var(--green-light); }
+    .sc-info { flex: 1; }
+    .sc-name { font-size: 0.84rem; font-weight: 700; color: var(--text-dark); }
+    .sc-meta { font-size: 0.72rem; color: var(--text-muted); margin-top: 1px; }
+    .sc-del {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 0.95rem;
+      padding: 2px 4px;
+      border-radius: 4px;
+      line-height: 1;
+    }
+    .sc-del:hover { color: #c0392b; background: #fce8e6; }
+    .no-saved { font-size: 0.82rem; color: var(--text-muted); font-style: italic; }
+
+    /* ── Preview panel ── */
+    .builder-preview {
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px 24px;
+      min-height: 420px;
+    }
+    .preview-empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 340px;
+      color: var(--text-muted);
+      text-align: center;
+      gap: 14px;
+    }
+    .preview-empty .pe-icon { font-size: 2.8rem; color: var(--border); }
+    .preview-empty p { font-size: 0.9rem; max-width: 320px; line-height: 1.55; }
+
+    .preview-title { text-align: center; margin-bottom: 28px; }
+    .preview-title h2 { font-size: 1.2rem; font-weight: 800; color: var(--green-dark); }
+    .preview-title p { font-size: 0.85rem; color: var(--text-muted); margin-top: 4px; }
+
+    /* chain-wrap already defined in styles.css via chain page, re-declare for this page */
+    .chain-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      max-width: 520px;
+      margin: 0 auto;
+    }
+    .c-row { display: flex; align-items: center; gap: 12px; width: 100%; }
+    .c-num {
+      width: 30px; height: 30px; border-radius: 50%;
+      background: var(--green-dark); color: var(--white);
+      font-size: 0.7rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; font-family: 'Lato', sans-serif;
+    }
+    .c-num.gold { background: var(--gold); }
+    .c-num.teal { background: var(--green-mid); }
+    .c-node {
+      width: 100%; background: var(--white);
+      border: 2px solid var(--border); border-radius: var(--radius);
+      padding: 13px 22px; text-align: center; box-shadow: var(--shadow-sm);
+    }
+    .c-node.divine { border-color: #8b6914; background: linear-gradient(135deg,#fffbe6,#fef3c7); }
+    .c-node.divine .label { color: #8b6914; }
+    .c-node.divine .en { color: #5a3e00; }
+    .c-node.prophet { border-color: var(--gold); background: var(--gold-pale); }
+    .c-node.recipient { border-color: var(--green-mid); background: var(--green-light); }
+    .c-node .label {
+      font-size: 0.65rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.9px; margin-bottom: 4px; color: var(--text-muted);
+    }
+    .c-node.prophet .label { color: var(--gold); }
+    .c-node.recipient .label { color: var(--green-mid); }
+    .c-node .en {
+      font-family: 'Lato', sans-serif; font-size: 0.92rem;
+      font-weight: 700; color: var(--text-dark); line-height: 1.35;
+    }
+    .c-conn-row { display: flex; align-items: flex-start; gap: 12px; width: 100%; }
+    .c-conn-row .spacer { width: 30px; flex-shrink: 0; }
+    .c-conn { display: flex; flex-direction: column; align-items: center; }
+    .c-conn .line { width: 2px; height: 18px; background: var(--border); }
+    .c-conn .arrow { width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 8px solid var(--border); }
+
+    @media (max-width: 820px) {
+      .builder-layout { grid-template-columns: 1fr; }
+      .builder-panel { position: static; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="index.html" class="navbar-brand">
+      <div class="logo-icon">&#9632;</div>
+      US Qaris Database
+    </a>
+    <ul class="navbar-nav">
+      <li><a href="index.html">All States</a></li>
+      <li><a href="states/new-york.html">New York</a></li>
+      <li><a href="chain-esmail-essack.html">Chains</a></li>
+      <li><a href="chain-builder.html" class="active">Build a Chain</a></li>
+    </ul>
+  </nav>
+
+  <div class="breadcrumb">
+    <div class="container">
+      <div class="breadcrumb-inner">
+        <a href="index.html">Home</a>
+        <span class="sep">›</span>
+        <span>Chain Builder</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="builder-hero">
+    <div style="font-family:'Amiri',serif;font-size:1.3rem;color:var(--gold);margin-bottom:10px;">سِلْسِلَةُ الإِسْنَاد</div>
+    <h1>Chain Builder</h1>
+    <div class="gold-divider"></div>
+    <p>Enter names to generate a visual chain of transmission — save and manage multiple chains</p>
+  </div>
+
+  <main class="builder-main">
+    <div class="container">
+      <div class="builder-layout">
+
+        <!-- ── Form panel ── -->
+        <div class="builder-panel">
+          <h3>&#9670; Build a Chain</h3>
+
+          <div class="builder-field">
+            <label>Chain Title</label>
+            <input type="text" id="inputTitle" placeholder="e.g. Qārī Ahmad's Chain of Ḥafs" />
+          </div>
+
+          <div class="builder-field">
+            <label>Names (one per line, top to bottom)</label>
+            <textarea id="inputNames" placeholder="Allāh ﷻ&#10;Al-Lawḥ al-Maḥfūẓ&#10;Jibrīl عليه السلام&#10;Prophet Muhammad ﷺ&#10;...&#10;Recipient Name"></textarea>
+            <div class="builder-hint">
+              • One name per line, source first, recipient last<br>
+              • "Allah / ﷻ", "Lawh / Mahfuz", "Jibreel" → divine gold style<br>
+              • "Prophet / Nabi / ﷺ" → prophet style<br>
+              • Last name automatically styled as recipient
+            </div>
+          </div>
+
+          <div class="builder-actions">
+            <button class="btn-build" onclick="buildPreview()">&#9654; Generate</button>
+            <button class="btn-save" onclick="saveChain()">&#9733; Save</button>
+          </div>
+
+          <div class="saved-chains">
+            <h4>&#9670; Saved Chains</h4>
+            <div id="savedList"><p class="no-saved">No saved chains yet.</p></div>
+          </div>
+        </div>
+
+        <!-- ── Preview panel ── -->
+        <div class="builder-preview" id="chainPreview">
+          <div class="preview-empty">
+            <div class="pe-icon">&#9753;</div>
+            <p>Enter names on the left and press <strong>Generate</strong> to see the visual chain here.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p><strong>US Qaris Database</strong> &mdash; Preserving and celebrating Quranic scholarship in America</p>
+  </footer>
+
+  <script>
+    const STORAGE_KEY = 'usqaris_chains_v1';
+
+    function escHtml(s) {
+      return String(s)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+    }
+
+    function detectType(name) {
+      const l = name.toLowerCase();
+      if (l.includes('allah') || name.includes('ﷻ')) return 'divine-allah';
+      if (l.includes('lawh') || l.includes('mahfuz') || l.includes('mahfooz')) return 'divine-lawh';
+      if (l.includes('jibreel') || l.includes('jibrīl') || l.includes('jibril') || l.includes('gabriel')) return 'divine-jibreel';
+      if (l.includes('prophet') || l.includes('nabi') || name.includes('ﷺ') || l.includes('muhammad') && name.includes('ﷺ')) return 'prophet';
+      return 'normal';
+    }
+
+    function buildChainHTML(names, title) {
+      const count = names.length;
+      let html = `
+        <div class="preview-title">
+          <h2>${escHtml(title || 'Chain of Transmission')}</h2>
+          <p>${count} transmitter${count !== 1 ? 's' : ''} in this chain</p>
+        </div>
+        <div class="chain-wrap">
+      `;
+
+      names.forEach((name, i) => {
+        const isLast = i === names.length - 1;
+        const type = isLast ? 'recipient' : detectType(name);
+
+        let numContent, numClass, nodeClass, labelHtml = '';
+
+        if (type === 'divine-allah') {
+          numContent = '&#9733;'; numClass = 'gold'; nodeClass = 'divine';
+          labelHtml = '<div class="label">The Almighty</div>';
+        } else if (type === 'divine-lawh') {
+          numContent = '&#9670;'; numClass = 'gold'; nodeClass = 'divine';
+          labelHtml = '<div class="label">The Preserved Tablet</div>';
+        } else if (type === 'divine-jibreel') {
+          numContent = '&#9711;'; numClass = 'gold'; nodeClass = 'divine';
+          labelHtml = '<div class="label">The Trustworthy Angel</div>';
+        } else if (type === 'prophet') {
+          numContent = i + 1; numClass = 'gold'; nodeClass = 'prophet';
+          labelHtml = '<div class="label">The Final Messenger</div>';
+        } else if (type === 'recipient') {
+          numContent = i + 1; numClass = 'teal'; nodeClass = 'recipient';
+          labelHtml = '<div class="label">Recipient</div>';
+        } else {
+          numContent = i + 1; numClass = ''; nodeClass = '';
+        }
+
+        html += `
+          <div class="c-row">
+            <div class="c-num${numClass ? ' ' + numClass : ''}">${numContent}</div>
+            <div class="c-node${nodeClass ? ' ' + nodeClass : ''}">
+              ${labelHtml}
+              <div class="en">${escHtml(name)}</div>
+            </div>
+          </div>
+        `;
+
+        if (!isLast) {
+          html += `<div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>`;
+        }
+      });
+
+      html += `</div>`;
+      return html;
+    }
+
+    function buildPreview() {
+      const title = document.getElementById('inputTitle').value.trim();
+      const raw = document.getElementById('inputNames').value;
+      const names = raw.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+      const preview = document.getElementById('chainPreview');
+
+      if (names.length === 0) {
+        preview.innerHTML = `<div class="preview-empty"><div class="pe-icon">&#9753;</div><p>Please enter at least one name.</p></div>`;
+        return;
+      }
+
+      preview.innerHTML = buildChainHTML(names, title);
+    }
+
+    // Live preview as user types
+    let debounce;
+    ['inputNames', 'inputTitle'].forEach(id => {
+      document.getElementById(id).addEventListener('input', () => {
+        clearTimeout(debounce);
+        debounce = setTimeout(buildPreview, 350);
+      });
+    });
+
+    // ── Persistence ──────────────────────────────────────────────
+
+    function getSaved() {
+      try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
+      catch { return []; }
+    }
+
+    function saveChain() {
+      const title = document.getElementById('inputTitle').value.trim() || 'Untitled Chain';
+      const names = document.getElementById('inputNames').value.trim();
+      if (!names) { alert('Please enter names before saving.'); return; }
+
+      const saved = getSaved();
+      saved.unshift({
+        id: Date.now().toString(),
+        title,
+        names,
+        date: new Date().toLocaleDateString()
+      });
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(saved));
+      renderSaved();
+    }
+
+    function loadChain(id) {
+      const entry = getSaved().find(s => s.id === id);
+      if (!entry) return;
+      document.getElementById('inputTitle').value = entry.title;
+      document.getElementById('inputNames').value = entry.names;
+      buildPreview();
+    }
+
+    function deleteChain(id, e) {
+      e.stopPropagation();
+      const saved = getSaved().filter(s => s.id !== id);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(saved));
+      renderSaved();
+    }
+
+    function renderSaved() {
+      const saved = getSaved();
+      const list = document.getElementById('savedList');
+      if (saved.length === 0) {
+        list.innerHTML = '<p class="no-saved">No saved chains yet.</p>';
+        return;
+      }
+      list.innerHTML = saved.map(s => {
+        const n = s.names.split('\n').filter(l => l.trim()).length;
+        return `
+          <div class="sc-item" onclick="loadChain('${s.id}')">
+            <div class="sc-info">
+              <div class="sc-name">${escHtml(s.title)}</div>
+              <div class="sc-meta">${n} names &middot; ${s.date}</div>
+            </div>
+            <button class="sc-del" onclick="deleteChain('${s.id}', event)" title="Delete">&#10005;</button>
+          </div>
+        `;
+      }).join('');
+    }
+
+    renderSaved();
+  </script>
+</body>
+</html>

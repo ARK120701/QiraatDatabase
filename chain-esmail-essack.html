@@ -233,6 +233,54 @@
     .coming-panel h3 { color: var(--text-mid); font-size: 1.1rem; margin-bottom: 6px; }
     .coming-panel p { color: var(--text-muted); font-size: 0.9rem; }
 
+    /* ── Reference node (appears in main chain) ── */
+    .c-node.ref {
+      border-style: dashed;
+      border-color: var(--green-mid);
+      background: var(--green-light);
+    }
+    .c-node.ref .label { color: var(--green-mid); font-size: 0.6rem; }
+
+    /* ── Additional sanad paths section ── */
+    .add-paths-section {
+      background: var(--off-white);
+      border-top: 2px solid var(--border);
+      padding: 56px 0 80px;
+    }
+    .add-paths-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .add-paths-header h2 {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--green-dark);
+    }
+    .add-paths-header p {
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      margin-top: 6px;
+    }
+    .add-path-entry {
+      margin-bottom: 48px;
+    }
+    .add-path-label {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .add-path-label span {
+      display: inline-block;
+      background: var(--green-light);
+      border: 1.5px solid var(--green-mid);
+      border-radius: 20px;
+      padding: 5px 18px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.9px;
+      color: var(--green-mid);
+    }
+
     /* ── Branching fork / merge ── */
     .c-fork-row {
       display: flex;
@@ -334,7 +382,8 @@
     <ul class="navbar-nav">
       <li><a href="index.html">All States</a></li>
       <li><a href="states/new-york.html">New York</a></li>
-      <li><a href="chain-esmail-essack.html" class="active">Chain of Transmission</a></li>
+      <li><a href="chain-esmail-essack.html" class="active">Chains</a></li>
+      <li><a href="chain-builder.html">Build a Chain</a></li>
     </ul>
   </nav>
 
@@ -473,21 +522,18 @@
             <div class="c-para-body">
               <div class="c-para-item">
                 <div class="c-node">
-                  <div class="label">2 · Companion</div>
                   <div class="en">'Alī ibn Abī Ṭālib ؓ</div>
                   <div class="ar">علي بن أبي طالب</div>
                 </div>
               </div>
               <div class="c-para-item">
                 <div class="c-node">
-                  <div class="label">2b · Companion</div>
                   <div class="en">Zayd ibn Thābit ؓ</div>
                   <div class="ar">زيد بن ثابت</div>
                 </div>
               </div>
               <div class="c-para-item">
                 <div class="c-node">
-                  <div class="label">2c · Companion</div>
                   <div class="en">Ubayy ibn Ka'b ؓ</div>
                   <div class="ar">أُبَيّ بن كعب</div>
                 </div>
@@ -764,6 +810,189 @@
       </div><!-- end container -->
     </div><!-- end chain-display -->
   </main>
+
+  <!-- ═══ Additional Sanad Connections ═══ -->
+  <section class="add-paths-section">
+    <div class="container">
+      <div class="add-paths-header">
+        <h2>Additional Sanad Connections</h2>
+        <p>Alternate teacher paths that also connect into the main chain above</p>
+      </div>
+
+      <!-- ─── Path A: via Ibn Ghānim → al-Yamānī (21) ─── -->
+      <div class="add-path-entry">
+        <div class="add-path-label">
+          <span>&#9670; ʿAbd al-Raḥmān al-Yamānī — alternate path via Ibn Ghānim al-Maqdisī</span>
+        </div>
+        <div class="chain-wrap">
+          <!-- Two sources (in main chain) -->
+          <div class="c-para-row">
+            <div class="c-para-spacer"></div>
+            <div class="c-para-body">
+              <div class="c-para-item">
+                <div class="c-node ref">
+                  <div class="label">= Node 19 in main chain</div>
+                  <div class="en">Muḥammad al-Ṣamādīsī</div>
+                  <div class="ar">محمد الصمادیسي</div>
+                </div>
+              </div>
+              <div class="c-para-item">
+                <div class="c-node">
+                  <div class="en">al-Sharaf ʿAbd al-Ḥaqq al-Sunbaṭī</div>
+                  <div class="ar">الشرف عبد الحق الصنبطي</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Merge → Ibn Ghanim -->
+          <div class="c-merge-row">
+            <div class="c-merge-spacer"></div>
+            <div class="c-merge-body">
+              <div class="merge-rises">
+                <div class="merge-rise"></div>
+                <div class="merge-rise"></div>
+              </div>
+              <div class="merge-hbar"></div>
+              <div class="merge-stem"></div>
+              <div class="merge-tip"></div>
+            </div>
+          </div>
+          <div class="c-row"><div class="c-num">&#9670;</div>
+            <div class="c-node"><div class="en">Ibn Ghānim al-Maqdisī</div><div class="ar">ابن غانم المقدسي</div></div>
+          </div>
+          <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
+          <div class="c-row"><div class="c-num teal">&#8594;</div>
+            <div class="c-node ref">
+              <div class="label">= Node 21 in main chain</div>
+              <div class="en">ʿAbd al-Raḥmān al-Yamānī</div>
+              <div class="ar">عبد الرحمن اليماني</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── Path B: via Yūsuf Afandī → al-Ujhūrī (24) ─── -->
+      <div class="add-path-entry">
+        <div class="add-path-label">
+          <span>&#9670; ʿAbd al-Raḥmān al-Ujhūrī — alternate path via Yūsuf Afandī</span>
+        </div>
+        <div class="chain-wrap">
+          <!-- Two sources feeding Ali al-Mansuri -->
+          <div class="c-para-row">
+            <div class="c-para-spacer"></div>
+            <div class="c-para-body">
+              <div class="c-para-item">
+                <div class="c-node ref">
+                  <div class="label">= Node 21 in main chain</div>
+                  <div class="en">ʿAbd al-Raḥmān al-Yamānī</div>
+                  <div class="ar">عبد الرحمن اليماني</div>
+                </div>
+              </div>
+              <div class="c-para-item">
+                <div class="c-node ref">
+                  <div class="label">= Node 22 in main chain</div>
+                  <div class="en">Muḥammad al-Baqārī</div>
+                  <div class="ar">محمد البقاري</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Merge → Ali al-Shabraamalisi / Ali al-Mansuri fork -->
+          <div class="c-merge-row">
+            <div class="c-merge-spacer"></div>
+            <div class="c-merge-body">
+              <div class="merge-rises">
+                <div class="merge-rise"></div>
+                <div class="merge-rise"></div>
+              </div>
+              <div class="merge-hbar"></div>
+              <div class="merge-stem"></div>
+              <div class="merge-tip"></div>
+            </div>
+          </div>
+          <!-- Note: al-Yamani → Ali al-Shabraamalisi; al-Baqari → directly to Ali al-Mansuri -->
+          <!-- Show Ali al-Shabraamalisi as intermediate under al-Yamani side -->
+          <div class="c-row"><div class="c-num">&#9670;</div>
+            <div class="c-node"><div class="en">ʿAlī al-Shabrāmalīsī</div><div class="ar">علي الشبراملسي</div></div>
+          </div>
+          <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
+          <div class="c-row"><div class="c-num">&#9670;</div>
+            <div class="c-node"><div class="en">ʿAlī al-Manṣūrī</div><div class="ar">علي المنصوري</div></div>
+          </div>
+          <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
+          <div class="c-row"><div class="c-num">&#9670;</div>
+            <div class="c-node"><div class="en">Yūsuf Afandī</div><div class="ar">يوسف أفندي</div></div>
+          </div>
+          <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
+          <div class="c-row"><div class="c-num teal">&#8594;</div>
+            <div class="c-node ref">
+              <div class="label">= Node 24 in main chain</div>
+              <div class="en">ʿAbd al-Raḥmān al-Ujhūrī</div>
+              <div class="ar">عبد الرحمن الأجهوري</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── Path C: via ʿAlī al-Badrī → Ibrāhīm al-ʿUbaydī (25) ─── -->
+      <div class="add-path-entry">
+        <div class="add-path-label">
+          <span>&#9670; Ibrāhīm al-ʿUbaydī — alternate path via ʿAlī al-Badrī</span>
+        </div>
+        <div class="chain-wrap">
+          <!-- Two sources feeding Ali al-Badri -->
+          <div class="c-para-row">
+            <div class="c-para-spacer"></div>
+            <div class="c-para-body">
+              <div class="c-para-item">
+                <div class="c-node">
+                  <div class="en">Aḥmad al-Naqrī</div>
+                  <div class="ar">أحمد النقري</div>
+                </div>
+              </div>
+              <div class="c-para-item">
+                <div class="c-node ref">
+                  <div class="label">= Node 22 in main chain</div>
+                  <div class="en">Muḥammad al-Baqārī</div>
+                  <div class="ar">محمد البقاري</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Right side: Baqari → Uzbakaawi before merging -->
+          <div class="c-merge-row">
+            <div class="c-merge-spacer"></div>
+            <div class="c-merge-body">
+              <div class="merge-rises">
+                <div class="merge-rise"></div>
+                <div class="merge-rise"></div>
+              </div>
+              <div class="merge-hbar"></div>
+              <div class="merge-stem"></div>
+              <div class="merge-tip"></div>
+            </div>
+          </div>
+          <!-- Note: Baqari → Uzbakaawi → Ali al-Badri; Naqri → directly to Ali al-Badri -->
+          <div class="c-row"><div class="c-num">&#9670;</div>
+            <div class="c-node"><div class="en">Muḥammad al-Uzbakāwī</div><div class="ar">محمد الأزبكاوي</div></div>
+          </div>
+          <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
+          <div class="c-row"><div class="c-num">&#9670;</div>
+            <div class="c-node"><div class="en">ʿAlī al-Badrī</div><div class="ar">علي البدري</div></div>
+          </div>
+          <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
+          <div class="c-row"><div class="c-num teal">&#8594;</div>
+            <div class="c-node ref">
+              <div class="label">= Node 25 in main chain</div>
+              <div class="en">Ibrāhīm al-ʿUbaydī</div>
+              <div class="ar">إبراهيم العبيدي</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end container -->
+  </section>
 
   <script>
     function showChain(id) {
