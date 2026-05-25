@@ -15,115 +15,20 @@
       text-align: center;
       color: var(--white);
     }
+    .chain-hero .arabic-tag { font-family: 'Amiri', serif; font-size: 1.4rem; color: var(--gold); margin-bottom: 10px; }
+    .chain-hero h1 { font-size: clamp(1.6rem, 3.5vw, 2.4rem); font-weight: 900; margin-bottom: 6px; }
+    .chain-hero .sub { color: rgba(255,255,255,0.72); font-size: 0.95rem; margin-top: 6px; }
 
-    .chain-hero .arabic-tag {
-      font-family: 'Amiri', serif;
-      font-size: 1.4rem;
-      color: var(--gold);
-      margin-bottom: 10px;
-    }
+    .chain-section { padding: 56px 0 80px; }
 
-    .chain-hero h1 {
-      font-size: clamp(1.6rem, 3.5vw, 2.4rem);
-      font-weight: 900;
-      margin-bottom: 6px;
-    }
-
-    .chain-hero .sub {
-      color: rgba(255,255,255,0.72);
-      font-size: 0.95rem;
-      margin-top: 6px;
-    }
-
-    .chain-section {
-      padding: 56px 0 80px;
-    }
-
-    /* ── Chain ── */
     .chain-wrap {
       display: flex;
       flex-direction: column;
       align-items: center;
-      max-width: 520px;
+      max-width: 560px;
       margin: 0 auto;
     }
 
-    .c-node {
-      width: 100%;
-      background: var(--white);
-      border: 2px solid var(--border);
-      border-radius: var(--radius);
-      padding: 14px 24px;
-      text-align: center;
-      box-shadow: var(--shadow-sm);
-      transition: box-shadow 0.2s, border-color 0.2s;
-    }
-
-    .c-node:hover {
-      box-shadow: var(--shadow-md);
-      border-color: var(--green-mid);
-    }
-
-    .c-node.prophet {
-      border-color: var(--gold);
-      background: var(--gold-pale);
-    }
-
-    .c-node.recipient {
-      border-color: var(--green-mid);
-      background: var(--green-light);
-    }
-
-    .c-node .en {
-      font-family: 'Lato', sans-serif;
-      font-size: 0.95rem;
-      font-weight: 700;
-      color: var(--text-dark);
-      line-height: 1.3;
-    }
-
-    .c-node .ar {
-      font-family: 'Amiri', serif;
-      font-size: 1.05rem;
-      color: var(--text-mid);
-      margin-top: 3px;
-      direction: rtl;
-    }
-
-    .c-node .label {
-      font-size: 0.68rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.9px;
-      margin-bottom: 5px;
-    }
-
-    .c-node.prophet .label { color: var(--gold); }
-    .c-node.recipient .label { color: var(--green-mid); }
-    .c-node .label { color: var(--text-muted); }
-
-    /* connector */
-    .c-conn {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .c-conn .line {
-      width: 2px;
-      height: 20px;
-      background: var(--border);
-    }
-
-    .c-conn .arrow {
-      width: 0;
-      height: 0;
-      border-left: 7px solid transparent;
-      border-right: 7px solid transparent;
-      border-top: 9px solid var(--border);
-    }
-
-    /* number badge on left */
     .c-row {
       display: flex;
       align-items: center;
@@ -132,8 +37,8 @@
     }
 
     .c-num {
-      width: 28px;
-      height: 28px;
+      width: 30px;
+      height: 30px;
       border-radius: 50%;
       background: var(--green-dark);
       color: var(--white);
@@ -145,29 +50,70 @@
       flex-shrink: 0;
       font-family: 'Lato', sans-serif;
     }
-
-    .c-node.prophet ~ .c-num,
     .c-num.gold { background: var(--gold); }
     .c-num.teal { background: var(--green-mid); }
+    .c-num.muted { background: var(--border); color: var(--text-muted); }
 
-    /* spacer connector with number */
+    .c-node {
+      width: 100%;
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 22px;
+      text-align: center;
+      box-shadow: var(--shadow-sm);
+    }
+    .c-node.prophet { border-color: var(--gold); background: var(--gold-pale); }
+    .c-node.recipient { border-color: var(--green-mid); background: var(--green-light); }
+    .c-node.pending {
+      border-color: #ddd;
+      background: #f9f9f9;
+      border-style: dashed;
+    }
+
+    .c-node .label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.9px;
+      margin-bottom: 4px;
+    }
+    .c-node.prophet .label { color: var(--gold); }
+    .c-node.recipient .label { color: var(--green-mid); }
+    .c-node.pending .label { color: var(--text-muted); }
+
+    .c-node .en {
+      font-family: 'Lato', sans-serif;
+      font-size: 0.93rem;
+      font-weight: 700;
+      color: var(--text-dark);
+      line-height: 1.35;
+    }
+    .c-node.pending .en { color: var(--text-muted); font-style: italic; font-weight: 500; }
+
+    .c-node .ar {
+      font-family: 'Amiri', serif;
+      font-size: 1.05rem;
+      color: var(--text-mid);
+      margin-top: 4px;
+      direction: rtl;
+    }
+
     .c-conn-row {
       display: flex;
       align-items: flex-start;
       gap: 12px;
       width: 100%;
     }
-
-    .c-conn-row .c-conn {
-      margin-left: 12px; /* align with center of 28px num */
-    }
-
-    .c-conn-row .spacer { width: 28px; flex-shrink: 0; }
+    .c-conn-row .spacer { width: 30px; flex-shrink: 0; }
+    .c-conn { display: flex; flex-direction: column; align-items: center; }
+    .c-conn .line { width: 2px; height: 20px; background: var(--border); }
+    .c-conn .line.dashed { background: repeating-linear-gradient(to bottom, var(--border) 0, var(--border) 4px, transparent 4px, transparent 8px); }
+    .c-conn .arrow { width: 0; height: 0; border-left: 7px solid transparent; border-right: 7px solid transparent; border-top: 9px solid var(--border); }
 
     @media (max-width: 580px) {
-      .c-num { width: 22px; height: 22px; font-size: 0.65rem; }
-      .c-node { padding: 12px 16px; }
-      .c-node .en { font-size: 0.88rem; }
+      .c-node { padding: 11px 14px; }
+      .c-node .en { font-size: 0.85rem; }
     }
   </style>
 </head>
@@ -210,7 +156,7 @@
       <div class="container">
         <div class="chain-wrap">
 
-          <!-- 1 -->
+          <!-- 1. Prophet -->
           <div class="c-row">
             <div class="c-num gold">1</div>
             <div class="c-node prophet">
@@ -219,9 +165,19 @@
               <div class="ar">النبيّ الصّادق الأمين ﷺ</div>
             </div>
           </div>
-          <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
+          <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line dashed"></div><div class="arrow"></div></div></div>
 
-          <!-- 2 -->
+          <!-- Placeholder 1 -->
+          <div class="c-row">
+            <div class="c-num muted">—</div>
+            <div class="c-node pending">
+              <div class="label">Sanad</div>
+              <div class="en">Sanad will be added</div>
+            </div>
+          </div>
+          <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line dashed"></div><div class="arrow"></div></div></div>
+
+          <!-- 2. Asim -->
           <div class="c-row">
             <div class="c-num">2</div>
             <div class="c-node">
@@ -231,7 +187,7 @@
           </div>
           <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
 
-          <!-- 3 -->
+          <!-- 3. Hafs -->
           <div class="c-row">
             <div class="c-num">3</div>
             <div class="c-node">
@@ -239,9 +195,19 @@
               <div class="ar">حفص بن سليمان</div>
             </div>
           </div>
-          <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
+          <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line dashed"></div><div class="arrow"></div></div></div>
 
-          <!-- 4 -->
+          <!-- Placeholder 2 -->
+          <div class="c-row">
+            <div class="c-num muted">—</div>
+            <div class="c-node pending">
+              <div class="label">Sanad</div>
+              <div class="en">Sanad will be added</div>
+            </div>
+          </div>
+          <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line dashed"></div><div class="arrow"></div></div></div>
+
+          <!-- 4. Jazari -->
           <div class="c-row">
             <div class="c-num">4</div>
             <div class="c-node">
@@ -255,8 +221,7 @@
           <div class="c-row">
             <div class="c-num">5</div>
             <div class="c-node">
-              <div class="en">Riḍwān Abū Nu'aym al-'Uqbī & Ibn Bakr al-Qalqīlī</div>
-              <div class="ar">رضوان أبي نعيم العقبي وابن بكر القلقيلي</div>
+              <div class="en">Ibrāhīm al-'Ubaydī</div>
             </div>
           </div>
           <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
@@ -265,8 +230,7 @@
           <div class="c-row">
             <div class="c-num">6</div>
             <div class="c-node">
-              <div class="en">Al-Ṭablaāwī</div>
-              <div class="ar">الطبلاوي</div>
+              <div class="en">Aḥmad Salamūnah</div>
             </div>
           </div>
           <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
@@ -275,8 +239,7 @@
           <div class="c-row">
             <div class="c-num">7</div>
             <div class="c-node">
-              <div class="en">Shaykh al-Islām Zakariyyā al-Anṣārī</div>
-              <div class="ar">شيخ الإسلام زكريّا الأنصاري</div>
+              <div class="en">Aḥmad al-Durrī al-Tihāmī</div>
             </div>
           </div>
           <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
@@ -285,8 +248,7 @@
           <div class="c-row">
             <div class="c-num">8</div>
             <div class="c-node">
-              <div class="en">Al-Sunbāṭī</div>
-              <div class="ar">السنباطي</div>
+              <div class="en">Muḥammad Aḥmad al-Mutawwallī</div>
             </div>
           </div>
           <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
@@ -295,8 +257,7 @@
           <div class="c-row">
             <div class="c-num">9</div>
             <div class="c-node">
-              <div class="en">Shaḥādha al-Yamānī</div>
-              <div class="ar">شحاذه اليمني</div>
+              <div class="en">Ibrāhīm Sa'd al-Miṣrī — Ḥasan al-Jurayshī al-Kabīr</div>
             </div>
           </div>
           <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
@@ -305,8 +266,7 @@
           <div class="c-row">
             <div class="c-num">10</div>
             <div class="c-node">
-              <div class="en">'Abd al-Raḥmān al-Yamānī</div>
-              <div class="ar">عبد الرحمن اليمني</div>
+              <div class="en">'Abd Allāh al-Makkī</div>
             </div>
           </div>
           <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
@@ -315,8 +275,7 @@
           <div class="c-row">
             <div class="c-num">11</div>
             <div class="c-node">
-              <div class="en">Abū al-Nūr al-Dimyāṭī</div>
-              <div class="ar">أبو النور الدمياطي</div>
+              <div class="en">'Abd al-Raḥmān al-Makkī</div>
             </div>
           </div>
           <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
@@ -325,8 +284,7 @@
           <div class="c-row">
             <div class="c-num">12</div>
             <div class="c-node">
-              <div class="en">Aḥmad al-Bannā al-Dimyāṭī</div>
-              <div class="ar">أحمد البنّاء الدمياطي — صاحب الإتحاف</div>
+              <div class="en">Muḥammad Kāmil bin Ni'mat Alī Khān — al-Afḍal Kidhī</div>
             </div>
           </div>
           <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
@@ -335,8 +293,7 @@
           <div class="c-row">
             <div class="c-num">13</div>
             <div class="c-node">
-              <div class="en">'Abd al-Raḥmān al-Juhūrī</div>
-              <div class="ar">عبد الرحمن الجهوري</div>
+              <div class="en">Aḥmadullāh al-Karīm al-Qāsimī bin Ma'ārif billāh al-Karīm</div>
             </div>
           </div>
           <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
@@ -345,85 +302,14 @@
           <div class="c-row">
             <div class="c-num">14</div>
             <div class="c-node">
-              <div class="en">Al-Sayyid Muḥammad al-Mutawwallī</div>
-              <div class="ar">السيد محمد المتولي</div>
+              <div class="en">Ismā'īl bin Muḥammad Isḥāq</div>
             </div>
           </div>
           <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
 
-          <!-- 15 -->
+          <!-- 15 — Recipient -->
           <div class="c-row">
-            <div class="c-num">15</div>
-            <div class="c-node">
-              <div class="en">Al-Sayyid Ibrāhīm al-'Ubaydī</div>
-              <div class="ar">السيد إبراهيم العبيدي</div>
-            </div>
-          </div>
-          <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
-
-          <!-- 16 -->
-          <div class="c-row">
-            <div class="c-num">16</div>
-            <div class="c-node">
-              <div class="en">Aḥmad al-Durrī al-Hāmī</div>
-              <div class="ar">أحمد الدرّي الهامي</div>
-            </div>
-          </div>
-          <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
-
-          <!-- 17 -->
-          <div class="c-row">
-            <div class="c-num">17</div>
-            <div class="c-node">
-              <div class="en">Al-Sayyid Buḍayr al-Khalwatī al-Muhājir</div>
-              <div class="ar">السيد بُدَير الخلوتي المهاجر</div>
-            </div>
-          </div>
-          <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
-
-          <!-- 18 -->
-          <div class="c-row">
-            <div class="c-num">18</div>
-            <div class="c-node">
-              <div class="en">Mawlānā Ḍiyā' al-Dīn al-Muqri' — al-Murādābādī</div>
-              <div class="ar">مولانا ضياء الدين المقرئ المرادآبادي</div>
-            </div>
-          </div>
-          <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
-
-          <!-- 19 -->
-          <div class="c-row">
-            <div class="c-num">19</div>
-            <div class="c-node">
-              <div class="en">Muḥammad Kāmil — Nu'mat al-Qāsim Khān</div>
-              <div class="ar">محمد كامل — نعمت القاسم خان — بجنور، الهند</div>
-            </div>
-          </div>
-          <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
-
-          <!-- 20 -->
-          <div class="c-row">
-            <div class="c-num">20</div>
-            <div class="c-node">
-              <div class="en">Shaykh Muḥammad 'Abd Allāh — al-Murādābādī then al-Makkī</div>
-              <div class="ar">الشيخ محمد عبد الله المرادآبادي ثم المكي</div>
-            </div>
-          </div>
-          <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
-
-          <!-- 21 -->
-          <div class="c-row">
-            <div class="c-num">21</div>
-            <div class="c-node">
-              <div class="en">Shaykh Muḥammad 'Abd al-Raḥmān al-Makkī — South Africa</div>
-              <div class="ar">الشيخ محمد عبد الرحمن المكي — أفريقيا الجنوبية</div>
-            </div>
-          </div>
-          <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
-
-          <!-- 22 — Recipient -->
-          <div class="c-row">
-            <div class="c-num teal">22</div>
+            <div class="c-num teal">15</div>
             <div class="c-node recipient">
               <div class="label">Recipient</div>
               <div class="en">Qārī Esmail Essack</div>
