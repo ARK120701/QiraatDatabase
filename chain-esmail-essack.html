@@ -1,182 +1,169 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Chain of Transmission — Qārī Esmail Essack</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;500;700;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Lato:wght@400;500;700;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/styles.css" />
   <style>
+    /* Override RTL conflicts with the navbar/ltr elements */
+    .navbar, .breadcrumb, footer { direction: ltr; }
+    .navbar-brand, .navbar-nav, .breadcrumb-inner { direction: ltr; }
+
     .chain-hero {
       background-color: var(--green-dark);
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cg fill='none' stroke='rgba(255,255,255,0.06)' stroke-width='1'%3E%3Cpolygon points='40,4 76,20 76,60 40,76 4,60 4,20'/%3E%3Cpolygon points='40,14 66,25 66,55 40,66 14,55 14,25'/%3E%3Cline x1='40' y1='4' x2='40' y2='76'/%3E%3Cline x1='4' y1='20' x2='76' y2='60'/%3E%3Cline x1='76' y1='20' x2='4' y2='60'/%3E%3C/g%3E%3C/svg%3E");
       padding: 60px 2rem;
       text-align: center;
       color: var(--white);
+      direction: ltr;
     }
 
-    .chain-hero h1 { font-size: clamp(1.6rem, 3.5vw, 2.4rem); font-weight: 900; margin-bottom: 8px; }
-    .chain-hero .subtitle { color: rgba(255,255,255,0.75); font-size: 1rem; margin-top: 8px; }
+    .chain-hero h1 { font-size: clamp(1.6rem, 3.5vw, 2.4rem); font-weight: 900; margin-bottom: 8px; font-family: 'Lato', sans-serif; }
+    .chain-hero .subtitle { color: rgba(255,255,255,0.75); font-size: 1rem; margin-top: 8px; font-family: 'Lato', sans-serif; }
+    .chain-hero .arabic-title { font-family: 'Amiri', serif; font-size: 1.5rem; color: var(--gold); margin-bottom: 10px; direction: rtl; }
 
-    .chain-section {
-      padding: 60px 0 80px;
-    }
+    .chain-section { padding: 48px 0 80px; }
 
-    .coming-soon-box {
-      background: var(--white);
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius);
-      padding: 32px;
-      text-align: center;
-      margin-bottom: 48px;
-      box-shadow: var(--shadow-sm);
-    }
-
-    .coming-soon-box .icon {
-      font-size: 2.5rem;
-      margin-bottom: 12px;
-    }
-
-    .coming-soon-box h2 {
-      font-size: 1.2rem;
-      color: var(--green-dark);
-      margin-bottom: 8px;
-    }
-
-    .coming-soon-box p {
-      color: var(--text-muted);
-      font-size: 0.95rem;
-      max-width: 500px;
-      margin: 0 auto;
-      line-height: 1.6;
-    }
-
-    /* ── Chain visual ── */
-    .chain-wrapper {
+    /* ── Visual chain ── */
+    .chain-overview {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 0;
+      margin-bottom: 48px;
+      direction: ltr;
     }
 
     .chain-node {
       background: var(--white);
       border: 2px solid var(--border);
       border-radius: var(--radius);
-      padding: 18px 32px;
+      padding: 16px 28px;
       text-align: center;
       width: 100%;
-      max-width: 480px;
+      max-width: 460px;
       box-shadow: var(--shadow-sm);
-      position: relative;
-      transition: box-shadow 0.2s;
+      font-family: 'Lato', sans-serif;
     }
 
-    .chain-node.highlight {
+    .chain-node.gold {
       border-color: var(--gold);
       background: var(--gold-pale);
     }
 
-    .chain-node.recipient {
+    .chain-node.blue {
       border-color: var(--green-mid);
       background: var(--green-light);
     }
 
     .chain-node .node-label {
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 1px;
       color: var(--text-muted);
       margin-bottom: 4px;
     }
+    .chain-node.gold .node-label { color: var(--gold); }
+    .chain-node.blue .node-label { color: var(--green-mid); }
 
-    .chain-node.highlight .node-label { color: var(--gold); }
-    .chain-node.recipient .node-label { color: var(--green-mid); }
-
-    .chain-node .node-name {
-      font-size: 1.05rem;
-      font-weight: 700;
-      color: var(--text-dark);
-    }
-
-    .chain-node .node-sub {
-      font-size: 0.82rem;
-      color: var(--text-muted);
-      margin-top: 4px;
-    }
-
-    .chain-node.coming .node-name {
-      color: var(--text-muted);
-      font-style: italic;
-      font-weight: 500;
-    }
+    .chain-node .node-name { font-size: 1rem; font-weight: 700; color: var(--text-dark); }
+    .chain-node .node-arabic { font-family: 'Amiri', serif; font-size: 1.1rem; color: var(--text-mid); margin-top: 3px; direction: rtl; }
 
     .chain-connector {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 0;
-      padding: 4px 0;
+      padding: 2px 0;
     }
-
-    .chain-connector .line {
-      width: 2px;
-      height: 28px;
-      background: var(--border);
-    }
-
-    .chain-connector .arrow {
-      width: 0;
-      height: 0;
-      border-left: 7px solid transparent;
-      border-right: 7px solid transparent;
-      border-top: 9px solid var(--border);
-    }
-
-    .chain-connector .badge {
+    .chain-connector .line { width: 2px; height: 22px; background: var(--border); }
+    .chain-connector .arrow { width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 8px solid var(--border); }
+    .chain-connector .tag {
       background: var(--gold-light);
       border: 1px solid #f0d88a;
       color: #7a5800;
       border-radius: 12px;
-      padding: 3px 12px;
-      font-size: 0.75rem;
+      padding: 2px 12px;
+      font-size: 0.72rem;
       font-weight: 600;
-      margin: 6px 0;
+      margin: 5px 0;
+      font-family: 'Lato', sans-serif;
       white-space: nowrap;
     }
 
-    .chain-dots {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 5px;
-      padding: 12px 0;
-    }
+    .dots { display: flex; flex-direction: column; align-items: center; gap: 5px; padding: 10px 0; }
+    .dots span { width: 6px; height: 6px; border-radius: 50%; background: var(--border); display: block; }
 
-    .chain-dots span {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--border);
-      display: block;
-    }
-
-    .info-note {
-      background: var(--gold-light);
-      border: 1px solid #f0d88a;
+    /* ── Arabic Sanad block ── */
+    .sanad-container {
+      background: var(--white);
+      border: 1.5px solid var(--border);
       border-radius: var(--radius);
-      padding: 20px 24px;
-      max-width: 480px;
-      margin: 32px auto 0;
-      font-size: 0.88rem;
-      color: #6b4c00;
-      line-height: 1.6;
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+      direction: rtl;
+    }
+
+    .sanad-header {
+      background: var(--green-dark);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cg fill='none' stroke='rgba(255,255,255,0.06)' stroke-width='1'%3E%3Cpolygon points='40,4 76,20 76,60 40,76 4,60 4,20'/%3E%3C/g%3E%3C/svg%3E");
+      padding: 24px 32px;
       text-align: center;
     }
 
-    .info-note strong { display: block; margin-bottom: 6px; font-size: 0.95rem; }
+    .sanad-header h2 {
+      font-family: 'Amiri', serif;
+      font-size: 1.8rem;
+      color: var(--white);
+      margin-bottom: 6px;
+    }
+
+    .sanad-header p {
+      font-family: 'Lato', sans-serif;
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.7);
+      direction: ltr;
+    }
+
+    .sanad-body {
+      padding: 36px 40px;
+    }
+
+    .sanad-text {
+      font-family: 'Amiri', serif;
+      font-size: 1.25rem;
+      line-height: 2.4;
+      color: var(--text-dark);
+      text-align: justify;
+      direction: rtl;
+    }
+
+    .sanad-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 28px 0;
+    }
+
+    .sanad-footer {
+      background: var(--gold-pale);
+      border-top: 1px solid #f0d88a;
+      padding: 20px 32px;
+      text-align: center;
+    }
+
+    .sanad-footer p {
+      font-family: 'Lato', sans-serif;
+      font-size: 0.85rem;
+      color: #6b4c00;
+      direction: ltr;
+    }
+
+    @media (max-width: 640px) {
+      .sanad-body { padding: 24px 20px; }
+      .sanad-text { font-size: 1.1rem; line-height: 2.2; }
+    }
   </style>
 </head>
 <body>
@@ -206,123 +193,100 @@
   </div>
 
   <div class="chain-hero">
-    <p style="color:var(--gold);font-size:0.85rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px;">Silsilah — سِلْسِلَة</p>
+    <div class="arabic-title">سِلْسِلَةُ الإِسْنَاد</div>
     <h1>Chain of Transmission</h1>
     <div class="gold-divider"></div>
-    <div style="font-size:1.3rem;font-weight:700;margin-bottom:6px;">Qārī Esmail Essack</div>
-    <p class="subtitle">The unbroken chain of Quranic transmission connecting back to the Prophet Muhammad ﷺ</p>
+    <div style="font-family:'Lato',sans-serif;font-size:1.25rem;font-weight:700;margin-bottom:6px;">Qārī Esmail Essack</div>
+    <p class="subtitle">The unbroken sanad connecting back to the Prophet Muhammad ﷺ</p>
   </div>
 
   <main>
     <section class="chain-section">
       <div class="container">
 
-        <div class="coming-soon-box">
-          <div class="icon">&#9749;</div>
-          <h2>Full Details Coming Soon</h2>
-          <p>The complete chain of transmission (silsilah) for Qārī Esmail Essack is being documented and verified. Inshallah, the full sanad with all transmitters will be published here soon.</p>
-        </div>
-
-        <div class="chain-wrapper">
-
-          <!-- Source -->
-          <div class="chain-node highlight">
+        <!-- Visual overview -->
+        <div class="chain-overview">
+          <div class="chain-node gold">
             <div class="node-label">Source of Revelation</div>
-            <div class="node-name">Sayyiduna Jibrīl &#1593;&#1604;&#1610;&#1607; &#1575;&#1604;&#1587;&#1604;&#1575;&#1605;</div>
-          </div>
-
-          <div class="chain-connector">
-            <div class="line"></div>
-            <div class="badge">Wahy — Divine Revelation</div>
-            <div class="line"></div>
-            <div class="arrow"></div>
-          </div>
-
-          <!-- Prophet -->
-          <div class="chain-node highlight">
-            <div class="node-label">The Messenger &#65018;</div>
             <div class="node-name">Prophet Muhammad ﷺ</div>
-            <div class="node-sub">The Quran was revealed to him over 23 years</div>
+            <div class="node-arabic">النبيّ الصّادق الأمين ﷺ</div>
           </div>
-
           <div class="chain-connector">
             <div class="line"></div>
-            <div class="badge">Hafs 'an 'Asim — transmission chain</div>
+            <div class="tag">Hafs 'an 'Asim — full chain below</div>
             <div class="line"></div>
             <div class="arrow"></div>
           </div>
-
-          <!-- Dots representing chain -->
-          <div class="chain-node coming">
-            <div class="node-label">Transmitters — details to come soon</div>
-            <div class="node-name">Full silsilah being documented...</div>
-          </div>
-
-          <div class="chain-connector">
-            <div class="line"></div>
-            <div class="arrow"></div>
-          </div>
-
-          <div class="chain-dots">
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-
-          <div class="chain-connector">
-            <div class="line"></div>
-            <div class="arrow"></div>
-          </div>
-
-          <!-- 'Asim -->
           <div class="chain-node">
             <div class="node-label">Imam of Qira'at</div>
             <div class="node-name">'Āṣim ibn Abī al-Najūd</div>
-            <div class="node-sub">One of the Seven Imams of Qira'at — d. 127 AH</div>
+            <div class="node-arabic">عاصم بن أبي النَّجود</div>
           </div>
-
           <div class="chain-connector">
             <div class="line"></div>
             <div class="arrow"></div>
           </div>
-
-          <!-- Hafs -->
           <div class="chain-node">
             <div class="node-label">Primary Student</div>
             <div class="node-name">Ḥafs ibn Sulaymān</div>
-            <div class="node-sub">The riwayah of Hafs — most widely recited today — d. 180 AH</div>
+            <div class="node-arabic">حفص بن سليمان</div>
           </div>
-
           <div class="chain-connector">
             <div class="line"></div>
             <div class="arrow"></div>
           </div>
-
-          <div class="chain-dots">
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-
+          <div class="dots"><span></span><span></span><span></span></div>
           <div class="chain-connector">
             <div class="line"></div>
-            <div class="badge">Further links — details to come soon</div>
+            <div class="tag">Full silsilah — see Arabic sanad below</div>
             <div class="line"></div>
             <div class="arrow"></div>
           </div>
-
-          <!-- Esmail Essack -->
-          <div class="chain-node recipient">
-            <div class="node-label">Recipient — New York, USA</div>
+          <div class="chain-node blue">
+            <div class="node-label">Recipient</div>
             <div class="node-name">Qārī Esmail Essack</div>
-            <div class="node-sub">Full details of his direct teacher and ijazah to be added soon</div>
           </div>
-
         </div>
 
-        <div class="info-note">
-          <strong>&#9432; About the Silsilah</strong>
-          The chain of transmission (silsilah/sanad) is an unbroken line of teachers connecting every Qārī back to the Prophet Muhammad ﷺ. It is the foundation of authenticated Quranic recitation. Full details for this chain are being compiled and will be updated here inshallah.
+        <!-- Arabic Sanad -->
+        <div class="sanad-container">
+          <div class="sanad-header">
+            <h2>سند الإجازة</h2>
+            <p>The complete chain of Quranic transmission — Riwayat Hafs 'an 'Asim</p>
+          </div>
+          <div class="sanad-body">
+            <div class="sanad-text">
+الحافظ مولانا الشيخ عن ، الجنوبية فضيلة بهاكلفور مضافات من الكريم الله معارف عن بجنور، مضافات من كدهي الْفضل بن خان القاسم عل نعمت الكريم بن الله كامل محمد المقرئ الهند بديار الشيخ القراء الأستاذ حضرة وقال . المرادآبادي ثم الهانوي رئيس الشيخ عن الإجازة المذكور الله عبد محمد الشيخ وقال ، آبادي الإلهى ثم المكي الله عبد الرحمن محمد الشيخ المقرئ أفريقيا الله عبد محمد وللشيخ له حصل عبد محمد المقرئ الشيخ عن المقرئ مولانا أنَّه المذكور مولانا الكل الهند، من الشيخ كامل أستاذ الدين ضياء المقرئ مولانا العلامة العالم ملاذّي عن أحمد الدين ضياء الشيخ المقرئ وقدوتي وأخذ وأستاذي سيدي عن ، آبادي الإلهى الرزاق أخذته : المذكور المرادآبادي بن أحمد الشيخ المكي فضيلة قال ( المذكور المكي خان بشير محمد خان بشير محمد بن الله بن أخيه الرّحمن عبد محمد والمقرئين عبد محمد منش الأقراء شيخ الدين الفاضل عن ذلك تلقّى أنّه وهو وهو رحمته ، المتولي وأفرغ محمد السيد إليه الله العبيدي إبراهيم السيّد عبد محمد الشيخ عن ، إبراهيم سعد بن علي الشافعي المصري المحقق الشيخ عن ذلك تلقّى أنّه وهو أحسن – الهامي بالشهير الدُّرِّي أحمد عن سَلَمونه بالمعروف محمد بن أحمد ذلك تلقّى أنّه أخبرني هو ) أحمد وهو أنّه تلقّى ذلك عن ضياء الشيخ ، الخلوتي ، المهاجر الشافعي بُدَير السيّد المتقن الشيخ عن الشيخ عن ذلك تلقّى أنّه : منهم أجلاء، حَسَن الشيخ ذلك تلقّى أنّه وهو – عليه مشايخ عن
+            </div>
+
+            <hr class="sanad-divider" />
+
+            <div class="sanad-text">
+عبد الرحمن الْجهوري المالكي المقرئ الأزهري الأحمدي الأشعري الشاذلي ) المتقن المحقّق الشيخ ١ ( وطناً المصري . علي البدري والعمدة المحقّق الأمين ) ٢ ( . محمد المنير ) والعمدة الفاضل الشيخ ٣ ( . مصطفى بن عبد الرحمن الأزميري ) والشيخ ٤ ( ، وكذا عن عبد ربّه بن محمد السجاعي فقد قرأ على الشيخ المحقّق ؛ عبد الرحمن الأجهوري فأمّا الشيخ شيخ القرّاء بالديار القسطنطينية عام واحد وخمسين ومائة وألف بقلعة مصر وقت قدومه للحجّ الشريف، وكذا على الشيخ أحمد الإسقاطي الشيخ ، وكذا أحمد البقري وخمسين ومائة وألف بقلعة مصر وقت قدومه للحجّ الشريف، وكذا على الشيخ الله عبد الشهير نسبه بالجامع الأزهر، وكذا على الشيخ المغرب الشُّماطي محمد الأزبكاوي على الشيخ . وقت رحلته إلى المدينة المنوّرة عام اثنين وخمسين ومائة وألف من الهجرة
+            </div>
+
+            <hr class="sanad-divider" />
+
+            <div class="sanad-text">
+أحمد محقّق العصر أبي السماح الشيخ فقد قرأ على ؛ عبد ربّه بن محمد السجاعي ) فأمّا الشيخ ١ ( . البقري . وقرأ أبو النور الدّمياطي على أبي النور الدّمياطي فقد قرأ على الشيخ ؛ أحمد الإسقاطي ) وأمّا الشيخ ٢ ( صاحب "الإتحاف". وقرأ أحمد البناء الدمياطي العلاّمة المحقّق العالم العامل والوليّ الكامل الشيخ علي بن علي على مشايخ أجلاء منهم: العلاّمة المحقّق أبو الضياء الشيخ صاحب "الإتحاف" ، ليمني ا الرحمن عبد بزمانه على شيخ القرّاء شيخنا المذكور ": قرأ صاحب "الإتحاف . قال الشبراملسي ، وهو قرأ على سلطان بن أحمد بن سلامة بن إسماعيل المزاحي على الشيخ صاحب "الإتحاف" وكذا قرأ بن أحمد بن عبد أحمد ، وهو قرأ على الشيخ البصير بقلبه سيف الدين بن عطاء الله الفضالي الشيخ . الحق السُّنباطي علي بن سليمان بن عبد الله فقد قرأ على الشيخ ؛ أفندي زاده يوسف الله عبد محمد ) وأمّا الشيخ ٣ ( سلطان بن بالديار القسطنطينية وقت رحلته إليها وإقامته بها. وقرأ المنصوري على الشيخ المنصوري بن أحمد بن عبد أحمد ، وهو قرأ على الشيخ سيف الدين المذكور ، وهو قرأ على الشيخ أحمد بن المزاحي . الحق السُّنباطي . عبد الرحمن اليمني ، وهو قرأ على الشيخ محمد البقري فقد قرأ على الشيخ ؛ أحمد البقري ) وأمّا الشيخ ٤ ( عبد الرحمن ، وهو قرأ على الشيخ محمد البقري فقد قرأ على الشيخ ؛ محمد الأزبكاوي ) وأمّا الشيخ ٥ ( . اليمني الشُّماطي عبد الخالق . رحمه الله فقد قرأ على رجال كثيرين منهم: الشيخ بأبي عمرو الداني المتصل سنده ؛ الشُّماطي عبد الله الهبطي عبد الله بشيخ الإسلام ) وأمّا الشيخ ٦ ( المتصل سنده فقد قرأ على الشيخ
+            </div>
+
+            <hr class="sanad-divider" />
+
+            <div class="sanad-text">
+إبراهيم العبيدي هو الشيخ الثاني لسيد الأمين علي البدري أمّا إسناد الشيخ يوسف أفندي زاده ، محمد الأزبكاوي ، وكذا قرأ على الشيخ الله عبد محمد ، وكذا على أحمد الإسقاطي . اليمني عبد الرحمن ، وتقدّم إسنادهم المتصل إلى الشيخ المغرب طي عبد الله الشُّما وكذا قرأ على الشيخ على الشيخ محفوظ برواق ، وقرأ الشيخ محفوظ برواق الشيخ على الأمين علي البدري قرأ الشيخ وكذا ، وهو قرأ على لي ي الرم علي على الشيخ محفوظ بالأزهر الشريف. وقرأ الشيخ محفوظ برواق ابن معمر . عبد الرحمن اليمني الشيخ ، وهو قرأ على محمد البقري الشيخ في كتابه "إتحاف أحمد بن محمّد البنّاء فكما ذكره العلامة الشيخ ؛ عبد الرّحمن اليمني أمّا إسناد الشيخ بن أحمد بن عبد الحق أحمد شهاب وعلى شحاذه اليمني على والده الشيخ اليمني " أنّه قرأ فضلاء البشر... أبي نصر على الشيخ شحاذه وقرأ الشيخ ، شحاذه المذكور على الشيخ السُّنباطي . وقرأ السُّنباطي أحمد على الشيخين شيخ الإسلام ، وقرأ زكريّا الأنصاري على شيخ الإسلام الطبلاوي ، وقرأ الطبلاوي على إمام القرّاء والمحدّثين محرّر كلّ منهما ، وقرأ رضوان أبي نعيم العقبي و بن بكر بن يوسف القلقيلي بأسانيده المذكورة في أبي الخير محمّد بن محمّد بن محمّد بن علي بن يوسف الجزري الروايات والطرق
+            </div>
+
+            <hr class="sanad-divider" />
+
+            <div class="sanad-text" style="text-align:center; font-size:1.4rem; line-height:2.8; color: var(--green-dark);">
+عن اللوح المحفوظ عن جبرئيل عليه السلام عن النبيّ الصّادق الأمين ﷺ
+            </div>
+
+          </div>
+          <div class="sanad-footer">
+            <p>&#9632; This is the authenticated chain of transmission (silsilah/sanad) for Qārī Esmail Essack in the riwayah of Ḥafs 'an 'Āṣim, connected to the Prophet Muhammad ﷺ.</p>
+          </div>
         </div>
 
       </div>
