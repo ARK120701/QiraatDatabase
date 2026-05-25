@@ -62,6 +62,14 @@
       text-align: center;
       box-shadow: var(--shadow-sm);
     }
+    .c-node.divine {
+      border-color: #8b6914;
+      background: linear-gradient(135deg, #fffbe6, #fef3c7);
+      box-shadow: 0 2px 12px rgba(201,150,42,0.2);
+    }
+    .c-node.divine .label { color: #8b6914; }
+    .c-node.divine .en { color: #5a3e00; font-size: 1rem; }
+    .c-node.divine .ar { font-size: 1.15rem; color: #7a5000; }
     .c-node.prophet { border-color: var(--gold); background: var(--gold-pale); }
     .c-node.recipient { border-color: var(--green-mid); background: var(--green-light); }
 
@@ -148,11 +156,39 @@
       <div class="container">
         <div class="chain-wrap">
 
-          <!-- Helper macro: each node + connector below -->
+          <!-- Allah SWT -->
+          <div class="c-row"><div class="c-num gold">&#9733;</div>
+            <div class="c-node divine">
+              <div class="label">The Almighty</div>
+              <div class="en">Allāh ﷻ</div>
+              <div class="ar">اللهُ جَلَّ جَلَالُه</div>
+            </div>
+          </div>
+          <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
+
+          <!-- Lawh Mahfuz -->
+          <div class="c-row"><div class="c-num gold">&#9670;</div>
+            <div class="c-node divine">
+              <div class="label">The Preserved Tablet</div>
+              <div class="en">Al-Lawḥ al-Maḥfūẓ</div>
+              <div class="ar">اللَّوْحُ الْمَحْفُوظ</div>
+            </div>
+          </div>
+          <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
+
+          <!-- Jibreel -->
+          <div class="c-row"><div class="c-num gold">&#9711;</div>
+            <div class="c-node divine">
+              <div class="label">The Trustworthy Angel</div>
+              <div class="en">Jibrīl عليه السلام</div>
+              <div class="ar">جِبْرِيلُ الأَمِين عليه السلام</div>
+            </div>
+          </div>
+          <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
 
           <!-- 1 -->
           <div class="c-row"><div class="c-num gold">1</div>
-            <div class="c-node prophet"><div class="label">Source</div>
+            <div class="c-node prophet"><div class="label">The Final Messenger</div>
               <div class="en">Prophet Muhammad ﷺ</div>
               <div class="ar">النبيّ الصّادق الأمين ﷺ</div>
             </div>
