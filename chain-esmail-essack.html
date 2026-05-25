@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chain of Transmission — Qārī Esmail Essack</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;500;700;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <style>
+    .chain-hero {
+      background-color: var(--green-dark);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cg fill='none' stroke='rgba(255,255,255,0.06)' stroke-width='1'%3E%3Cpolygon points='40,4 76,20 76,60 40,76 4,60 4,20'/%3E%3Cpolygon points='40,14 66,25 66,55 40,66 14,55 14,25'/%3E%3Cline x1='40' y1='4' x2='40' y2='76'/%3E%3Cline x1='4' y1='20' x2='76' y2='60'/%3E%3Cline x1='76' y1='20' x2='4' y2='60'/%3E%3C/g%3E%3C/svg%3E");
+      padding: 60px 2rem;
+      text-align: center;
+      color: var(--white);
+    }
+
+    .chain-hero h1 { font-size: clamp(1.6rem, 3.5vw, 2.4rem); font-weight: 900; margin-bottom: 8px; }
+    .chain-hero .subtitle { color: rgba(255,255,255,0.75); font-size: 1rem; margin-top: 8px; }
+
+    .chain-section {
+      padding: 60px 0 80px;
+    }
+
+    .coming-soon-box {
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px;
+      text-align: center;
+      margin-bottom: 48px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .coming-soon-box .icon {
+      font-size: 2.5rem;
+      margin-bottom: 12px;
+    }
+
+    .coming-soon-box h2 {
+      font-size: 1.2rem;
+      color: var(--green-dark);
+      margin-bottom: 8px;
+    }
+
+    .coming-soon-box p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      max-width: 500px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* ── Chain visual ── */
+    .chain-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+    }
+
+    .chain-node {
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 32px;
+      text-align: center;
+      width: 100%;
+      max-width: 480px;
+      box-shadow: var(--shadow-sm);
+      position: relative;
+      transition: box-shadow 0.2s;
+    }
+
+    .chain-node.highlight {
+      border-color: var(--gold);
+      background: var(--gold-pale);
+    }
+
+    .chain-node.recipient {
+      border-color: var(--green-mid);
+      background: var(--green-light);
+    }
+
+    .chain-node .node-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .chain-node.highlight .node-label { color: var(--gold); }
+    .chain-node.recipient .node-label { color: var(--green-mid); }
+
+    .chain-node .node-name {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-dark);
+    }
+
+    .chain-node .node-sub {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .chain-node.coming .node-name {
+      color: var(--text-muted);
+      font-style: italic;
+      font-weight: 500;
+    }
+
+    .chain-connector {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+      padding: 4px 0;
+    }
+
+    .chain-connector .line {
+      width: 2px;
+      height: 28px;
+      background: var(--border);
+    }
+
+    .chain-connector .arrow {
+      width: 0;
+      height: 0;
+      border-left: 7px solid transparent;
+      border-right: 7px solid transparent;
+      border-top: 9px solid var(--border);
+    }
+
+    .chain-connector .badge {
+      background: var(--gold-light);
+      border: 1px solid #f0d88a;
+      color: #7a5800;
+      border-radius: 12px;
+      padding: 3px 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin: 6px 0;
+      white-space: nowrap;
+    }
+
+    .chain-dots {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      padding: 12px 0;
+    }
+
+    .chain-dots span {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--border);
+      display: block;
+    }
+
+    .info-note {
+      background: var(--gold-light);
+      border: 1px solid #f0d88a;
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      max-width: 480px;
+      margin: 32px auto 0;
+      font-size: 0.88rem;
+      color: #6b4c00;
+      line-height: 1.6;
+      text-align: center;
+    }
+
+    .info-note strong { display: block; margin-bottom: 6px; font-size: 0.95rem; }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="index.html" class="navbar-brand">
+      <div class="logo-icon">&#9632;</div>
+      US Qaris Database
+    </a>
+    <ul class="navbar-nav">
+      <li><a href="index.html">All States</a></li>
+      <li><a href="states/new-york.html">New York</a></li>
+      <li><a href="chain-esmail-essack.html" class="active">Chain of Transmission</a></li>
+    </ul>
+  </nav>
+
+  <div class="breadcrumb">
+    <div class="container">
+      <div class="breadcrumb-inner">
+        <a href="index.html">States</a>
+        <span class="sep">›</span>
+        <a href="states/new-york.html">New York</a>
+        <span class="sep">›</span>
+        <span>Chain of Transmission — Qārī Esmail Essack</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="chain-hero">
+    <p style="color:var(--gold);font-size:0.85rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px;">Silsilah — سِلْسِلَة</p>
+    <h1>Chain of Transmission</h1>
+    <div class="gold-divider"></div>
+    <div style="font-size:1.3rem;font-weight:700;margin-bottom:6px;">Qārī Esmail Essack</div>
+    <p class="subtitle">The unbroken chain of Quranic transmission connecting back to the Prophet Muhammad ﷺ</p>
+  </div>
+
+  <main>
+    <section class="chain-section">
+      <div class="container">
+
+        <div class="coming-soon-box">
+          <div class="icon">&#9749;</div>
+          <h2>Full Details Coming Soon</h2>
+          <p>The complete chain of transmission (silsilah) for Qārī Esmail Essack is being documented and verified. Inshallah, the full sanad with all transmitters will be published here soon.</p>
+        </div>
+
+        <div class="chain-wrapper">
+
+          <!-- Source -->
+          <div class="chain-node highlight">
+            <div class="node-label">Source of Revelation</div>
+            <div class="node-name">Sayyiduna Jibrīl &#1593;&#1604;&#1610;&#1607; &#1575;&#1604;&#1587;&#1604;&#1575;&#1605;</div>
+          </div>
+
+          <div class="chain-connector">
+            <div class="line"></div>
+            <div class="badge">Wahy — Divine Revelation</div>
+            <div class="line"></div>
+            <div class="arrow"></div>
+          </div>
+
+          <!-- Prophet -->
+          <div class="chain-node highlight">
+            <div class="node-label">The Messenger &#65018;</div>
+            <div class="node-name">Prophet Muhammad ﷺ</div>
+            <div class="node-sub">The Quran was revealed to him over 23 years</div>
+          </div>
+
+          <div class="chain-connector">
+            <div class="line"></div>
+            <div class="badge">Hafs 'an 'Asim — transmission chain</div>
+            <div class="line"></div>
+            <div class="arrow"></div>
+          </div>
+
+          <!-- Dots representing chain -->
+          <div class="chain-node coming">
+            <div class="node-label">Transmitters — details to come soon</div>
+            <div class="node-name">Full silsilah being documented...</div>
+          </div>
+
+          <div class="chain-connector">
+            <div class="line"></div>
+            <div class="arrow"></div>
+          </div>
+
+          <div class="chain-dots">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+
+          <div class="chain-connector">
+            <div class="line"></div>
+            <div class="arrow"></div>
+          </div>
+
+          <!-- 'Asim -->
+          <div class="chain-node">
+            <div class="node-label">Imam of Qira'at</div>
+            <div class="node-name">'Āṣim ibn Abī al-Najūd</div>
+            <div class="node-sub">One of the Seven Imams of Qira'at — d. 127 AH</div>
+          </div>
+
+          <div class="chain-connector">
+            <div class="line"></div>
+            <div class="arrow"></div>
+          </div>
+
+          <!-- Hafs -->
+          <div class="chain-node">
+            <div class="node-label">Primary Student</div>
+            <div class="node-name">Ḥafs ibn Sulaymān</div>
+            <div class="node-sub">The riwayah of Hafs — most widely recited today — d. 180 AH</div>
+          </div>
+
+          <div class="chain-connector">
+            <div class="line"></div>
+            <div class="arrow"></div>
+          </div>
+
+          <div class="chain-dots">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+
+          <div class="chain-connector">
+            <div class="line"></div>
+            <div class="badge">Further links — details to come soon</div>
+            <div class="line"></div>
+            <div class="arrow"></div>
+          </div>
+
+          <!-- Esmail Essack -->
+          <div class="chain-node recipient">
+            <div class="node-label">Recipient — New York, USA</div>
+            <div class="node-name">Qārī Esmail Essack</div>
+            <div class="node-sub">Full details of his direct teacher and ijazah to be added soon</div>
+          </div>
+
+        </div>
+
+        <div class="info-note">
+          <strong>&#9432; About the Silsilah</strong>
+          The chain of transmission (silsilah/sanad) is an unbroken line of teachers connecting every Qārī back to the Prophet Muhammad ﷺ. It is the foundation of authenticated Quranic recitation. Full details for this chain are being compiled and will be updated here inshallah.
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p><strong>US Qaris Database</strong> &mdash; Preserving and celebrating Quranic scholarship in America</p>
+    <p style="margin-top:8px;font-size:0.8rem;">For additions or corrections, please reach out to your local Islamic center.</p>
+  </footer>
+
+</body>
+</html>
