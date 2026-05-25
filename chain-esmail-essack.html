@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Chain of Transmission — Qārī Esmail Essack</title>
+  <title>Chains of Transmission — US Qaris Database</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Lato:wght@400;500;700;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/styles.css" />
@@ -110,10 +110,133 @@
     .c-conn .line { width: 2px; height: 18px; background: var(--border); }
     .c-conn .arrow { width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 8px solid var(--border); }
 
-    /* thin connector macro */
+    /* ── Selector grid ── */
+    .selector-section {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      padding: 32px 0;
+    }
+
+    .selector-label {
+      text-align: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+
+    .selector-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 14px;
+    }
+
+    .sel-card {
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: var(--white);
+      position: relative;
+    }
+
+    .sel-card.active {
+      border-color: var(--green-mid);
+      background: var(--green-light);
+    }
+
+    .sel-card.active::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 9px solid transparent;
+      border-right: 9px solid transparent;
+      border-top: 10px solid var(--green-mid);
+    }
+
+    .sel-card.coming {
+      opacity: 0.6;
+      cursor: default;
+    }
+
+    .sel-card .sel-name {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--text-dark);
+      line-height: 1.3;
+      margin-bottom: 8px;
+    }
+
+    .sel-card.coming .sel-name { color: var(--text-muted); }
+
+    .sel-badge {
+      display: inline-block;
+      border-radius: 20px;
+      padding: 3px 10px;
+      font-size: 0.72rem;
+      font-weight: 600;
+    }
+
+    .sel-badge.ready {
+      background: var(--green-mid);
+      color: var(--white);
+    }
+
+    .sel-badge.soon {
+      background: var(--border);
+      color: var(--text-muted);
+    }
+
+    /* ── Chain display ── */
+    .chain-display {
+      padding: 48px 0 80px;
+    }
+
+    .chain-title {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+
+    .chain-title h2 {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--green-dark);
+    }
+
+    .chain-title p {
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      margin-top: 6px;
+    }
+
+    /* coming soon panel */
+    .coming-panel {
+      display: none;
+      background: var(--white);
+      border: 1.5px dashed var(--border);
+      border-radius: var(--radius);
+      padding: 48px 32px;
+      text-align: center;
+      max-width: 560px;
+      margin: 0 auto;
+    }
+
+    .coming-panel .cp-icon { font-size: 2.2rem; color: var(--border); margin-bottom: 12px; }
+    .coming-panel h3 { color: var(--text-mid); font-size: 1.1rem; margin-bottom: 6px; }
+    .coming-panel p { color: var(--text-muted); font-size: 0.9rem; }
+
     @media (max-width: 580px) {
       .c-node { padding: 10px 14px; }
       .c-node .en { font-size: 0.84rem; }
+      .selector-grid { grid-template-columns: 1fr 1fr; }
     }
   </style>
 </head>
@@ -145,16 +268,69 @@
 
   <div class="chain-hero">
     <div class="arabic-tag">سِلْسِلَةُ الإِسْنَاد</div>
-    <h1>Chain of Transmission</h1>
+    <h1>Chains of Transmission</h1>
     <div class="gold-divider"></div>
-    <div style="font-size:1.2rem;font-weight:700;">Qārī Esmail Essack</div>
-    <p class="sub">Riwāyat Ḥafs 'an 'Āṣim — connected to the Prophet ﷺ</p>
+    <p class="sub">Select a Qārī below to view their chain of transmission — connected all the way back to the Prophet ﷺ</p>
+  </div>
+
+  <!-- Selector -->
+  <div class="selector-section">
+    <div class="container">
+      <div class="selector-label">Select a Qārī to view their Sanad</div>
+      <div class="selector-grid">
+
+        <div class="sel-card active" onclick="showChain('esmail')">
+          <div class="sel-name">Qārī Esmail Essack</div>
+          <span class="sel-badge ready">Chain Available</span>
+        </div>
+
+        <div class="sel-card coming">
+          <div class="sel-name">Placeholder — Qārī to be added</div>
+          <span class="sel-badge soon">Coming Soon</span>
+        </div>
+
+        <div class="sel-card coming">
+          <div class="sel-name">Placeholder — Qārī to be added</div>
+          <span class="sel-badge soon">Coming Soon</span>
+        </div>
+
+        <div class="sel-card coming">
+          <div class="sel-name">Placeholder — Qārī to be added</div>
+          <span class="sel-badge soon">Coming Soon</span>
+        </div>
+
+        <div class="sel-card coming">
+          <div class="sel-name">Placeholder — Qārī to be added</div>
+          <span class="sel-badge soon">Coming Soon</span>
+        </div>
+
+        <div class="sel-card coming">
+          <div class="sel-name">Placeholder — Qārī to be added</div>
+          <span class="sel-badge soon">Coming Soon</span>
+        </div>
+
+      </div>
+    </div>
   </div>
 
   <main>
-    <section class="chain-section">
+    <div class="chain-display">
       <div class="container">
-        <div class="chain-wrap">
+
+        <!-- Coming soon panel (hidden by default) -->
+        <div class="coming-panel" id="comingPanel">
+          <div class="cp-icon">&#9749;</div>
+          <h3>Chain of Transmission — Coming Soon</h3>
+          <p>This Qārī's sanad is being documented and verified. Inshallah it will be added here soon.</p>
+        </div>
+
+        <!-- Active chain title -->
+        <div class="chain-title" id="chainTitle">
+          <h2>Qārī Esmail Essack</h2>
+          <p>Riwāyat Ḥafs 'an 'Āṣim &mdash; 34 transmitters connected to the Prophet ﷺ</p>
+        </div>
+
+        <div class="chain-wrap" id="chainWrap">
 
           <!-- Allah SWT -->
           <div class="c-row"><div class="c-num gold">&#9733;</div>
@@ -396,10 +572,32 @@
             </div>
           </div>
 
-        </div>
-      </div>
-    </section>
+        </div><!-- end chain-wrap -->
+      </div><!-- end container -->
+    </div><!-- end chain-display -->
   </main>
+
+  <script>
+    function showChain(id) {
+      document.querySelectorAll('.sel-card').forEach(c => c.classList.remove('active'));
+      const clicked = event.currentTarget;
+      clicked.classList.add('active');
+
+      const wrap = document.getElementById('chainWrap');
+      const panel = document.getElementById('comingPanel');
+      const title = document.getElementById('chainTitle');
+
+      if (id === 'esmail') {
+        wrap.style.display = 'flex';
+        panel.style.display = 'none';
+        title.style.display = 'block';
+      } else {
+        wrap.style.display = 'none';
+        panel.style.display = 'block';
+        title.style.display = 'none';
+      }
+    }
+  </script>
 
   <footer>
     <p><strong>US Qaris Database</strong> &mdash; Preserving and celebrating Quranic scholarship in America</p>
