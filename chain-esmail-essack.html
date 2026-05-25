@@ -233,10 +233,94 @@
     .coming-panel h3 { color: var(--text-mid); font-size: 1.1rem; margin-bottom: 6px; }
     .coming-panel p { color: var(--text-muted); font-size: 0.9rem; }
 
+    /* ── Branching fork / merge ── */
+    .c-fork-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      width: 100%;
+    }
+    .c-fork-row .c-fork-spacer { width: 30px; flex-shrink: 0; }
+    .c-fork-row .c-fork-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .fork-stem { width: 2px; height: 14px; background: var(--border); }
+    .fork-hbar { width: 100%; height: 2px; background: var(--border); }
+    .fork-drops {
+      display: flex;
+      width: 100%;
+      justify-content: space-around;
+    }
+    .fork-drop { display: flex; flex-direction: column; align-items: center; }
+    .fork-drop-line { width: 2px; height: 14px; background: var(--border); }
+    .fork-drop-tip {
+      width: 0; height: 0;
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-top: 7px solid var(--border);
+    }
+
+    /* Parallel nodes row */
+    .c-para-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      width: 100%;
+    }
+    .c-para-row .c-para-spacer { width: 30px; flex-shrink: 0; }
+    .c-para-row .c-para-body {
+      flex: 1;
+      display: flex;
+      gap: 8px;
+      align-items: stretch;
+    }
+    .c-para-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .c-para-item .c-node { width: 100%; box-sizing: border-box; flex: 1; }
+
+    /* Merge connector */
+    .c-merge-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      width: 100%;
+    }
+    .c-merge-row .c-merge-spacer { width: 30px; flex-shrink: 0; }
+    .c-merge-row .c-merge-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .merge-rises {
+      display: flex;
+      width: 100%;
+      justify-content: space-around;
+    }
+    .merge-rise { width: 2px; height: 14px; background: var(--border); }
+    .merge-hbar { width: 100%; height: 2px; background: var(--border); }
+    .merge-stem { width: 2px; height: 14px; background: var(--border); }
+    .merge-tip {
+      width: 0; height: 0;
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-top: 8px solid var(--border);
+    }
+
     @media (max-width: 580px) {
       .c-node { padding: 10px 14px; }
       .c-node .en { font-size: 0.84rem; }
       .selector-grid { grid-template-columns: 1fr 1fr; }
+      .c-para-body { gap: 4px; }
+      .c-para-item .c-node { padding: 8px 8px; }
+      .c-para-item .c-node .en { font-size: 0.75rem; }
+      .c-para-item .c-node .ar { font-size: 0.82rem; }
     }
   </style>
 </head>
@@ -369,13 +453,62 @@
               <div class="ar">النبيّ الصّادق الأمين ﷺ</div>
             </div>
           </div>
-          <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
-
-          <!-- 2 -->
-          <div class="c-row"><div class="c-num">2</div>
-            <div class="c-node"><div class="en">'Alī ibn Abī Ṭālib ؓ</div><div class="ar">علي بن أبي طالب رضي الله عنه</div></div>
+          <!-- Fork: Prophet → [Ali, Zayd, Ubayy] -->
+          <div class="c-fork-row">
+            <div class="c-fork-spacer"></div>
+            <div class="c-fork-body">
+              <div class="fork-stem"></div>
+              <div class="fork-hbar"></div>
+              <div class="fork-drops">
+                <div class="fork-drop"><div class="fork-drop-line"></div><div class="fork-drop-tip"></div></div>
+                <div class="fork-drop"><div class="fork-drop-line"></div><div class="fork-drop-tip"></div></div>
+                <div class="fork-drop"><div class="fork-drop-line"></div><div class="fork-drop-tip"></div></div>
+              </div>
+            </div>
           </div>
-          <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
+
+          <!-- 2 · Three Companions in parallel -->
+          <div class="c-para-row">
+            <div class="c-para-spacer"></div>
+            <div class="c-para-body">
+              <div class="c-para-item">
+                <div class="c-node">
+                  <div class="label">2 · Companion</div>
+                  <div class="en">'Alī ibn Abī Ṭālib ؓ</div>
+                  <div class="ar">علي بن أبي طالب</div>
+                </div>
+              </div>
+              <div class="c-para-item">
+                <div class="c-node">
+                  <div class="label">2b · Companion</div>
+                  <div class="en">Zayd ibn Thābit ؓ</div>
+                  <div class="ar">زيد بن ثابت</div>
+                </div>
+              </div>
+              <div class="c-para-item">
+                <div class="c-node">
+                  <div class="label">2c · Companion</div>
+                  <div class="en">Ubayy ibn Ka'b ؓ</div>
+                  <div class="ar">أُبَيّ بن كعب</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Merge: [Ali, Zayd, Ubayy] → Sulami -->
+          <div class="c-merge-row">
+            <div class="c-merge-spacer"></div>
+            <div class="c-merge-body">
+              <div class="merge-rises">
+                <div class="merge-rise"></div>
+                <div class="merge-rise"></div>
+                <div class="merge-rise"></div>
+              </div>
+              <div class="merge-hbar"></div>
+              <div class="merge-stem"></div>
+              <div class="merge-tip"></div>
+            </div>
+          </div>
 
           <!-- 3 -->
           <div class="c-row"><div class="c-num">3</div>
@@ -453,13 +586,62 @@
           <div class="c-row"><div class="c-num">15</div>
             <div class="c-node"><div class="en">Al-Taqī al-Ṣā'igh</div><div class="ar">التقي الصائغ</div></div>
           </div>
-          <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
-
-          <!-- 16 -->
-          <div class="c-row"><div class="c-num">16</div>
-            <div class="c-node"><div class="en">Ibn al-Jundī</div><div class="ar">ابن الجندي</div></div>
+          <!-- Fork: Al-Taqi → [Ibn Baghdadi, Ibn Jundi, Ibn Sa'igh] -->
+          <div class="c-fork-row">
+            <div class="c-fork-spacer"></div>
+            <div class="c-fork-body">
+              <div class="fork-stem"></div>
+              <div class="fork-hbar"></div>
+              <div class="fork-drops">
+                <div class="fork-drop"><div class="fork-drop-line"></div><div class="fork-drop-tip"></div></div>
+                <div class="fork-drop"><div class="fork-drop-line"></div><div class="fork-drop-tip"></div></div>
+                <div class="fork-drop"><div class="fork-drop-line"></div><div class="fork-drop-tip"></div></div>
+              </div>
+            </div>
           </div>
-          <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
+
+          <!-- 16 · Three students of Al-Taqi in parallel -->
+          <div class="c-para-row">
+            <div class="c-para-spacer"></div>
+            <div class="c-para-body">
+              <div class="c-para-item">
+                <div class="c-node">
+                  <div class="label">16a</div>
+                  <div class="en">Ibn al-Baghdādī</div>
+                  <div class="ar">ابن البغدادي</div>
+                </div>
+              </div>
+              <div class="c-para-item">
+                <div class="c-node">
+                  <div class="label">16</div>
+                  <div class="en">Ibn al-Jundī</div>
+                  <div class="ar">ابن الجندي</div>
+                </div>
+              </div>
+              <div class="c-para-item">
+                <div class="c-node">
+                  <div class="label">16b</div>
+                  <div class="en">Ibn al-Ṣā'igh</div>
+                  <div class="ar">ابن الصائغ</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Merge: [Ibn Baghdadi, Ibn Jundi, Ibn Sa'igh] → Ibn Jazari -->
+          <div class="c-merge-row">
+            <div class="c-merge-spacer"></div>
+            <div class="c-merge-body">
+              <div class="merge-rises">
+                <div class="merge-rise"></div>
+                <div class="merge-rise"></div>
+                <div class="merge-rise"></div>
+              </div>
+              <div class="merge-hbar"></div>
+              <div class="merge-stem"></div>
+              <div class="merge-tip"></div>
+            </div>
+          </div>
 
           <!-- 17 -->
           <div class="c-row"><div class="c-num">17</div>
