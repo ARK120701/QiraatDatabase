@@ -281,6 +281,21 @@
       color: var(--green-mid);
     }
 
+    /* ── Alt path nodes (dashed, offset style) ── */
+    .c-node.alt {
+      border-style: dashed;
+      border-color: #7a9ccf;
+      background: #f2f6ff;
+    }
+    .c-node.alt .label { color: #5a7ab0; }
+    .c-para-item.alt-col { justify-content: space-around; }
+    .c-para-item.alt-col .c-node { flex: 0 0 auto; }
+    .c-para-item.pass-col { align-items: center; justify-content: center; }
+    .pass-line { flex: 1; width: 2px; background: var(--border); min-height: 60px; }
+    .c-mini-conn { display: flex; flex-direction: column; align-items: center; }
+    .c-mini-line { width: 2px; height: 12px; background: var(--border); }
+    .c-mini-tip { width: 0; height: 0; border-left: 4px solid transparent; border-right: 4px solid transparent; border-top: 6px solid var(--border); }
+
     /* ── Branching fork / merge ── */
     .c-fork-row {
       display: flex;
@@ -459,7 +474,7 @@
         <!-- Active chain title -->
         <div class="chain-title" id="chainTitle">
           <h2>Qārī Esmail Essack</h2>
-          <p>Riwāyat Ḥafs 'an 'Āṣim &mdash; 35 transmitters connected to the Prophet ﷺ</p>
+          <p>Riwāyat Ḥafs 'an 'Āṣim &mdash; 34 transmitters from the Ṣaḥābah to Qārī Esmail Essack</p>
         </div>
 
         <div class="chain-wrap" id="chainWrap">
@@ -495,7 +510,7 @@
           <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
 
           <!-- 1 -->
-          <div class="c-row"><div class="c-num gold">1</div>
+          <div class="c-row"><div class="c-num gold">&#9670;</div>
             <div class="c-node prophet"><div class="label">The Final Messenger</div>
               <div class="en">Prophet Muhammad ﷺ</div>
               <div class="ar">النبيّ الصّادق الأمين ﷺ</div>
@@ -521,18 +536,21 @@
             <div class="c-para-body">
               <div class="c-para-item">
                 <div class="c-node">
+                  <div class="label">1 · Ṣaḥābī</div>
                   <div class="en">'Alī ibn Abī Ṭālib ؓ</div>
                   <div class="ar">علي بن أبي طالب</div>
                 </div>
               </div>
               <div class="c-para-item">
                 <div class="c-node">
+                  <div class="label">1 · Ṣaḥābī</div>
                   <div class="en">Zayd ibn Thābit ؓ</div>
                   <div class="ar">زيد بن ثابت</div>
                 </div>
               </div>
               <div class="c-para-item">
                 <div class="c-node">
+                  <div class="label">1 · Ṣaḥābī</div>
                   <div class="en">Ubayy ibn Ka'b ؓ</div>
                   <div class="ar">أُبَيّ بن كعب</div>
                 </div>
@@ -556,79 +574,79 @@
           </div>
 
           <!-- 3 -->
-          <div class="c-row"><div class="c-num">3</div>
+          <div class="c-row"><div class="c-num">2</div>
             <div class="c-node"><div class="en">'Abd al-Raḥmān al-Sulamī</div><div class="ar">عبد الرحمن السلمي</div></div>
           </div>
           <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
 
           <!-- 4 -->
-          <div class="c-row"><div class="c-num">4</div>
+          <div class="c-row"><div class="c-num">3</div>
             <div class="c-node"><div class="en">'Āṣim ibn Abī al-Najūd</div><div class="ar">عاصم بن أبي النجود</div></div>
           </div>
           <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
 
           <!-- 5 -->
-          <div class="c-row"><div class="c-num">5</div>
+          <div class="c-row"><div class="c-num">4</div>
             <div class="c-node"><div class="en">Ḥafs ibn Sulaymān</div><div class="ar">حفص بن سليمان</div></div>
           </div>
           <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
 
           <!-- 6 -->
-          <div class="c-row"><div class="c-num">6</div>
+          <div class="c-row"><div class="c-num">5</div>
             <div class="c-node"><div class="en">'Ubayd ibn Ṣabbāḥ</div><div class="ar">عبيد بن صباح</div></div>
           </div>
           <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
 
           <!-- 7 -->
-          <div class="c-row"><div class="c-num">7</div>
+          <div class="c-row"><div class="c-num">6</div>
             <div class="c-node"><div class="en">Aḥmad ibn Sahl al-Ushnānī</div><div class="ar">أحمد بن سهل الأشناني</div></div>
           </div>
           <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
 
           <!-- 8 -->
-          <div class="c-row"><div class="c-num">8</div>
+          <div class="c-row"><div class="c-num">7</div>
             <div class="c-node"><div class="en">Abū al-Ḥasan al-Hāshimī</div><div class="ar">أبو الحسن الهاشمي</div></div>
           </div>
           <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
 
           <!-- 9 -->
-          <div class="c-row"><div class="c-num">9</div>
+          <div class="c-row"><div class="c-num">8</div>
             <div class="c-node"><div class="en">Ṭāhir ibn Ghalbūn</div><div class="ar">طاهر بن غلبون</div></div>
           </div>
           <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
 
           <!-- 10 -->
-          <div class="c-row"><div class="c-num">10</div>
+          <div class="c-row"><div class="c-num">9</div>
             <div class="c-node"><div class="en">Abū 'Amr al-Dānī</div><div class="ar">أبو عمرو الداني</div></div>
           </div>
           <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
 
           <!-- 11 -->
-          <div class="c-row"><div class="c-num">11</div>
+          <div class="c-row"><div class="c-num">10</div>
             <div class="c-node"><div class="en">Sulaymān ibn Najāḥ</div><div class="ar">سليمان بن نجاح</div></div>
           </div>
           <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
 
           <!-- 12 -->
-          <div class="c-row"><div class="c-num">12</div>
+          <div class="c-row"><div class="c-num">11</div>
             <div class="c-node"><div class="en">'Alī ibn Hudhayl al-Balansī</div><div class="ar">علي بن هذيل البلنسي</div></div>
           </div>
           <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
 
           <!-- 13 -->
-          <div class="c-row"><div class="c-num">13</div>
+          <div class="c-row"><div class="c-num">12</div>
             <div class="c-node"><div class="en">Imām al-Shāṭibī</div><div class="ar">الإمام الشاطبي</div></div>
           </div>
           <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
 
           <!-- 14 -->
-          <div class="c-row"><div class="c-num">14</div>
+          <div class="c-row"><div class="c-num">13</div>
             <div class="c-node"><div class="en">Kamāl al-Dīn 'Alī ibn Shujā'</div><div class="ar">كمال الدين علي بن شجاع</div></div>
           </div>
           <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
 
           <!-- 15 -->
-          <div class="c-row"><div class="c-num">15</div>
+          <div class="c-row"><div class="c-num">14</div>
             <div class="c-node"><div class="en">Al-Taqī al-Ṣā'igh</div><div class="ar">التقي الصائغ</div></div>
           </div>
           <!-- Fork: Al-Taqi → [Ibn Baghdadi, Ibn Jundi, Ibn Sa'igh] -->
@@ -651,21 +669,21 @@
             <div class="c-para-body">
               <div class="c-para-item">
                 <div class="c-node">
-                  <div class="label">16a</div>
+                  <div class="label">15a</div>
                   <div class="en">Ibn al-Baghdādī</div>
                   <div class="ar">ابن البغدادي</div>
                 </div>
               </div>
               <div class="c-para-item">
                 <div class="c-node">
-                  <div class="label">16</div>
+                  <div class="label">15</div>
                   <div class="en">Ibn al-Jundī</div>
                   <div class="ar">ابن الجندي</div>
                 </div>
               </div>
               <div class="c-para-item">
                 <div class="c-node">
-                  <div class="label">16b</div>
+                  <div class="label">15b</div>
                   <div class="en">Ibn al-Ṣā'igh</div>
                   <div class="ar">ابن الصائغ</div>
                 </div>
@@ -689,115 +707,236 @@
           </div>
 
           <!-- 17 -->
-          <div class="c-row"><div class="c-num">17</div>
+          <div class="c-row"><div class="c-num">16</div>
             <div class="c-node"><div class="en">Al-Imām Ibn al-Jazarī</div><div class="ar">الإمام ابن الجزري</div></div>
           </div>
           <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
 
           <!-- 18 -->
-          <div class="c-row"><div class="c-num">18</div>
+          <div class="c-row"><div class="c-num">17</div>
             <div class="c-node"><div class="en">Aḥmad ibn As'ad al-Umyūṭī</div><div class="ar">أحمد بن أسعد الأميوطي</div></div>
           </div>
           <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
 
           <!-- 19 -->
-          <div class="c-row"><div class="c-num">19</div>
+          <div class="c-row"><div class="c-num">18</div>
             <div class="c-node"><div class="en">Muḥammad al-Ṣamādīsī</div><div class="ar">محمد الصمادیسي</div></div>
           </div>
-          <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
+          <!-- Fork: al-Ṣamādīsī → [19 Abū al-Ḥaram | alt: al-Sunbaṭī → Ibn Ghānim] → 20 al-Yamānī -->
+          <div class="c-fork-row">
+            <div class="c-fork-spacer"></div>
+            <div class="c-fork-body">
+              <div class="fork-stem"></div>
+              <div class="fork-hbar"></div>
+              <div class="fork-drops">
+                <div class="fork-drop"><div class="fork-drop-line"></div><div class="fork-drop-tip"></div></div>
+                <div class="fork-drop"><div class="fork-drop-line"></div><div class="fork-drop-tip"></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="c-para-row">
+            <div class="c-para-spacer"></div>
+            <div class="c-para-body">
+              <div class="c-para-item">
+                <div class="c-node">
+                  <div class="label">19</div>
+                  <div class="en">Abū al-Ḥaram al-Madanī</div>
+                  <div class="ar">أبو الحرم المدني</div>
+                </div>
+              </div>
+              <div class="c-para-item alt-col">
+                <div class="c-node alt">
+                  <div class="label">● alt — also via al-Ṣamādīsī (18)</div>
+                  <div class="en">al-Sharaf ʿAbd al-Ḥaqq al-Sunbaṭī</div>
+                  <div class="ar">الشرف عبد الحق الصنبطي</div>
+                </div>
+                <div class="c-mini-conn"><div class="c-mini-line"></div><div class="c-mini-tip"></div></div>
+                <div class="c-node alt">
+                  <div class="label">●</div>
+                  <div class="en">Ibn Ghānim al-Maqdisī</div>
+                  <div class="ar">ابن غانم المقدسي</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="c-merge-row">
+            <div class="c-merge-spacer"></div>
+            <div class="c-merge-body">
+              <div class="merge-rises"><div class="merge-rise"></div><div class="merge-rise"></div></div>
+              <div class="merge-hbar"></div><div class="merge-stem"></div><div class="merge-tip"></div>
+            </div>
+          </div>
 
           <!-- 20 -->
           <div class="c-row"><div class="c-num">20</div>
-            <div class="c-node"><div class="en">Abū al-Ḥaram al-Madanī</div><div class="ar">أبو الحرم المدني</div></div>
+            <div class="c-node"><div class="en">'Abd al-Raḥmān al-Yamānī</div><div class="ar">عبد الرحمن اليماني</div></div>
           </div>
           <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
 
           <!-- 21 -->
           <div class="c-row"><div class="c-num">21</div>
-            <div class="c-node"><div class="en">'Abd al-Raḥmān al-Yamānī</div><div class="ar">عبد الرحمن اليماني</div></div>
-          </div>
-          <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
-
-          <!-- 22 -->
-          <div class="c-row"><div class="c-num">22</div>
             <div class="c-node"><div class="en">Muḥammad al-Baqārī</div><div class="ar">محمد البقاري</div></div>
           </div>
-          <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
+
+          <!-- Fork: al-Baqārī → [22 Aḥmad al-Baqārī | alt: al-Shabrāmalīsī→al-Manṣūrī→Yūsuf Afandī] → 23 al-Ujhūrī -->
+          <div class="c-fork-row">
+            <div class="c-fork-spacer"></div>
+            <div class="c-fork-body">
+              <div class="fork-stem"></div>
+              <div class="fork-hbar"></div>
+              <div class="fork-drops">
+                <div class="fork-drop"><div class="fork-drop-line"></div><div class="fork-drop-tip"></div></div>
+                <div class="fork-drop"><div class="fork-drop-line"></div><div class="fork-drop-tip"></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="c-para-row">
+            <div class="c-para-spacer"></div>
+            <div class="c-para-body">
+              <div class="c-para-item">
+                <div class="c-node">
+                  <div class="label">22</div>
+                  <div class="en">Aḥmad al-Baqārī</div>
+                  <div class="ar">أحمد البقاري</div>
+                </div>
+              </div>
+              <div class="c-para-item alt-col">
+                <div class="c-node alt">
+                  <div class="label">● alt — from al-Yamānī (20)</div>
+                  <div class="en">ʿAlī al-Shabrāmalīsī</div>
+                  <div class="ar">علي الشبراملسي</div>
+                </div>
+                <div class="c-mini-conn"><div class="c-mini-line"></div><div class="c-mini-tip"></div></div>
+                <div class="c-node alt">
+                  <div class="label">● also from al-Baqārī (21)</div>
+                  <div class="en">ʿAlī al-Manṣūrī</div>
+                  <div class="ar">علي المنصوري</div>
+                </div>
+                <div class="c-mini-conn"><div class="c-mini-line"></div><div class="c-mini-tip"></div></div>
+                <div class="c-node alt">
+                  <div class="label">●</div>
+                  <div class="en">Yūsuf Afandī</div>
+                  <div class="ar">يوسف أفندي</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="c-merge-row">
+            <div class="c-merge-spacer"></div>
+            <div class="c-merge-body">
+              <div class="merge-rises"><div class="merge-rise"></div><div class="merge-rise"></div></div>
+              <div class="merge-hbar"></div><div class="merge-stem"></div><div class="merge-tip"></div>
+            </div>
+          </div>
 
           <!-- 23 -->
           <div class="c-row"><div class="c-num">23</div>
-            <div class="c-node"><div class="en">Aḥmad al-Baqārī</div><div class="ar">أحمد البقاري</div></div>
+            <div class="c-node"><div class="en">'Abd al-Raḥmān al-Ujhūrī</div><div class="ar">عبد الرحمن الأجهوري</div></div>
           </div>
-          <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
+
+          <!-- Fork: al-Ujhūrī → [pass-through | alt: al-Naqrī+al-Baqārī(21)→al-Uzbakāwī→ʿAlī al-Badrī] → 24 al-Ubaydī -->
+          <div class="c-fork-row">
+            <div class="c-fork-spacer"></div>
+            <div class="c-fork-body">
+              <div class="fork-stem"></div>
+              <div class="fork-hbar"></div>
+              <div class="fork-drops">
+                <div class="fork-drop"><div class="fork-drop-line"></div><div class="fork-drop-tip"></div></div>
+                <div class="fork-drop"><div class="fork-drop-line"></div><div class="fork-drop-tip"></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="c-para-row">
+            <div class="c-para-spacer"></div>
+            <div class="c-para-body">
+              <div class="c-para-item pass-col">
+                <div class="pass-line"></div>
+              </div>
+              <div class="c-para-item alt-col">
+                <div class="c-node alt">
+                  <div class="label">● alt — from al-Baqārī (21)</div>
+                  <div class="en">Muḥammad al-Uzbakāwī</div>
+                  <div class="ar">محمد الأزبكاوي</div>
+                </div>
+                <div class="c-mini-conn"><div class="c-mini-line"></div><div class="c-mini-tip"></div></div>
+                <div class="c-node alt">
+                  <div class="label">● also from Aḥmad al-Naqrī</div>
+                  <div class="en">ʿAlī al-Badrī</div>
+                  <div class="ar">علي البدري</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="c-merge-row">
+            <div class="c-merge-spacer"></div>
+            <div class="c-merge-body">
+              <div class="merge-rises"><div class="merge-rise"></div><div class="merge-rise"></div></div>
+              <div class="merge-hbar"></div><div class="merge-stem"></div><div class="merge-tip"></div>
+            </div>
+          </div>
 
           <!-- 24 -->
           <div class="c-row"><div class="c-num">24</div>
-            <div class="c-node"><div class="en">'Abd al-Raḥmān al-Ujhūrī</div><div class="ar">عبد الرحمن الأجهوري</div></div>
-          </div>
-          <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
-
-          <!-- 25 -->
-          <div class="c-row"><div class="c-num">25</div>
             <div class="c-node"><div class="en">Ibrāhīm al-'Ubaydī</div><div class="ar">إبراهيم العبيدي</div></div>
           </div>
           <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
 
           <!-- 26 -->
-          <div class="c-row"><div class="c-num">26</div>
+          <div class="c-row"><div class="c-num">25</div>
             <div class="c-node"><div class="en">Aḥmad Salamūnah</div><div class="ar">أحمد سلمونة</div></div>
           </div>
           <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
 
           <!-- 27 -->
-          <div class="c-row"><div class="c-num">27</div>
+          <div class="c-row"><div class="c-num">26</div>
             <div class="c-node"><div class="en">Aḥmad al-Durrī al-Tihāmī</div><div class="ar">أحمد الدري التهامي</div></div>
           </div>
           <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
 
           <!-- 28 -->
-          <div class="c-row"><div class="c-num">28</div>
+          <div class="c-row"><div class="c-num">27</div>
             <div class="c-node"><div class="en">Muḥammad Aḥmad al-Mutawwallī</div><div class="ar">محمد أحمد المتولي</div></div>
           </div>
           <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
 
           <!-- 29 -->
-          <div class="c-row"><div class="c-num">29</div>
+          <div class="c-row"><div class="c-num">28</div>
             <div class="c-node"><div class="en">Ḥasan al-Jurayshī al-Kabīr</div><div class="ar">حسن الجريشي الكبير</div></div>
           </div>
           <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
 
           <!-- 30 -->
-          <div class="c-row"><div class="c-num">30</div>
+          <div class="c-row"><div class="c-num">29</div>
             <div class="c-node"><div class="en">Ibrāhīm Sa'd al-Miṣrī</div><div class="ar">إبراهيم سعد المصري</div></div>
           </div>
           <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
 
           <!-- 31 -->
-          <div class="c-row"><div class="c-num">31</div>
+          <div class="c-row"><div class="c-num">30</div>
             <div class="c-node"><div class="en">'Abd Allāh al-Makkī</div><div class="ar">عبد الله المكي</div></div>
           </div>
           <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
 
           <!-- 32 -->
-          <div class="c-row"><div class="c-num">32</div>
+          <div class="c-row"><div class="c-num">31</div>
             <div class="c-node"><div class="en">'Abd al-Raḥmān al-Makkī</div><div class="ar">عبد الرحمن المكي</div></div>
           </div>
           <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
 
           <!-- 33 -->
-          <div class="c-row"><div class="c-num">33</div>
+          <div class="c-row"><div class="c-num">32</div>
             <div class="c-node"><div class="en">Muḥammad Kāmil bin Ni'mat Alī Khān — al-Afḍal Kidhī</div><div class="ar">محمد كامل بن نعمت علي خان — الأفضل كدهي</div></div>
           </div>
           <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
 
           <!-- 34 -->
-          <div class="c-row"><div class="c-num">34</div>
+          <div class="c-row"><div class="c-num">33</div>
             <div class="c-node"><div class="en">Aḥmadullāh al-Karīm al-Qāsimī bin Ma'ārif billāh al-Karīm</div><div class="ar">أحمد الله الكريم القاسمي بن معارف بالله الكريم</div></div>
           </div>
           <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
 
           <!-- 35 — Recipient -->
-          <div class="c-row"><div class="c-num teal">35</div>
+          <div class="c-row"><div class="c-num teal">34</div>
             <div class="c-node recipient">
               <div class="label">Recipient</div>
               <div class="en">Qārī Esmail Essack (Ismā'īl bin Muḥammad Isḥāq)</div>
@@ -809,189 +948,6 @@
       </div><!-- end container -->
     </div><!-- end chain-display -->
   </main>
-
-  <!-- ═══ Additional Sanad Connections ═══ -->
-  <section class="add-paths-section">
-    <div class="container">
-      <div class="add-paths-header">
-        <h2>Additional Sanad Connections</h2>
-        <p>Alternate teacher paths that also connect into the main chain above</p>
-      </div>
-
-      <!-- ─── Path A: via Ibn Ghānim → al-Yamānī (21) ─── -->
-      <div class="add-path-entry">
-        <div class="add-path-label">
-          <span>&#9670; ʿAbd al-Raḥmān al-Yamānī — alternate path via Ibn Ghānim al-Maqdisī</span>
-        </div>
-        <div class="chain-wrap">
-          <!-- Two sources (in main chain) -->
-          <div class="c-para-row">
-            <div class="c-para-spacer"></div>
-            <div class="c-para-body">
-              <div class="c-para-item">
-                <div class="c-node ref">
-                  <div class="label">= Node 19 in main chain</div>
-                  <div class="en">Muḥammad al-Ṣamādīsī</div>
-                  <div class="ar">محمد الصمادیسي</div>
-                </div>
-              </div>
-              <div class="c-para-item">
-                <div class="c-node">
-                  <div class="en">al-Sharaf ʿAbd al-Ḥaqq al-Sunbaṭī</div>
-                  <div class="ar">الشرف عبد الحق الصنبطي</div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- Merge → Ibn Ghanim -->
-          <div class="c-merge-row">
-            <div class="c-merge-spacer"></div>
-            <div class="c-merge-body">
-              <div class="merge-rises">
-                <div class="merge-rise"></div>
-                <div class="merge-rise"></div>
-              </div>
-              <div class="merge-hbar"></div>
-              <div class="merge-stem"></div>
-              <div class="merge-tip"></div>
-            </div>
-          </div>
-          <div class="c-row"><div class="c-num">&#9670;</div>
-            <div class="c-node"><div class="en">Ibn Ghānim al-Maqdisī</div><div class="ar">ابن غانم المقدسي</div></div>
-          </div>
-          <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
-          <div class="c-row"><div class="c-num teal">&#8594;</div>
-            <div class="c-node ref">
-              <div class="label">= Node 21 in main chain</div>
-              <div class="en">ʿAbd al-Raḥmān al-Yamānī</div>
-              <div class="ar">عبد الرحمن اليماني</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ─── Path B: via Yūsuf Afandī → al-Ujhūrī (24) ─── -->
-      <div class="add-path-entry">
-        <div class="add-path-label">
-          <span>&#9670; ʿAbd al-Raḥmān al-Ujhūrī — alternate path via Yūsuf Afandī</span>
-        </div>
-        <div class="chain-wrap">
-          <!-- Two sources feeding Ali al-Mansuri -->
-          <div class="c-para-row">
-            <div class="c-para-spacer"></div>
-            <div class="c-para-body">
-              <div class="c-para-item">
-                <div class="c-node ref">
-                  <div class="label">= Node 21 in main chain</div>
-                  <div class="en">ʿAbd al-Raḥmān al-Yamānī</div>
-                  <div class="ar">عبد الرحمن اليماني</div>
-                </div>
-              </div>
-              <div class="c-para-item">
-                <div class="c-node ref">
-                  <div class="label">= Node 22 in main chain</div>
-                  <div class="en">Muḥammad al-Baqārī</div>
-                  <div class="ar">محمد البقاري</div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- Merge → Ali al-Shabraamalisi / Ali al-Mansuri fork -->
-          <div class="c-merge-row">
-            <div class="c-merge-spacer"></div>
-            <div class="c-merge-body">
-              <div class="merge-rises">
-                <div class="merge-rise"></div>
-                <div class="merge-rise"></div>
-              </div>
-              <div class="merge-hbar"></div>
-              <div class="merge-stem"></div>
-              <div class="merge-tip"></div>
-            </div>
-          </div>
-          <!-- Note: al-Yamani → Ali al-Shabraamalisi; al-Baqari → directly to Ali al-Mansuri -->
-          <!-- Show Ali al-Shabraamalisi as intermediate under al-Yamani side -->
-          <div class="c-row"><div class="c-num">&#9670;</div>
-            <div class="c-node"><div class="en">ʿAlī al-Shabrāmalīsī</div><div class="ar">علي الشبراملسي</div></div>
-          </div>
-          <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
-          <div class="c-row"><div class="c-num">&#9670;</div>
-            <div class="c-node"><div class="en">ʿAlī al-Manṣūrī</div><div class="ar">علي المنصوري</div></div>
-          </div>
-          <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
-          <div class="c-row"><div class="c-num">&#9670;</div>
-            <div class="c-node"><div class="en">Yūsuf Afandī</div><div class="ar">يوسف أفندي</div></div>
-          </div>
-          <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
-          <div class="c-row"><div class="c-num teal">&#8594;</div>
-            <div class="c-node ref">
-              <div class="label">= Node 24 in main chain</div>
-              <div class="en">ʿAbd al-Raḥmān al-Ujhūrī</div>
-              <div class="ar">عبد الرحمن الأجهوري</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ─── Path C: via ʿAlī al-Badrī → Ibrāhīm al-ʿUbaydī (25) ─── -->
-      <div class="add-path-entry">
-        <div class="add-path-label">
-          <span>&#9670; Ibrāhīm al-ʿUbaydī — alternate path via ʿAlī al-Badrī</span>
-        </div>
-        <div class="chain-wrap">
-          <!-- Two sources feeding Ali al-Badri -->
-          <div class="c-para-row">
-            <div class="c-para-spacer"></div>
-            <div class="c-para-body">
-              <div class="c-para-item">
-                <div class="c-node">
-                  <div class="en">Aḥmad al-Naqrī</div>
-                  <div class="ar">أحمد النقري</div>
-                </div>
-              </div>
-              <div class="c-para-item">
-                <div class="c-node ref">
-                  <div class="label">= Node 22 in main chain</div>
-                  <div class="en">Muḥammad al-Baqārī</div>
-                  <div class="ar">محمد البقاري</div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- Right side: Baqari → Uzbakaawi before merging -->
-          <div class="c-merge-row">
-            <div class="c-merge-spacer"></div>
-            <div class="c-merge-body">
-              <div class="merge-rises">
-                <div class="merge-rise"></div>
-                <div class="merge-rise"></div>
-              </div>
-              <div class="merge-hbar"></div>
-              <div class="merge-stem"></div>
-              <div class="merge-tip"></div>
-            </div>
-          </div>
-          <!-- Note: Baqari → Uzbakaawi → Ali al-Badri; Naqri → directly to Ali al-Badri -->
-          <div class="c-row"><div class="c-num">&#9670;</div>
-            <div class="c-node"><div class="en">Muḥammad al-Uzbakāwī</div><div class="ar">محمد الأزبكاوي</div></div>
-          </div>
-          <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
-          <div class="c-row"><div class="c-num">&#9670;</div>
-            <div class="c-node"><div class="en">ʿAlī al-Badrī</div><div class="ar">علي البدري</div></div>
-          </div>
-          <div class="c-conn-row"><div class="spacer"></div><div class="c-conn"><div class="line"></div><div class="arrow"></div></div></div>
-          <div class="c-row"><div class="c-num teal">&#8594;</div>
-            <div class="c-node ref">
-              <div class="label">= Node 25 in main chain</div>
-              <div class="en">Ibrāhīm al-ʿUbaydī</div>
-              <div class="ar">إبراهيم العبيدي</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div><!-- end container -->
-  </section>
 
   <script>
     function showChain(id) {
