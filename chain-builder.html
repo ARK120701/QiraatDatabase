@@ -238,7 +238,7 @@
       <li><a href="index.html">All States</a></li>
       <li><a href="states/new-york.html">New York</a></li>
       <li><a href="chain-esmail-essack.html">Chains</a></li>
-      <li><a href="chain-builder.html" class="active">Build a Chain</a></li>
+      <li><a href="chain-builder.html" class="active">Chain Builder</a></li>
     </ul>
   </nav>
 
@@ -311,6 +311,11 @@
   </footer>
 
   <script>
+    // Auth guard — redirect to login if not authenticated
+    if (sessionStorage.getItem('admin_auth') !== 'granted') {
+      window.location.replace('admin-login.html');
+    }
+
     const STORAGE_KEY = 'usqaris_chains_v1';
 
     function escHtml(s) {
