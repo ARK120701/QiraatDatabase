@@ -324,12 +324,11 @@
 
           <div class="builder-field">
             <label>Names (one per line, top to bottom)</label>
-            <textarea id="inputNames" placeholder="Allāh ﷻ&#10;Al-Lawḥ al-Maḥfūẓ&#10;Jibrīl عليه السلام&#10;Prophet Muhammad ﷺ&#10;...&#10;Recipient Name"></textarea>
+            <textarea id="inputNames" placeholder="'Alī ibn Abī Ṭālib&#10;'Abd al-Raḥmān al-Sulamī&#10;...&#10;Recipient Name"></textarea>
             <div class="builder-hint">
-              • One name per line, source first, recipient last<br>
-              • "Allah / ﷻ", "Lawh / Mahfuz", "Jibreel" → divine gold style<br>
-              • "Prophet / Nabi / ﷺ" → prophet style<br>
-              • Last name automatically styled as recipient
+              • Allāh ﷻ → Lawḥ al-Maḥfūẓ → Jibrīl → Prophet ﷺ are added automatically at the top<br>
+              • Start with the first human transmitter (e.g. a Ṣaḥābī)<br>
+              • Last name is automatically styled as the recipient
             </div>
           </div>
 
@@ -496,37 +495,48 @@
       return html;
     }
 
+    const HEADER_NODES = [
+      { name: 'Allāh ﷻ',              type: 'divine-allah'   },
+      { name: 'Al-Lawḥ al-Maḥfūẓ',   type: 'divine-lawh'    },
+      { name: 'Jibrīl عليه السلام',   type: 'divine-jibreel' },
+      { name: 'Prophet Muhammad ﷺ',   type: 'prophet'        },
+    ];
+
     function buildChainHTML(names, title, altRoutes) {
-      const count = names.length;
+      // Prepend the fixed header then user names
+      const allNames  = [...HEADER_NODES.map(h => h.name), ...names];
+      const allTypes  = [...HEADER_NODES.map(h => h.type), ...names.map((n, i) => i === names.length - 1 ? 'recipient' : detectType(n))];
+      const count     = names.length; // only count user-entered transmitters
       let html = `<div class="preview-title"><h2>${escHtml(title || 'Chain of Transmission')}</h2><p>${count} transmitter${count !== 1 ? 's' : ''}</p></div><div class="chain-wrap">`;
 
-      // Index: 0-based. Node number = i+1.
+      const H = HEADER_NODES.length; // 4 header nodes
+      // Alt route fromNode/toNode are relative to user names (1-based).
+      // Offset by H so they index into allNames correctly.
       const routes = (altRoutes || []).slice().sort((a, b) => a.fromNode - b.fromNode);
-      let skip = new Set(); // indices to skip (shown inside parallel row)
+      let skip = new Set();
 
-      // Pre-compute which indices are inside a fork range
-      const forkMap = new Map(); // fromIdx → route
-      routes.forEach(r => forkMap.set(r.fromNode - 1, r)); // fromNode is 1-based
+      const forkMap = new Map();
+      routes.forEach(r => forkMap.set(r.fromNode - 1 + H, r)); // offset into allNames
 
       let i = 0;
-      while (i < names.length) {
+      while (i < allNames.length) {
         if (skip.has(i)) { i++; continue; }
 
-        const isLast = i === names.length - 1;
-        const type = isLast ? 'recipient' : detectType(names[i]);
-        html += nodeHTML(names[i], i + 1, type);
+        const isLast = i === allNames.length - 1;
+        const type = allTypes[i];
+        // Display number: header nodes get icon, user nodes get (i - H + 1)
+        const displayNum = i < H ? null : (i - H + 1);
+        html += nodeHTML(allNames[i], displayNum !== null ? displayNum : (i + 1), type);
 
         const route = forkMap.get(i);
         if (route && !isLast) {
-          // toNode is 1-based; main nodes in between: indices fromNode to toNode-2
-          const mainSliceStart = i + 1;          // index after fork node
-          const mainSliceEnd = route.toNode - 1;  // index before merge node (exclusive)
+          const mainSliceStart = i + 1;
+          const mainSliceEnd = route.toNode - 1 + H;
 
-          // Mark skipped
           for (let k = mainSliceStart; k < mainSliceEnd; k++) skip.add(k);
 
-          const mainSlice = names.slice(mainSliceStart, mainSliceEnd);
-          const mainNums = mainSlice.map((_, j) => mainSliceStart + j + 1);
+          const mainSlice = allNames.slice(mainSliceStart, mainSliceEnd);
+          const mainNums  = mainSlice.map((_, j) => mainSliceStart + j - H + 1);
 
           html += forkHTML();
           html += `<div class="c-para-row"><div class="c-para-spacer"></div><div class="c-para-body">`;
@@ -535,8 +545,7 @@
           html += `</div></div>`;
           html += mergeHTML();
 
-          // Continue from toNode (merge node)
-          i = mainSliceEnd; // will render merge node next iteration
+          i = mainSliceEnd;
         } else if (!isLast) {
           html += connHTML();
           i++;
