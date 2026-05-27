@@ -891,6 +891,7 @@
       const [showTplModal,setTplModal] = useState(false);
       const [appliedTpl,setAppliedTpl] = useState(null);
       const [pdfStatus,setPdfStatus]   = useState("idle");
+      const [showChainPreview,setShowChainPreview] = useState(false);
       const previewRef = useRef(null);
 
       /* new state */
@@ -1096,6 +1097,47 @@
           {showSaveModal && <SaveSanadModal subject={subject} onSave={handleSaveSanad} onClose={()=>setShowSaveModal(false)}/>}
           {showSaveTplModal && <SaveTemplateModal rows={rows} onSave={handleSaveCustomTpl} onClose={()=>setShowSaveTpl(false)}/>}
 
+          {/* ── Chain Preview Modal ── */}
+          {showChainPreview&&(
+            <div style={{position:'fixed',inset:0,zIndex:400,display:'flex',alignItems:'center',justifyContent:'center',padding:16}} onClick={()=>setShowChainPreview(false)}>
+              <div style={{position:'absolute',inset:0,background:'rgba(0,0,0,.6)',backdropFilter:'blur(5px)'}}/>
+              <div onClick={e=>e.stopPropagation()} style={{background:'#f9fafb',borderRadius:22,width:'min(700px,97vw)',maxHeight:'94vh',overflow:'hidden',display:'flex',flexDirection:'column',position:'relative',zIndex:1,boxShadow:'0 28px 80px rgba(0,0,0,.32)'}}>
+                {/* Header */}
+                <div style={{padding:'14px 20px',background:'#fff',borderBottom:'1px solid #f3f4f6',display:'flex',alignItems:'center',justifyContent:'space-between',flexShrink:0,gap:12}}>
+                  <div>
+                    <div style={{fontSize:16,fontWeight:700,color:'#111827',fontFamily:"'EB Garamond',serif"}}>Chain Preview</div>
+                    {subject&&<div style={{fontSize:11.5,color:'#6b7280',fontFamily:'system-ui',marginTop:1}}>{subject}</div>}
+                  </div>
+                  <div style={{display:'flex',gap:8,flexShrink:0}}>
+                    <button onClick={downloadPDF} disabled={pdfStatus==='loading'} style={{display:'flex',alignItems:'center',gap:6,padding:'8px 16px',borderRadius:8,border:'none',background:pdfStatus==='done'?'#166534':pdfStatus==='loading'?'#9ca3af':'#111827',color:'#fff',cursor:pdfStatus==='loading'?'wait':'pointer',fontSize:13,fontFamily:'system-ui',fontWeight:600,transition:'background .2s'}}>
+                      {pdfStatus==='loading'?<><span style={{display:'inline-block',width:12,height:12,border:'2px solid #fff',borderTopColor:'transparent',borderRadius:'50%',animation:'spin .7s linear infinite'}}/>Generating…</>:pdfStatus==='done'?'✓ Downloaded!':<><svg width="13" height="13" viewBox="0 0 15 15" fill="none"><path d="M7.5 10L3 5.5h3V1h3v4.5h3L7.5 10Z" fill="#fff"/><path d="M1 13h13" stroke="#fff" strokeWidth="1.5" strokeLinecap="round"/></svg>Download PDF</>}
+                    </button>
+                    <button onClick={()=>setShowChainPreview(false)} style={{background:'#f3f4f6',border:'none',borderRadius:'50%',width:34,height:34,cursor:'pointer',fontSize:20,color:'#6b7280',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>×</button>
+                  </div>
+                </div>
+                {/* Design / Accent quick controls */}
+                <div style={{padding:'10px 18px',background:'#fff',borderBottom:'1px solid #f3f4f6',display:'flex',alignItems:'center',gap:16,flexWrap:'wrap',flexShrink:0}}>
+                  <div style={{display:'flex',flexWrap:'wrap',gap:5}}>
+                    {DESIGNS.map(d=>(
+                      <button key={d.id} onClick={()=>setDesign(d.id)} style={{padding:'4px 10px',borderRadius:20,fontSize:10.5,cursor:'pointer',fontFamily:'system-ui',letterSpacing:.3,border:`1.5px solid ${design===d.id?'#111827':'#e5e7eb'}`,background:design===d.id?'#111827':d.bg,color:design===d.id?'#fff':'#374151'}}>
+                        {d.label}
+                      </button>
+                    ))}
+                  </div>
+                  <div style={{display:'flex',gap:5,flexShrink:0}}>
+                    {["#b45309","#166534","#1e40af","#991b1b","#5b21b6","#374151"].map(c=>(
+                      <button key={c} onClick={()=>setAccent(c)} style={{width:22,height:22,borderRadius:'50%',background:c,padding:0,cursor:'pointer',border:accent===c?'3px solid #111':'2px solid #fff',boxShadow:`0 0 0 1.5px ${c}88`}}/>
+                    ))}
+                  </div>
+                </div>
+                {/* Visual */}
+                <div style={{overflowY:'auto',flex:1}}>
+                  <Visual rows={rows} edges={edges} subject={subject} design={design} accentColor={accent} previewRef={previewRef}/>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* ── Sanad Preview Modal ── */}
           {previewSanad&&(()=>{
             const ps=previewSanad;
@@ -1198,12 +1240,15 @@
                 )}
 
                 {/* Save toolbar */}
-                <div style={{display:'flex',gap:8,justifyContent:'flex-end',marginBottom:12}}>
+                <div style={{display:'flex',gap:8,justifyContent:'flex-end',marginBottom:12,flexWrap:'wrap'}}>
                   {!editingTpl && (
                     <button onClick={()=>setShowSaveTpl(true)} style={{display:'flex',alignItems:'center',gap:5,padding:'7px 14px',borderRadius:8,border:'1.5px solid #d97706',background:saveTplDone?'#166534':'#fffbeb',color:saveTplDone?'#fff':'#92400e',cursor:'pointer',fontSize:12.5,fontFamily:'system-ui',fontWeight:600,transition:'all .2s'}}>
                       {saveTplDone?'✓ Template Saved':'⭐ Save as Template'}
                     </button>
                   )}
+                  <button onClick={()=>setShowChainPreview(true)} style={{display:'flex',alignItems:'center',gap:5,padding:'7px 14px',borderRadius:8,border:'1.5px solid #6366f1',background:'#eef2ff',color:'#4f46e5',cursor:'pointer',fontSize:12.5,fontFamily:'system-ui',fontWeight:600}}>
+                    👁 Preview
+                  </button>
                   <button onClick={()=>setShowSaveModal(true)} style={{display:'flex',alignItems:'center',gap:5,padding:'7px 14px',borderRadius:8,border:'none',background:'#111827',color:'#fff',cursor:'pointer',fontSize:12.5,fontFamily:'system-ui',fontWeight:600}}>
                     💾 Save Sanad
                   </button>
