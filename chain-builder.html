@@ -878,6 +878,7 @@
       const [folderCat,setFolderCat]         = useState('all');
       const [saveTplDone,setSaveTplDone]     = useState(false);
       const [editingTpl,setEditingTpl]       = useState(null); // {id, name, isFamous}
+      const [previewSanad,setPreviewSanad]   = useState(null);
 
       const upd = fn => setChain(c=>fn(c));
       const setSubject  = v       => upd(c=>({...c,subject:v}));
@@ -1053,6 +1054,58 @@
           {showTplModal && <TemplateModal onSelect={applyTemplate} onClose={()=>setTplModal(false)} customTemplates={customTpls} onDeleteCustom={handleDeleteCustomTpl} onEdit={loadTplForEdit}/>}
           {showSaveModal && <SaveSanadModal subject={subject} onSave={handleSaveSanad} onClose={()=>setShowSaveModal(false)}/>}
           {showSaveTplModal && <SaveTemplateModal rows={rows} onSave={handleSaveCustomTpl} onClose={()=>setShowSaveTpl(false)}/>}
+
+          {/* ── Sanad Preview Modal ── */}
+          {previewSanad&&(()=>{
+            const ps=previewSanad;
+            const catObj=CATS.find(c=>c.id===ps.category)||CATS[CATS.length-1];
+            const psEdges=new Set(ps.edges||[]);
+            const psPdfRef={current:null};
+            const handlePsPdf=async()=>{
+              await new Promise((res,rej)=>{if(window.html2canvas)return res();const s=document.createElement("script");s.src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js";s.onload=res;s.onerror=rej;document.head.appendChild(s);});
+              await new Promise((res,rej)=>{if(window.jspdf)return res();const s=document.createElement("script");s.src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js";s.onload=res;s.onerror=rej;document.head.appendChild(s);});
+              const canvas=await window.html2canvas(psPdfRef.current,{scale:2,useCORS:true,backgroundColor:null,logging:false,allowTaint:true});
+              const imgData=canvas.toDataURL("image/png");
+              const{jsPDF}=window.jspdf;
+              const W=canvas.width/2,H=canvas.height/2;
+              const pdf=new jsPDF({orientation:H>W?"portrait":"landscape",unit:"px",format:[W,H]});
+              pdf.addImage(imgData,"PNG",0,0,W,H);
+              pdf.save(`Sanad-${ps.title.replace(/\s+/g,"-")}.pdf`);
+            };
+            return(
+              <div style={{position:'fixed',inset:0,zIndex:400,display:'flex',alignItems:'center',justifyContent:'center',padding:16}} onClick={()=>setPreviewSanad(null)}>
+                <div style={{position:'absolute',inset:0,background:'rgba(0,0,0,.55)',backdropFilter:'blur(4px)'}}/>
+                <div onClick={e=>e.stopPropagation()} style={{background:'#f9fafb',borderRadius:20,width:'min(700px,97vw)',maxHeight:'93vh',overflow:'hidden',display:'flex',flexDirection:'column',position:'relative',zIndex:1,boxShadow:'0 24px 64px rgba(0,0,0,.28)'}}>
+                  {/* Modal header */}
+                  <div style={{padding:'14px 18px',background:'#fff',borderBottom:'1px solid #f3f4f6',display:'flex',alignItems:'center',justifyContent:'space-between',flexShrink:0,gap:12,flexWrap:'wrap'}}>
+                    <div style={{flex:1,minWidth:0}}>
+                      <div style={{fontSize:17,fontWeight:700,color:'#111827',fontFamily:"'EB Garamond',serif",lineHeight:1.3}}>{ps.title}</div>
+                      {ps.subject&&<div style={{fontSize:12,color:'#6b7280',fontFamily:'system-ui',marginTop:2}}>{ps.subject}</div>}
+                    </div>
+                    <div style={{display:'flex',gap:7,flexShrink:0,flexWrap:'wrap'}}>
+                      <button onClick={handlePsPdf} style={{padding:'7px 14px',borderRadius:8,border:'1px solid #e5e7eb',background:'#f9fafb',color:'#374151',cursor:'pointer',fontSize:12,fontFamily:'system-ui',fontWeight:600,display:'flex',alignItems:'center',gap:5}}>
+                        <svg width="13" height="13" viewBox="0 0 15 15" fill="none"><path d="M7.5 10L3 5.5h3V1h3v4.5h3L7.5 10Z" fill="#374151"/><path d="M1 13h13" stroke="#374151" strokeWidth="1.5" strokeLinecap="round"/></svg>PDF
+                      </button>
+                      <button onClick={()=>{handleLoadSanad(ps);setPreviewSanad(null);}} style={{padding:'7px 16px',borderRadius:8,border:'none',background:catObj.color,color:'#fff',cursor:'pointer',fontSize:12.5,fontFamily:'system-ui',fontWeight:600}}>
+                        ✏ Load &amp; Edit
+                      </button>
+                      <button onClick={()=>setPreviewSanad(null)} style={{background:'#f3f4f6',border:'none',borderRadius:'50%',width:32,height:32,cursor:'pointer',fontSize:20,color:'#6b7280',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>×</button>
+                    </div>
+                  </div>
+                  {/* Visual */}
+                  <div style={{overflowY:'auto',flex:1}}>
+                    <Visual rows={ps.rows} edges={psEdges} subject={ps.subject||''} design={ps.design||'flowers'} accentColor={ps.accent||'#b45309'} previewRef={psPdfRef}/>
+                  </div>
+                  {/* Footer info */}
+                  <div style={{padding:'10px 18px',background:'#fff',borderTop:'1px solid #f3f4f6',display:'flex',alignItems:'center',gap:12,flexShrink:0,fontSize:11,color:'#9ca3af',fontFamily:'system-ui'}}>
+                    <span style={{background:`${catObj.color}14`,border:`1px solid ${catObj.color}44`,color:catObj.color,borderRadius:20,padding:'2px 10px',fontWeight:600}}>{catObj.arabic&&catObj.arabic+' '}{catObj.label}</span>
+                    <span>{ps.rows?.length||0} narrators</span>
+                    <span>Saved {ps.date}</span>
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
 
           {/* ── Tabs ── */}
           <div style={{background:"#fff",borderBottom:"1px solid #f3f4f6",display:"flex",justifyContent:"center"}}>
@@ -1305,23 +1358,34 @@
                               {catObj.arabic&&<span style={{marginRight:4,fontFamily:"'EB Garamond',serif"}}>{catObj.arabic}</span>}{catObj.label}
                             </span>
                           </div>
-                          {/* Narrator preview chips */}
+                          {/* Narrator preview chips with gen number + Arabic */}
                           {sanad.rows&&sanad.rows.length>0&&(
-                            <div style={{display:'flex',flexWrap:'wrap',gap:4,marginBottom:12}}>
-                              {sanad.rows.slice(0,4).map((row,i)=>row.narrators[0]?.name?(
-                                <span key={i} style={{fontSize:10,background:'#f3f4f6',borderRadius:6,padding:'2px 8px',color:'#374151',fontFamily:"'EB Garamond',serif",maxWidth:110,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{row.narrators[0].name}</span>
-                              ):null)}
-                              {sanad.rows.length>4&&<span style={{fontSize:10,color:'#9ca3af',fontFamily:'system-ui',padding:'2px 0'}}>+{sanad.rows.length-4} more</span>}
+                            <div style={{display:'flex',flexDirection:'column',gap:3,marginBottom:12}}>
+                              {sanad.rows.slice(0,5).map((row,i)=>{
+                                const nName=row.narrators[0]?.name||'';
+                                const arabic=nName?lookupArabic(nName):'';
+                                return nName?(
+                                  <div key={i} style={{display:'flex',alignItems:'center',gap:6}}>
+                                    <div style={{width:18,height:18,borderRadius:'50%',background:i===0?'#1e3a5f':'#e5e7eb',color:i===0?'#fff':'#6b7280',fontSize:9,fontFamily:'system-ui',fontWeight:700,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>{i+1}</div>
+                                    <div style={{flex:1,minWidth:0}}>
+                                      <div style={{fontSize:11,color:'#374151',fontFamily:"'EB Garamond',serif",overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{nName}</div>
+                                      {arabic&&<div style={{fontSize:10,color:'#8b6a3e',fontFamily:"'EB Garamond',serif",direction:'rtl',lineHeight:1.2}}>{arabic}</div>}
+                                    </div>
+                                  </div>
+                                ):null;
+                              })}
+                              {sanad.rows.length>5&&<div style={{fontSize:10,color:'#9ca3af',fontFamily:'system-ui',paddingLeft:24}}>+{sanad.rows.length-5} more</div>}
                             </div>
                           )}
-                          <div style={{fontSize:11.5,color:'#9ca3af',fontFamily:'system-ui',marginBottom:14,display:'flex',gap:10,alignItems:'center'}}>
+                          <div style={{fontSize:11.5,color:'#9ca3af',fontFamily:'system-ui',marginBottom:12,display:'flex',gap:10,alignItems:'center'}}>
                             <span>{narratorCount} narrator{narratorCount!==1?'s':''}</span>
                             <span style={{width:3,height:3,borderRadius:'50%',background:'#d1d5db',display:'inline-block'}}/>
                             <span>{sanad.date}</span>
                           </div>
-                          <div style={{display:'flex',gap:8}}>
-                            <button onClick={()=>handleLoadSanad(sanad)} style={{flex:1,padding:'8px',borderRadius:8,border:'none',background:catObj.color,color:'#fff',cursor:'pointer',fontSize:13,fontFamily:'system-ui',fontWeight:600,transition:'opacity .15s'}}>Load Chain</button>
-                            <button onClick={()=>handleDeleteSanad(sanad.id)} style={{padding:'8px 14px',borderRadius:8,border:'1px solid #fecaca',background:'#fef2f2',color:'#ef4444',cursor:'pointer',fontSize:12,fontFamily:'system-ui',flexShrink:0}}>Delete</button>
+                          <div style={{display:'flex',gap:7}}>
+                            <button onClick={()=>setPreviewSanad(sanad)} style={{flex:1,padding:'8px',borderRadius:8,border:`1.5px solid ${catObj.color}`,background:'#fff',color:catObj.color,cursor:'pointer',fontSize:12.5,fontFamily:'system-ui',fontWeight:600,transition:'all .15s'}}>👁 Preview</button>
+                            <button onClick={()=>handleLoadSanad(sanad)} style={{flex:1,padding:'8px',borderRadius:8,border:'none',background:catObj.color,color:'#fff',cursor:'pointer',fontSize:12.5,fontFamily:'system-ui',fontWeight:600,transition:'opacity .15s'}}>✏ Edit</button>
+                            <button onClick={()=>handleDeleteSanad(sanad.id)} style={{padding:'8px 12px',borderRadius:8,border:'1px solid #fecaca',background:'#fef2f2',color:'#ef4444',cursor:'pointer',fontSize:12,fontFamily:'system-ui',flexShrink:0}}>✕</button>
                           </div>
                         </div>
                       );
