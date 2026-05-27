@@ -50,10 +50,9 @@
     <div style="font-family:'Amiri',serif;font-size:1.3rem;color:var(--gold);margin-bottom:10px;">سِلْسِلَةُ الإِسْنَاد</div>
     <h1>Sanad Chain Builder</h1>
     <div class="gold-divider"></div>
-    <p>Build and visualize chains of transmission — Allāh ﷻ → Lawḥ → Jibrīl → Prophet ﷺ are added automatically</p>
+    <p>Build, save, and organise chains of transmission by topic</p>
   </div>
 
-  <!-- Auth guard runs before React loads -->
   <script>
     if (sessionStorage.getItem('admin_auth') !== 'granted') {
       window.location.replace('admin-login.html');
@@ -85,110 +84,104 @@
       "#854d0e","#065f46","#6b21a8","#0369a1","#a16207",
     ];
 
+    /* ── Categories ────────────────────────────────────── */
+    const CATS = [
+      { id: 'all',    label: 'All Sanads', color: '#374151', arabic: '' },
+      { id: 'fiqh',   label: 'Fiqh',       color: '#7c3aed', arabic: 'الفقه' },
+      { id: 'hadith', label: 'Hadith',      color: '#1e40af', arabic: 'الحديث' },
+      { id: 'qiraat', label: 'Qirāʾāt',    color: '#166534', arabic: 'القراءات' },
+      { id: 'other',  label: 'Other',       color: '#92400e', arabic: 'أخرى' },
+    ];
+
+    /* ── Storage ───────────────────────────────────────── */
+    const SANADS_KEY     = 'usqaris_sanads_v2';
+    const CUSTOM_TPL_KEY = 'usqaris_custom_tpl_v1';
+    function loadSavedSanads() { try { return JSON.parse(localStorage.getItem(SANADS_KEY)   || '[]'); } catch { return []; } }
+    function loadCustomTpls()  { try { return JSON.parse(localStorage.getItem(CUSTOM_TPL_KEY)|| '[]'); } catch { return []; } }
+
     /* ── Famous chain templates ────────────────────────── */
     const TEMPLATES = [
       {
-        id: "ibn_jazari",
-        name: "Ibn al-Jazarī",
-        field: "Qurʾānic Recitation (Qirāʾāt)",
-        description: "The renowned 10 Qirāʾāt chain ending at Imām Ibn al-Jazarī (d. 833 AH). Used widely in ijāza of recitation.",
-        badge: "القراءات",
-        color: "#166534",
+        id: "ibn_jazari", name: "Ibn al-Jazarī", field: "Qurʾānic Recitation (Qirāʾāt)",
+        description: "The renowned 10 Qirāʾāt chain ending at Imām Ibn al-Jazarī (d. 833 AH).",
+        badge: "القراءات", color: "#166534",
         narrators: [
-          { name: "Ubayy ibn Kaʿb", role: "sahabi", color: "#166534" },
-          { name: "Abū al-ʿĀliya al-Riyāḥī", role: "", color: "#166534" },
-          { name: "Yaḥyā ibn Yaʿmur",          role: "", color: "#166534" },
-          { name: "Naṣr ibn ʿĀṣim al-Laythī",  role: "", color: "#166534" },
-          { name: "ʿĀṣim ibn Abī al-Najūd",     role: "", color: "#166534" },
-          { name: "Zayd ibn al-Qāsiṁ",          role: "", color: "#166534" },
-          { name: "Ibn al-Jazarī (Muhammad ibn Muhammad)", role: "anchor", color: "#166534" },
+          { name: "Ubayy ibn Kaʿb",                         role: "sahabi", color: "#166534" },
+          { name: "Abū al-ʿĀliya al-Riyāḥī",               color: "#166534" },
+          { name: "Yaḥyā ibn Yaʿmur",                       color: "#166534" },
+          { name: "Naṣr ibn ʿĀṣim al-Laythī",              color: "#166534" },
+          { name: "ʿĀṣim ibn Abī al-Najūd",                 color: "#166534" },
+          { name: "Zayd ibn al-Qāsiṁ",                      color: "#166534" },
+          { name: "Ibn al-Jazarī (Muḥammad ibn Muḥammad)",  role: "anchor", color: "#166534" },
         ],
       },
       {
-        id: "silsilat_dhahab",
-        name: "Silsilat al-Dhahab",
-        field: "Hadith Transmission",
-        description: "The 'Golden Chain' — considered by Imam Ahmad the most authentic chain of transmission in hadith.",
-        badge: "الذهب",
-        color: "#a16207",
+        id: "silsilat_dhahab", name: "Silsilat al-Dhahab", field: "Hadith Transmission",
+        description: "The 'Golden Chain' — considered by Imam Ahmad the most authentic chain.",
+        badge: "الذهب", color: "#a16207",
         narrators: [
-          { name: "ʿAbdullāh ibn ʿUmar", role: "sahabi", color: "#a16207" },
-          { name: "Nāfiʿ (mawlā Ibn ʿUmar)",              color: "#a16207" },
-          { name: "Mālik ibn Anas",                        color: "#a16207" },
-          { name: "al-Imām al-Shāfiʿī",                   color: "#a16207" },
-          { name: "Aḥmad ibn Ḥanbal", role: "anchor",     color: "#a16207" },
+          { name: "ʿAbdullāh ibn ʿUmar",      role: "sahabi", color: "#a16207" },
+          { name: "Nāfiʿ (mawlā Ibn ʿUmar)",                  color: "#a16207" },
+          { name: "Mālik ibn Anas",                            color: "#a16207" },
+          { name: "al-Imām al-Shāfiʿī",                       color: "#a16207" },
+          { name: "Aḥmad ibn Ḥanbal",          role: "anchor", color: "#a16207" },
         ],
       },
       {
-        id: "bukhari",
-        name: "Imam al-Bukhārī",
-        field: "Ṣaḥīḥ al-Bukhārī",
-        description: "A representative chain of Imam al-Bukhārī through Sufyan ibn ʿUyayna back to Anas ibn Mālik.",
-        badge: "البخاري",
-        color: "#1e40af",
+        id: "bukhari", name: "Imam al-Bukhārī", field: "Ṣaḥīḥ al-Bukhārī",
+        description: "A representative chain through Sufyān ibn ʿUyayna back to Anas ibn Mālik.",
+        badge: "البخاري", color: "#1e40af",
         narrators: [
-          { name: "Anas ibn Mālik", role: "sahabi", color: "#1e40af" },
-          { name: "al-Zuhrī (Ibn Shihāb)",         color: "#1e40af" },
-          { name: "Sufyān ibn ʿUyayna",            color: "#1e40af" },
-          { name: "ʿAlī ibn al-Madīnī",            color: "#1e40af" },
-          { name: "Imam al-Bukhārī", role: "anchor", color: "#1e40af" },
+          { name: "Anas ibn Mālik",        role: "sahabi", color: "#1e40af" },
+          { name: "al-Zuhrī (Ibn Shihāb)",                 color: "#1e40af" },
+          { name: "Sufyān ibn ʿUyayna",                    color: "#1e40af" },
+          { name: "ʿAlī ibn al-Madīnī",                    color: "#1e40af" },
+          { name: "Imam al-Bukhārī",       role: "anchor", color: "#1e40af" },
         ],
       },
       {
-        id: "malik_muwatta",
-        name: "Imam Mālik",
-        field: "al-Muwaṭṭaʾ",
-        description: "The chain of Imam Mālik ibn Anas through Nāfiʿ to Ibn ʿUmar — one of the shortest and most authenticated chains.",
-        badge: "الموطأ",
-        color: "#115e59",
+        id: "malik_muwatta", name: "Imam Mālik", field: "al-Muwaṭṭaʾ",
+        description: "One of the shortest and most authenticated chains in hadith scholarship.",
+        badge: "الموطأ", color: "#115e59",
         narrators: [
           { name: "ʿAbdullāh ibn ʿUmar", role: "sahabi", color: "#115e59" },
           { name: "Nāfiʿ (mawlā Ibn ʿUmar)",              color: "#115e59" },
-          { name: "Imam Mālik ibn Anas", role: "anchor",  color: "#115e59" },
+          { name: "Imam Mālik ibn Anas",  role: "anchor", color: "#115e59" },
         ],
       },
       {
-        id: "abu_hanifa",
-        name: "Imam Abū Ḥanīfa",
-        field: "Fiqh al-Ḥanafī",
-        description: "The chain of Imam Abu Hanifa through his teacher Hammād back to Ibn Masʿūd (RA).",
-        badge: "الحنفي",
-        color: "#7c3aed",
+        id: "abu_hanifa", name: "Imam Abū Ḥanīfa", field: "Fiqh al-Ḥanafī",
+        description: "The chain through Ḥammād ibn Abī Sulaymān back to Ibn Masʿūd (RA).",
+        badge: "الحنفي", color: "#7c3aed",
         narrators: [
-          { name: "ʿAbdullāh ibn Masʿūd", role: "sahabi", color: "#7c3aed" },
-          { name: "ʿAlqama ibn Qays al-Nakhaʿī",           color: "#7c3aed" },
-          { name: "Ibrāhīm al-Nakhaʿī",                   color: "#7c3aed" },
-          { name: "Ḥammād ibn Abī Sulaymān",               color: "#7c3aed" },
-          { name: "Imam Abū Ḥanīfa", role: "anchor",       color: "#7c3aed" },
+          { name: "ʿAbdullāh ibn Masʿūd",          role: "sahabi", color: "#7c3aed" },
+          { name: "ʿAlqama ibn Qays al-Nakhaʿī",               color: "#7c3aed" },
+          { name: "Ibrāhīm al-Nakhaʿī",                        color: "#7c3aed" },
+          { name: "Ḥammād ibn Abī Sulaymān",                    color: "#7c3aed" },
+          { name: "Imam Abū Ḥanīfa",               role: "anchor", color: "#7c3aed" },
         ],
       },
       {
-        id: "shafii",
-        name: "Imam al-Shāfiʿī",
-        field: "Fiqh al-Shāfiʿī",
-        description: "Chain of al-Imām al-Shāfiʿī through Mālik to Nāfiʿ and Ibn ʿUmar.",
-        badge: "الشافعي",
-        color: "#991b1b",
+        id: "shafii", name: "Imam al-Shāfiʿī", field: "Fiqh al-Shāfiʿī",
+        description: "Chain through Mālik to Nāfiʿ and Ibn ʿUmar.",
+        badge: "الشافعي", color: "#991b1b",
         narrators: [
-          { name: "ʿAbdullāh ibn ʿUmar", role: "sahabi", color: "#991b1b" },
+          { name: "ʿAbdullāh ibn ʿUmar",  role: "sahabi", color: "#991b1b" },
           { name: "Nāfiʿ (mawlā Ibn ʿUmar)",              color: "#991b1b" },
           { name: "Mālik ibn Anas",                        color: "#991b1b" },
-          { name: "al-Imām al-Shāfiʿī", role: "anchor",   color: "#991b1b" },
+          { name: "al-Imām al-Shāfiʿī",   role: "anchor", color: "#991b1b" },
         ],
       },
       {
-        id: "suyuti",
-        name: "Imam al-Suyūṭī",
-        field: "Hadith & Tafsīr",
-        description: "Representative chain of Jalāl al-Dīn al-Suyūṭī (d. 911 AH) through Ibn Ḥajar al-ʿAsqalānī.",
-        badge: "السيوطي",
-        color: "#5b21b6",
+        id: "suyuti", name: "Imam al-Suyūṭī", field: "Hadith & Tafsīr",
+        description: "Representative chain of al-Suyūṭī (d. 911 AH) through Ibn Ḥajar al-ʿAsqalānī.",
+        badge: "السيوطي", color: "#5b21b6",
         narrators: [
-          { name: "Anas ibn Mālik", role: "sahabi", color: "#5b21b6" },
-          { name: "al-Zuhrī",                       color: "#5b21b6" },
-          { name: "Mālik ibn Anas",                 color: "#5b21b6" },
-          { name: "Ibn Ḥajar al-ʿAsqalānī",        color: "#5b21b6" },
-          { name: "Imam al-Suyūṭī", role: "anchor", color: "#5b21b6" },
+          { name: "Anas ibn Mālik",          role: "sahabi", color: "#5b21b6" },
+          { name: "al-Zuhrī",                              color: "#5b21b6" },
+          { name: "Mālik ibn Anas",                        color: "#5b21b6" },
+          { name: "Ibn Ḥajar al-ʿAsqalānī",               color: "#5b21b6" },
+          { name: "Imam al-Suyūṭī",          role: "anchor", color: "#5b21b6" },
         ],
       },
     ];
@@ -211,50 +204,50 @@
       if (design === "flowers") return (
         <svg style={{ ...s, opacity: .12 }} xmlns="http://www.w3.org/2000/svg">
           <defs><pattern id="flwr" x="0" y="0" width="80" height="80" patternUnits="userSpaceOnUse">
-            {[0,1,2,3,4,5].map(i => { const a = i * 60 * Math.PI / 180, cx = 40 + 18 * Math.cos(a), cy = 40 + 18 * Math.sin(a); return <ellipse key={i} cx={cx} cy={cy} rx="7" ry="13" transform={`rotate(${i * 60},${cx},${cy})`} fill="#b45309" />; })}
-            <circle cx="40" cy="40" r="5" fill="#92400e" /><circle cx="40" cy="40" r="2" fill="#fbbf24" />
-          </pattern></defs><rect width="100%" height="100%" fill="url(#flwr)" />
+            {[0,1,2,3,4,5].map(i => { const a=i*60*Math.PI/180,cx=40+18*Math.cos(a),cy=40+18*Math.sin(a); return <ellipse key={i} cx={cx} cy={cy} rx="7" ry="13" transform={`rotate(${i*60},${cx},${cy})`} fill="#b45309"/>; })}
+            <circle cx="40" cy="40" r="5" fill="#92400e"/><circle cx="40" cy="40" r="2" fill="#fbbf24"/>
+          </pattern></defs><rect width="100%" height="100%" fill="url(#flwr)"/>
         </svg>
       );
       if (design === "stars") return (
         <svg style={{ ...s, opacity: .08 }} xmlns="http://www.w3.org/2000/svg">
           <defs><pattern id="star" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
-            <polygon points="30,4 34,20 50,20 37,30 42,46 30,36 18,46 23,30 10,20 26,20" fill="#1e3a5f" />
-            <circle cx="30" cy="30" r="3" fill="none" stroke="#1e3a5f" strokeWidth="1" />
-          </pattern></defs><rect width="100%" height="100%" fill="url(#star)" />
+            <polygon points="30,4 34,20 50,20 37,30 42,46 30,36 18,46 23,30 10,20 26,20" fill="#1e3a5f"/>
+            <circle cx="30" cy="30" r="3" fill="none" stroke="#1e3a5f" strokeWidth="1"/>
+          </pattern></defs><rect width="100%" height="100%" fill="url(#star)"/>
         </svg>
       );
       if (design === "arabesque") return (
         <svg style={{ ...s, opacity: .09 }} xmlns="http://www.w3.org/2000/svg">
           <defs><pattern id="arab" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
-            {[0, 90, 180, 270].map(r => <g key={r} transform={`rotate(${r},50,50)`}><path d="M50,50 Q30,20 50,10 Q70,20 50,50" fill="none" stroke="#b45309" strokeWidth="1.2" /><path d="M50,50 Q20,30 10,50 Q20,70 50,50" fill="none" stroke="#b45309" strokeWidth="1.2" /></g>)}
-            <circle cx="50" cy="50" r="4" fill="none" stroke="#92400e" strokeWidth="1" /><circle cx="50" cy="50" r="1.5" fill="#92400e" />
-          </pattern></defs><rect width="100%" height="100%" fill="url(#arab)" />
+            {[0,90,180,270].map(r=><g key={r} transform={`rotate(${r},50,50)`}><path d="M50,50 Q30,20 50,10 Q70,20 50,50" fill="none" stroke="#b45309" strokeWidth="1.2"/><path d="M50,50 Q20,30 10,50 Q20,70 50,50" fill="none" stroke="#b45309" strokeWidth="1.2"/></g>)}
+            <circle cx="50" cy="50" r="4" fill="none" stroke="#92400e" strokeWidth="1"/><circle cx="50" cy="50" r="1.5" fill="#92400e"/>
+          </pattern></defs><rect width="100%" height="100%" fill="url(#arab)"/>
         </svg>
       );
       if (design === "vines") return (
         <svg style={{ ...s, opacity: .10 }} xmlns="http://www.w3.org/2000/svg">
           <defs><pattern id="vine" x="0" y="0" width="120" height="120" patternUnits="userSpaceOnUse">
-            <path d="M0,60 Q30,20 60,60 Q90,100 120,60" fill="none" stroke="#166534" strokeWidth="1.4" />
-            <path d="M0,60 Q30,100 60,60 Q90,20 120,60" fill="none" stroke="#166534" strokeWidth="1.4" opacity=".4" />
-            {[20, 40, 60, 80, 100].map(x => { const y = x % 40 === 20 ? 40 : 80, r = (x + y) % 3 === 0 ? 5 : 4; return <ellipse key={x} cx={x} cy={y} rx={r} ry={r + 2} transform={`rotate(${(x * 13) % 60},${x},${y})`} fill="#166534" opacity=".7" />; })}
-          </pattern></defs><rect width="100%" height="100%" fill="url(#vine)" />
+            <path d="M0,60 Q30,20 60,60 Q90,100 120,60" fill="none" stroke="#166534" strokeWidth="1.4"/>
+            <path d="M0,60 Q30,100 60,60 Q90,20 120,60" fill="none" stroke="#166534" strokeWidth="1.4" opacity=".4"/>
+            {[20,40,60,80,100].map(x=>{const y=x%40===20?40:80,r=(x+y)%3===0?5:4;return <ellipse key={x} cx={x} cy={y} rx={r} ry={r+2} transform={`rotate(${(x*13)%60},${x},${y})`} fill="#166534" opacity=".7"/>;}) }
+          </pattern></defs><rect width="100%" height="100%" fill="url(#vine)"/>
         </svg>
       );
       if (design === "geometric") return (
         <svg style={{ ...s, opacity: .07 }} xmlns="http://www.w3.org/2000/svg">
           <defs><pattern id="geo" x="0" y="0" width="50" height="50" patternUnits="userSpaceOnUse">
-            <path d="M0,0 L50,0 L50,50 L0,50 Z" fill="none" stroke="#1e40af" strokeWidth=".6" />
-            <path d="M25,0 L50,25 L25,50 L0,25 Z" fill="none" stroke="#1e40af" strokeWidth=".6" />
-            <circle cx="25" cy="25" r="1.5" fill="#1e40af" />
-          </pattern></defs><rect width="100%" height="100%" fill="url(#geo)" />
+            <path d="M0,0 L50,0 L50,50 L0,50 Z" fill="none" stroke="#1e40af" strokeWidth=".6"/>
+            <path d="M25,0 L50,25 L25,50 L0,25 Z" fill="none" stroke="#1e40af" strokeWidth=".6"/>
+            <circle cx="25" cy="25" r="1.5" fill="#1e40af"/>
+          </pattern></defs><rect width="100%" height="100%" fill="url(#geo)"/>
         </svg>
       );
       if (design === "dots") return (
         <svg style={{ ...s, opacity: .15 }} xmlns="http://www.w3.org/2000/svg">
           <defs><pattern id="dots" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
-            <circle cx="12" cy="12" r="1.5" fill="#374151" />
-          </pattern></defs><rect width="100%" height="100%" fill="url(#dots)" />
+            <circle cx="12" cy="12" r="1.5" fill="#374151"/>
+          </pattern></defs><rect width="100%" height="100%" fill="url(#dots)"/>
         </svg>
       );
       return null;
@@ -264,74 +257,58 @@
     function CornerOrn({ color }) {
       return (
         <svg width="40" height="40" viewBox="0 0 40 40" style={{ position: "absolute", pointerEvents: "none" }}>
-          <path d="M0,0 Q0,20 10,24 Q22,28 24,24 Q20,20 18,14 Q14,6 8,2 Q4,0 0,0 Z" fill={color} opacity=".14" />
-          <path d="M2,2 Q2,18 12,22" fill="none" stroke={color} strokeWidth="1" opacity=".4" />
-          <circle cx="20" cy="20" r="2.2" fill={color} opacity=".25" />
+          <path d="M0,0 Q0,20 10,24 Q22,28 24,24 Q20,20 18,14 Q14,6 8,2 Q4,0 0,0 Z" fill={color} opacity=".14"/>
+          <path d="M2,2 Q2,18 12,22" fill="none" stroke={color} strokeWidth="1" opacity=".4"/>
+          <circle cx="20" cy="20" r="2.2" fill={color} opacity=".25"/>
         </svg>
       );
     }
 
     /* ── Geometry ─────────────────────────────────────────── */
-    const VW = 620, BW = 176, BH = 74, CONN_H = 58;
-    function rowCenters(count) {
-      const gap = 20, tot = BW * count + gap * (count - 1), l = (VW - tot) / 2;
-      return Array.from({ length: count }, (_, i) => l + BW / 2 + i * (BW + gap));
-    }
-    function bezier(x1, x2, h = CONN_H) {
-      const cp = h * .44;
-      return `M ${x1} 0 C ${x1} ${cp}, ${x2} ${h - cp}, ${x2} ${h}`;
-    }
+    const VW=620, BW=176, BH=74, CONN_H=58;
+    function rowCenters(count){const gap=20,tot=BW*count+gap*(count-1),l=(VW-tot)/2;return Array.from({length:count},(_,i)=>l+BW/2+i*(BW+gap));}
+    function bezier(x1,x2,h=CONN_H){const cp=h*.44;return `M ${x1} 0 C ${x1} ${cp}, ${x2} ${h-cp}, ${x2} ${h}`;}
 
     /* ── Edge helpers ─────────────────────────────────────── */
-    const eKey = (a, b) => `${a}|${b}`;
-    const hasE = (E, a, b) => E.has(eKey(a, b));
-    const addE = (E, a, b) => { const s = new Set(E); s.add(eKey(a, b)); return s; };
-    const delE = (E, a, b) => { const s = new Set(E); s.delete(eKey(a, b)); return s; };
-    const togE = (E, a, b) => hasE(E, a, b) ? delE(E, a, b) : addE(E, a, b);
-    const tgts = (E, id) => [...E].filter(e => e.startsWith(`${id}|`)).map(e => e.split("|")[1]);
-    const srcs = (E, id) => [...E].filter(e => e.endsWith(`|${id}`)).map(e => e.split("|")[0]);
+    const eKey=(a,b)=>`${a}|${b}`;
+    const hasE=(E,a,b)=>E.has(eKey(a,b));
+    const addE=(E,a,b)=>{const s=new Set(E);s.add(eKey(a,b));return s;};
+    const delE=(E,a,b)=>{const s=new Set(E);s.delete(eKey(a,b));return s;};
+    const togE=(E,a,b)=>hasE(E,a,b)?delE(E,a,b):addE(E,a,b);
+    const tgts=(E,id)=>[...E].filter(e=>e.startsWith(`${id}|`)).map(e=>e.split("|")[1]);
+    const srcs=(E,id)=>[...E].filter(e=>e.endsWith(`|${id}`)).map(e=>e.split("|")[0]);
 
     /* ── Build chain from template ────────────────────────── */
     function buildFromTemplate(tpl) {
-      const rows = tpl.narrators.map(n => ({
-        id: uid(), fromTemplate: true,
-        narrators: [{ id: uid(), name: n.name, role: n.role || "", color: n.color }],
-      }));
-      const blank1 = { id: uid(), fromTemplate: false, narrators: [{ id: uid(), name: "", role: "", color: PALETTE[1] }] };
-      const blank2 = { id: uid(), fromTemplate: false, narrators: [{ id: uid(), name: "", role: "self", color: PALETTE[2] }] };
-      const allRows = [...rows, blank1, blank2];
-      let edges = new Set();
-      for (let i = 0; i < allRows.length - 1; i++) {
-        const a = allRows[i].narrators[0].id, b = allRows[i + 1].narrators[0].id;
-        edges.add(eKey(a, b));
-      }
-      return { subject: tpl.field, rows: allRows, edges };
+      const rows=tpl.narrators.map(n=>({id:uid(),fromTemplate:true,narrators:[{id:uid(),name:n.name,role:n.role||"",color:n.color}]}));
+      const blank1={id:uid(),fromTemplate:false,narrators:[{id:uid(),name:"",role:"",color:PALETTE[1]}]};
+      const blank2={id:uid(),fromTemplate:false,narrators:[{id:uid(),name:"",role:"self",color:PALETTE[2]}]};
+      const allRows=[...rows,blank1,blank2];
+      let edges=new Set();
+      for(let i=0;i<allRows.length-1;i++){const a=allRows[i].narrators[0].id,b=allRows[i+1].narrators[0].id;edges.add(eKey(a,b));}
+      return{subject:tpl.field,rows:allRows,edges};
     }
 
     /* ── Init (blank) ─────────────────────────────────────── */
-    function init() {
-      const s = uid(), n = uid(), y = uid();
-      return {
-        subject: "",
-        rows: [
-          { id: uid(), fromTemplate: false, narrators: [{ id: s, name: "", role: "sahabi", color: "#166534" }] },
-          { id: uid(), fromTemplate: false, narrators: [{ id: n, name: "", role: "",       color: "#1e40af" }] },
-          { id: uid(), fromTemplate: false, narrators: [{ id: y, name: "", role: "self",   color: "#92400e" }] },
-        ],
-        edges: new Set([eKey(s, n), eKey(n, y)]),
-      };
+    function init(){
+      const s=uid(),n=uid(),y=uid();
+      return{subject:"",rows:[
+        {id:uid(),fromTemplate:false,narrators:[{id:s,name:"",role:"sahabi",color:"#166534"}]},
+        {id:uid(),fromTemplate:false,narrators:[{id:n,name:"",role:"",     color:"#1e40af"}]},
+        {id:uid(),fromTemplate:false,narrators:[{id:y,name:"",role:"self", color:"#92400e"}]},
+      ],edges:new Set([eKey(s,n),eKey(n,y)])};
     }
 
     /* ── Swatch ───────────────────────────────────────────── */
-    function Swatch({ color, onChange }) {
-      const [open, setOpen] = useState(false);
-      return (
-        <div style={{ position: "relative", flexShrink: 0 }}>
-          {open && <div style={{ position: "fixed", inset: 0, zIndex: 98 }} onClick={() => setOpen(false)} />}
-          <button onClick={() => setOpen(o => !o)} style={{ width: 22, height: 22, borderRadius: "50%", background: color, border: "2.5px solid #fff", cursor: "pointer", padding: 0, boxShadow: `0 0 0 1.5px ${color},0 1px 4px rgba(0,0,0,.18)`, position: "relative", zIndex: open ? 101 : 1 }} />
-          {open && (
-            <div style={{ position: "absolute", top: 27, left: 0, zIndex: 100, background: "#fff", border: "1px solid #e5e7eb", borderRadius: 10, padding: 8, boxShadow: "0 6px 24px rgba(0,0,0,.13)", display: "grid", gridTemplateColumns: "repeat(5,1fr)", gap: 5, width: 140 }}>
-              {PALETTE.map(c => <button key={c} onClick={() => { onChange(c); setOpen(false); }} style={{ width: 20, height: 20, borderRadius: "50%", background: c, padding: 0, border: c === color ? "2.5px solid #111" : "2px solid transparent", boxShadow: `0 0 0 1px ${c}66`, cursor: "pointer" }} />)}
+    function Swatch({color,onChange}){
+      const[open,setOpen]=useState(false);
+      return(
+        <div style={{position:"relative",flexShrink:0}}>
+          {open&&<div style={{position:"fixed",inset:0,zIndex:98}} onClick={()=>setOpen(false)}/>}
+          <button onClick={()=>setOpen(o=>!o)} style={{width:22,height:22,borderRadius:"50%",background:color,border:"2.5px solid #fff",cursor:"pointer",padding:0,boxShadow:`0 0 0 1.5px ${color},0 1px 4px rgba(0,0,0,.18)`,position:"relative",zIndex:open?101:1}}/>
+          {open&&(
+            <div style={{position:"absolute",top:27,left:0,zIndex:100,background:"#fff",border:"1px solid #e5e7eb",borderRadius:10,padding:8,boxShadow:"0 6px 24px rgba(0,0,0,.13)",display:"grid",gridTemplateColumns:"repeat(5,1fr)",gap:5,width:140}}>
+              {PALETTE.map(c=><button key={c} onClick={()=>{onChange(c);setOpen(false);}} style={{width:20,height:20,borderRadius:"50%",background:c,padding:0,border:c===color?"2.5px solid #111":"2px solid transparent",boxShadow:`0 0 0 1px ${c}66`,cursor:"pointer"}}/>)}
             </div>
           )}
         </div>
@@ -339,21 +316,21 @@
     }
 
     /* ── ConnMatrix ───────────────────────────────────────── */
-    function ConnMatrix({ fromRow, toRow, edges, onToggle }) {
-      const F = fromRow.narrators, T = toRow.narrators;
-      if (F.length === 1 && T.length === 1) return null;
-      const L = ["A", "B", "C"];
-      return (
-        <div style={{ display: "inline-flex", flexDirection: "column", alignItems: "center", background: "#fafafa", border: "1px dashed #d1d5db", borderRadius: 8, padding: "7px 12px 9px", gap: 5 }}>
-          <span style={{ fontSize: 9, letterSpacing: 1.5, color: "#9ca3af", fontFamily: "system-ui", textTransform: "uppercase" }}>Who connects to whom?</span>
-          <table style={{ borderCollapse: "separate", borderSpacing: 4 }}>
-            <thead><tr><th />{T.map((n, ti) => <th key={n.id} style={{ fontSize: 10, fontWeight: 700, color: n.color, textAlign: "center", fontFamily: "system-ui", paddingBottom: 2 }}>{T.length > 1 ? L[ti] : "↓"}</th>)}</tr></thead>
-            <tbody>{F.map((fn, fi) => (
+    function ConnMatrix({fromRow,toRow,edges,onToggle}){
+      const F=fromRow.narrators,T=toRow.narrators;
+      if(F.length===1&&T.length===1) return null;
+      const L=["A","B","C"];
+      return(
+        <div style={{display:"inline-flex",flexDirection:"column",alignItems:"center",background:"#fafafa",border:"1px dashed #d1d5db",borderRadius:8,padding:"7px 12px 9px",gap:5}}>
+          <span style={{fontSize:9,letterSpacing:1.5,color:"#9ca3af",fontFamily:"system-ui",textTransform:"uppercase"}}>Who connects to whom?</span>
+          <table style={{borderCollapse:"separate",borderSpacing:4}}>
+            <thead><tr><th/>{T.map((n,ti)=><th key={n.id} style={{fontSize:10,fontWeight:700,color:n.color,textAlign:"center",fontFamily:"system-ui",paddingBottom:2}}>{T.length>1?L[ti]:"↓"}</th>)}</tr></thead>
+            <tbody>{F.map((fn,fi)=>(
               <tr key={fn.id}>
-                <td style={{ fontSize: 10, fontWeight: 700, color: fn.color, fontFamily: "system-ui", paddingRight: 4, textAlign: "right" }}>{F.length > 1 ? L[fi] : "↑"}</td>
-                {T.map(tn => { const on = hasE(edges, fn.id, tn.id); return (
-                  <td key={tn.id}><button onClick={() => onToggle(fn.id, tn.id)} style={{ width: 26, height: 22, borderRadius: 5, cursor: "pointer", fontSize: 13, border: `1.5px solid ${on ? fn.color : "#e5e7eb"}`, background: on ? `${fn.color}1a` : "#fff", color: on ? fn.color : "#d1d5db", display: "flex", alignItems: "center", justifyContent: "center", transition: "all .15s" }}>{on ? "✓" : "·"}</button></td>
-                ); })}
+                <td style={{fontSize:10,fontWeight:700,color:fn.color,fontFamily:"system-ui",paddingRight:4,textAlign:"right"}}>{F.length>1?L[fi]:"↑"}</td>
+                {T.map(tn=>{const on=hasE(edges,fn.id,tn.id);return(
+                  <td key={tn.id}><button onClick={()=>onToggle(fn.id,tn.id)} style={{width:26,height:22,borderRadius:5,cursor:"pointer",fontSize:13,border:`1.5px solid ${on?fn.color:"#e5e7eb"}`,background:on?`${fn.color}1a`:"#fff",color:on?fn.color:"#d1d5db",display:"flex",alignItems:"center",justifyContent:"center",transition:"all .15s"}}>{on?"✓":"·"}</button></td>
+                );})}
               </tr>
             ))}</tbody>
           </table>
@@ -361,47 +338,198 @@
       );
     }
 
-    /* ── Template Gallery Modal ───────────────────────────── */
-    function TemplateModal({ onSelect, onClose }) {
-      const [hovered, setHovered] = useState(null);
+    /* ── Save Sanad Modal ─────────────────────────────────── */
+    function SaveSanadModal({ subject, onSave, onClose }) {
+      const [title, setTitle] = useState(subject || '');
+      const [cat, setCat] = useState('other');
+      const MOD = { position:'fixed',inset:0,zIndex:300,display:'flex',alignItems:'center',justifyContent:'center',padding:20 };
+      const LBL = { fontSize:10,letterSpacing:2,color:'#9ca3af',display:'block',marginBottom:7,fontFamily:'system-ui',textTransform:'uppercase' };
+      const INP = { width:'100%',border:'1.5px solid #e5e7eb',borderRadius:8,padding:'10px 13px',fontSize:15,fontFamily:"'EB Garamond',serif",outline:'none',boxSizing:'border-box',color:'#1f2937' };
       return (
-        <div style={{ position: "fixed", inset: 0, zIndex: 200, display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }} onClick={onClose}>
-          <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,.45)", backdropFilter: "blur(3px)" }} />
-          <div onClick={e => e.stopPropagation()} style={{ background: "#fff", borderRadius: 20, width: "min(820px,98vw)", maxHeight: "88vh", overflow: "hidden", display: "flex", flexDirection: "column", boxShadow: "0 24px 64px rgba(0,0,0,.2)", position: "relative", zIndex: 1 }}>
-            <div style={{ padding: "22px 26px 18px", borderBottom: "1px solid #f3f4f6", display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0 }}>
-              <div>
-                <h2 style={{ margin: 0, fontSize: 20, fontWeight: 700, color: "#111827", fontFamily: "'EB Garamond',serif" }}>Famous Chain Templates</h2>
-                <p style={{ margin: "4px 0 0", fontSize: 13, color: "#6b7280", fontFamily: "system-ui" }}>
-                  Select a well-known sanad — it will be pre-filled automatically. Then add your own links below the anchor scholar.
-                </p>
+        <div style={MOD} onClick={onClose}>
+          <div style={{position:'absolute',inset:0,background:'rgba(0,0,0,.45)',backdropFilter:'blur(3px)'}}/>
+          <div onClick={e=>e.stopPropagation()} style={{background:'#fff',borderRadius:20,padding:'28px',width:'min(440px,95vw)',position:'relative',zIndex:1,boxShadow:'0 24px 64px rgba(0,0,0,.2)'}}>
+            <h3 style={{margin:'0 0 6px',fontSize:21,fontWeight:700,color:'#111827',fontFamily:"'EB Garamond',serif"}}>Save Sanad</h3>
+            <p style={{margin:'0 0 22px',fontSize:12,color:'#9ca3af',fontFamily:'system-ui'}}>Save this chain to a folder for later use.</p>
+            <div style={{marginBottom:18}}>
+              <label style={LBL}>Title</label>
+              <input value={title} onChange={e=>setTitle(e.target.value)} onKeyDown={e=>e.key==='Enter'&&title.trim()&&onSave(title.trim(),cat)} style={INP} placeholder="e.g. My Qirāʾāt Chain" autoFocus/>
+            </div>
+            <div style={{marginBottom:24}}>
+              <label style={LBL}>Folder / Category</label>
+              <div style={{display:'flex',gap:8,flexWrap:'wrap'}}>
+                {CATS.filter(c=>c.id!=='all').map(c=>(
+                  <button key={c.id} onClick={()=>setCat(c.id)} style={{padding:'7px 16px',borderRadius:20,fontSize:13,cursor:'pointer',fontFamily:"'EB Garamond',serif",fontWeight:cat===c.id?700:400,border:`2px solid ${cat===c.id?c.color:'#e5e7eb'}`,background:cat===c.id?`${c.color}12`:'#f9fafb',color:cat===c.id?c.color:'#6b7280',transition:'all .15s'}}>
+                    {c.arabic && <span style={{marginRight:5,fontSize:11}}>{c.arabic}</span>}{c.label}
+                  </button>
+                ))}
               </div>
-              <button onClick={onClose} style={{ background: "#f3f4f6", border: "none", borderRadius: "50%", width: 32, height: 32, cursor: "pointer", fontSize: 18, color: "#6b7280", display: "flex", alignItems: "center", justifyContent: "center" }}>×</button>
             </div>
-            <div style={{ overflowY: "auto", padding: "20px 22px 24px", display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(220px,1fr))", gap: 14 }}>
-              {TEMPLATES.map(tpl => (
-                <div key={tpl.id}
-                  onMouseEnter={() => setHovered(tpl.id)}
-                  onMouseLeave={() => setHovered(null)}
-                  onClick={() => onSelect(tpl)}
-                  style={{ border: `2px solid ${hovered === tpl.id ? tpl.color : "#e5e7eb"}`, borderRadius: 14, padding: "16px 16px 14px", cursor: "pointer", background: hovered === tpl.id ? `${tpl.color}06` : "#fafafa", transition: "all .18s", position: "relative", overflow: "hidden" }}>
-                  <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: tpl.color, borderRadius: "14px 14px 0 0" }} />
-                  <div style={{ display: "inline-block", background: `${tpl.color}18`, border: `1px solid ${tpl.color}44`, borderRadius: 20, padding: "2px 10px", fontSize: 11, color: tpl.color, fontFamily: "'EB Garamond',serif", letterSpacing: 2, marginBottom: 9, marginTop: 4 }}>{tpl.badge}</div>
-                  <div style={{ fontFamily: "'EB Garamond',serif", fontSize: 16, fontWeight: 700, color: "#111827", marginBottom: 4, lineHeight: 1.3 }}>{tpl.name}</div>
-                  <div style={{ fontSize: 11, color: tpl.color, fontFamily: "system-ui", marginBottom: 7, fontWeight: 600, letterSpacing: .3 }}>{tpl.field}</div>
-                  <p style={{ margin: 0, fontSize: 12, color: "#6b7280", fontFamily: "system-ui", lineHeight: 1.5 }}>{tpl.description}</p>
-                  <div style={{ marginTop: 12, display: "flex", flexDirection: "column", gap: 3, alignItems: "flex-start" }}>
-                    {tpl.narrators.map((n, i) => (
-                      <div key={i} style={{ display: "flex", alignItems: "center", gap: 5 }}>
-                        <div style={{ background: "#fff", border: `1.5px solid ${n.role === "anchor" ? tpl.color : tpl.color + "66"}`, borderRadius: 5, padding: "2px 8px", fontSize: 10, color: n.role === "anchor" ? tpl.color : "#374151", fontFamily: "system-ui", fontWeight: n.role === "anchor" ? 700 : 400, whiteSpace: "nowrap", maxWidth: 170, overflow: "hidden", textOverflow: "ellipsis" }}>
-                          {n.role === "sahabi" ? "⬤ " : n.role === "anchor" ? "★ " : ""}{n.name}
-                        </div>
-                      </div>
-                    ))}
-                    <div style={{ fontSize: 10, color: "#9ca3af", fontFamily: "system-ui", marginTop: 4, fontStyle: "italic" }}>+ your links continue below ↓</div>
-                  </div>
+            <div style={{display:'flex',gap:8,justifyContent:'flex-end'}}>
+              <button onClick={onClose} style={{padding:'9px 22px',borderRadius:8,border:'1px solid #e5e7eb',background:'#f9fafb',cursor:'pointer',fontSize:13,fontFamily:'system-ui',color:'#6b7280'}}>Cancel</button>
+              <button onClick={()=>title.trim()&&onSave(title.trim(),cat)} style={{padding:'9px 22px',borderRadius:8,border:'none',background:title.trim()?'#111827':'#d1d5db',color:'#fff',cursor:title.trim()?'pointer':'default',fontSize:13,fontFamily:'system-ui',fontWeight:600,transition:'background .15s'}}>Save</button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    /* ── Save Template Modal ──────────────────────────────── */
+    function SaveTemplateModal({ rows, onSave, onClose }) {
+      const [name,  setName]  = useState('');
+      const [field, setField] = useState('');
+      const [badge, setBadge] = useState('');
+      const [color, setColor] = useState('#166534');
+      const [cat,   setCat]   = useState('other');
+      const validRows = rows.filter(r => r.narrators[0]?.name?.trim());
+      const MOD = { position:'fixed',inset:0,zIndex:300,display:'flex',alignItems:'center',justifyContent:'center',padding:20 };
+      const LBL = { fontSize:10,letterSpacing:2,color:'#9ca3af',display:'block',marginBottom:6,fontFamily:'system-ui',textTransform:'uppercase' };
+      const INP = (ex={}) => ({width:'100%',border:'1.5px solid #e5e7eb',borderRadius:8,padding:'9px 12px',fontSize:14,fontFamily:"'EB Garamond',serif",outline:'none',boxSizing:'border-box',color:'#1f2937',...ex});
+      const THEME_COLORS = ["#166534","#1e40af","#92400e","#991b1b","#115e59","#5b21b6","#7c3aed","#374151","#a16207","#0369a1"];
+      const canSave = name.trim() && validRows.length > 0;
+      return (
+        <div style={MOD} onClick={onClose}>
+          <div style={{position:'absolute',inset:0,background:'rgba(0,0,0,.45)',backdropFilter:'blur(3px)'}}/>
+          <div onClick={e=>e.stopPropagation()} style={{background:'#fff',borderRadius:20,padding:'28px',width:'min(520px,95vw)',maxHeight:'90vh',overflowY:'auto',position:'relative',zIndex:1,boxShadow:'0 24px 64px rgba(0,0,0,.2)'}}>
+            <h3 style={{margin:'0 0 6px',fontSize:21,fontWeight:700,color:'#111827',fontFamily:"'EB Garamond',serif"}}>Save as Template</h3>
+            <p style={{margin:'0 0 22px',fontSize:12,color:'#9ca3af',fontFamily:'system-ui'}}>Save the current chain as a reusable template. It will appear under "My Templates" in the template gallery.</p>
+            <div style={{marginBottom:14}}>
+              <label style={LBL}>Template Name *</label>
+              <input value={name} onChange={e=>setName(e.target.value)} style={INP()} placeholder="e.g. My Ijāza Chain" autoFocus/>
+            </div>
+            <div style={{marginBottom:14}}>
+              <label style={LBL}>Field / Subject</label>
+              <input value={field} onChange={e=>setField(e.target.value)} style={INP()} placeholder="e.g. Ḥafs ʿan ʿĀṣim — Qirāʾāt"/>
+            </div>
+            <div style={{display:'flex',gap:14,marginBottom:14}}>
+              <div style={{flex:1}}>
+                <label style={LBL}>Badge (short Arabic label)</label>
+                <input value={badge} onChange={e=>setBadge(e.target.value)} style={INP({fontFamily:"'EB Garamond',serif",direction:'rtl'})} placeholder="e.g. حفص"/>
+              </div>
+              <div style={{flexShrink:0}}>
+                <label style={LBL}>Theme Color</label>
+                <div style={{display:'flex',flexWrap:'wrap',gap:6,maxWidth:140}}>
+                  {THEME_COLORS.map(c=>(
+                    <button key={c} onClick={()=>setColor(c)} style={{width:24,height:24,borderRadius:'50%',background:c,padding:0,cursor:'pointer',border:color===c?'3px solid #111':'2px solid #fff',boxShadow:`0 0 0 1.5px ${c}88`,transition:'border .1s'}}/>
+                  ))}
                 </div>
-              ))}
+              </div>
             </div>
+            <div style={{marginBottom:18}}>
+              <label style={LBL}>Category</label>
+              <div style={{display:'flex',gap:8,flexWrap:'wrap'}}>
+                {CATS.filter(c=>c.id!=='all').map(c=>(
+                  <button key={c.id} onClick={()=>setCat(c.id)} style={{padding:'6px 14px',borderRadius:20,fontSize:12.5,cursor:'pointer',fontFamily:"'EB Garamond',serif",fontWeight:cat===c.id?700:400,border:`2px solid ${cat===c.id?c.color:'#e5e7eb'}`,background:cat===c.id?`${c.color}12`:'#f9fafb',color:cat===c.id?c.color:'#6b7280',transition:'all .15s'}}>
+                    {c.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+            {/* Narrator preview */}
+            {validRows.length > 0 && (
+              <div style={{background:'#f9fafb',border:`1.5px solid ${color}33`,borderRadius:12,padding:'14px 16px',marginBottom:20}}>
+                <div style={{fontSize:10,letterSpacing:2,color:'#9ca3af',marginBottom:10,fontFamily:'system-ui',textTransform:'uppercase'}}>Narrators in this template ({validRows.length})</div>
+                <div style={{display:'flex',flexDirection:'column',gap:6}}>
+                  {validRows.map((row,i)=>(
+                    <div key={row.id} style={{display:'flex',alignItems:'center',gap:10}}>
+                      <div style={{width:20,height:20,borderRadius:'50%',background:color,display:'flex',alignItems:'center',justifyContent:'center',fontSize:9,color:'#fff',flexShrink:0,fontFamily:'system-ui',fontWeight:700}}>{i+1}</div>
+                      <div style={{fontSize:14,color:'#1f2937',fontFamily:"'EB Garamond',serif",lineHeight:1.3}}>{row.narrators[0].name}</div>
+                      {(row.narrators[0].role==='sahabi'||i===0)&&<span style={{fontSize:9,background:`${color}14`,color,border:`1px solid ${color}44`,borderRadius:10,padding:'1px 7px',fontFamily:'system-ui',flexShrink:0}}>Ṣaḥābī</span>}
+                      {(row.narrators[0].role==='anchor'||i===validRows.length-1)&&<span style={{fontSize:9,background:`${color}14`,color,border:`1px solid ${color}44`,borderRadius:10,padding:'1px 7px',fontFamily:'system-ui',flexShrink:0}}>★ Anchor</span>}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            {validRows.length === 0 && (
+              <div style={{background:'#fef9f0',border:'1px solid #fbbf24',borderRadius:10,padding:'12px 16px',marginBottom:20,fontSize:13,color:'#92400e',fontFamily:'system-ui'}}>
+                Add at least one named narrator before saving as a template.
+              </div>
+            )}
+            <div style={{display:'flex',gap:8,justifyContent:'flex-end'}}>
+              <button onClick={onClose} style={{padding:'9px 22px',borderRadius:8,border:'1px solid #e5e7eb',background:'#f9fafb',cursor:'pointer',fontSize:13,fontFamily:'system-ui',color:'#6b7280'}}>Cancel</button>
+              <button onClick={()=>canSave&&onSave(name.trim(),field.trim(),badge.trim(),color,cat,validRows)} style={{padding:'9px 22px',borderRadius:8,border:'none',background:canSave?color:'#d1d5db',color:'#fff',cursor:canSave?'pointer':'default',fontSize:13,fontFamily:'system-ui',fontWeight:600,transition:'background .15s'}}>Save Template</button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    /* ── Template Gallery Modal ───────────────────────────── */
+    function TemplateModal({ onSelect, onClose, customTemplates, onDeleteCustom }) {
+      const [hovered, setHovered] = useState(null);
+      const [tab, setTab] = useState(customTemplates.length > 0 ? 'mine' : 'famous');
+      const TabBtn = ({ id, label, count }) => (
+        <button onClick={()=>setTab(id)} style={{padding:'8px 20px',background:tab===id?'#111827':'#f9fafb',border:'none',cursor:'pointer',color:tab===id?'#fff':'#6b7280',fontFamily:"'EB Garamond',serif",fontSize:14,fontWeight:tab===id?700:400,display:'flex',alignItems:'center',gap:6,transition:'all .15s'}}>
+          {label}
+          {count>0&&<span style={{background:tab===id?'rgba(255,255,255,.25)':'#e5e7eb',color:tab===id?'#fff':'#374151',borderRadius:10,padding:'1px 8px',fontSize:10,fontFamily:'system-ui',fontWeight:700}}>{count}</span>}
+        </button>
+      );
+      const CardTemplate = ({ tpl, isCustom }) => (
+        <div
+          onMouseEnter={()=>setHovered(tpl.id)} onMouseLeave={()=>setHovered(null)}
+          onClick={()=>onSelect(tpl)}
+          style={{border:`2px solid ${hovered===tpl.id?tpl.color:"#e5e7eb"}`,borderRadius:14,padding:"16px 16px 14px",cursor:"pointer",background:hovered===tpl.id?`${tpl.color}06`:"#fafafa",transition:"all .18s",position:"relative",overflow:"hidden"}}>
+          <div style={{position:"absolute",top:0,left:0,right:0,height:4,background:tpl.color,borderRadius:"14px 14px 0 0"}}/>
+          <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',marginTop:4,marginBottom:8}}>
+            <div style={{display:"inline-block",background:`${tpl.color}18`,border:`1px solid ${tpl.color}44`,borderRadius:20,padding:"2px 10px",fontSize:11,color:tpl.color,fontFamily:"'EB Garamond',serif",letterSpacing:2}}>{tpl.badge||tpl.name.slice(0,6)}</div>
+            {isCustom&&(
+              <button onClick={e=>{e.stopPropagation();onDeleteCustom(tpl.id);}} style={{background:'#fef2f2',border:'1px solid #fecaca',borderRadius:6,padding:'2px 8px',fontSize:10,color:'#ef4444',cursor:'pointer',fontFamily:'system-ui',flexShrink:0}}>Delete</button>
+            )}
+          </div>
+          <div style={{fontFamily:"'EB Garamond',serif",fontSize:15,fontWeight:700,color:"#111827",marginBottom:3,lineHeight:1.3}}>{tpl.name}</div>
+          <div style={{fontSize:11,color:tpl.color,fontFamily:"system-ui",marginBottom:6,fontWeight:600,letterSpacing:.3}}>{tpl.field}</div>
+          {tpl.description&&<p style={{margin:"0 0 10px",fontSize:11.5,color:"#6b7280",fontFamily:"system-ui",lineHeight:1.5}}>{tpl.description}</p>}
+          <div style={{display:"flex",flexDirection:"column",gap:3}}>
+            {(tpl.narrators||[]).slice(0,5).map((n,i)=>(
+              <div key={i} style={{background:"#fff",border:`1.5px solid ${n.role==="anchor"?tpl.color:tpl.color+"55"}`,borderRadius:5,padding:"2px 8px",fontSize:10,color:n.role==="anchor"?tpl.color:"#374151",fontFamily:"system-ui",fontWeight:n.role==="anchor"?700:400,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>
+                {n.role==="sahabi"?"⬤ ":n.role==="anchor"?"★ ":""}{n.name}
+              </div>
+            ))}
+            {(tpl.narrators||[]).length>5&&<div style={{fontSize:10,color:"#9ca3af",fontFamily:"system-ui",fontStyle:"italic"}}>+{tpl.narrators.length-5} more…</div>}
+            {isCustom&&<div style={{fontSize:10,color:"#9ca3af",fontFamily:"system-ui",marginTop:2,fontStyle:"italic"}}>Saved {tpl.date||''}</div>}
+            {!isCustom&&<div style={{fontSize:10,color:"#9ca3af",fontFamily:"system-ui",marginTop:4,fontStyle:"italic"}}>+ your links continue below ↓</div>}
+          </div>
+        </div>
+      );
+      return (
+        <div style={{position:"fixed",inset:0,zIndex:200,display:"flex",alignItems:"center",justifyContent:"center",padding:20}} onClick={onClose}>
+          <div style={{position:"absolute",inset:0,background:"rgba(0,0,0,.45)",backdropFilter:"blur(3px)"}}/>
+          <div onClick={e=>e.stopPropagation()} style={{background:"#fff",borderRadius:20,width:"min(860px,98vw)",maxHeight:"88vh",overflow:"hidden",display:"flex",flexDirection:"column",boxShadow:"0 24px 64px rgba(0,0,0,.2)",position:"relative",zIndex:1}}>
+            <div style={{padding:"20px 26px 0",borderBottom:"1px solid #f3f4f6",display:"flex",alignItems:"center",justifyContent:"space-between",flexShrink:0,flexWrap:'wrap',gap:12}}>
+              <div>
+                <h2 style={{margin:0,fontSize:20,fontWeight:700,color:"#111827",fontFamily:"'EB Garamond',serif"}}>Chain Templates</h2>
+                <p style={{margin:"3px 0 0",fontSize:12,color:"#6b7280",fontFamily:"system-ui"}}>Choose a pre-built chain or one of your saved templates.</p>
+              </div>
+              <div style={{display:'flex',alignItems:'center',gap:8}}>
+                <div style={{display:'flex',border:'1px solid #e5e7eb',borderRadius:10,overflow:'hidden'}}>
+                  <TabBtn id="famous" label="Famous Chains" count={TEMPLATES.length}/>
+                  <div style={{width:1,background:'#e5e7eb'}}/>
+                  <TabBtn id="mine" label="My Templates" count={customTemplates.length}/>
+                </div>
+                <button onClick={onClose} style={{background:"#f3f4f6",border:"none",borderRadius:"50%",width:32,height:32,cursor:"pointer",fontSize:18,color:"#6b7280",display:"flex",alignItems:"center",justifyContent:"center"}}>×</button>
+              </div>
+            </div>
+            {tab === 'famous' && (
+              <div style={{overflowY:"auto",padding:"20px 22px 24px",display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(210px,1fr))",gap:14}}>
+                {TEMPLATES.map(tpl=><CardTemplate key={tpl.id} tpl={tpl} isCustom={false}/>)}
+              </div>
+            )}
+            {tab === 'mine' && (
+              <div style={{overflowY:"auto",padding:"20px 22px 24px"}}>
+                {customTemplates.length===0?(
+                  <div style={{textAlign:'center',padding:'70px 20px',color:'#9ca3af'}}>
+                    <div style={{fontSize:36,marginBottom:14}}>⭐</div>
+                    <div style={{fontSize:17,fontFamily:"'EB Garamond',serif",color:'#374151',marginBottom:8}}>No custom templates yet</div>
+                    <div style={{fontSize:13,fontFamily:'system-ui',maxWidth:300,margin:'0 auto'}}>Build a chain and click <strong>⭐ Save as Template</strong> to add it here.</div>
+                  </div>
+                ):(
+                  <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(210px,1fr))",gap:14}}>
+                    {customTemplates.map(tpl=><CardTemplate key={tpl.id} tpl={tpl} isCustom={true}/>)}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
       );
@@ -409,114 +537,83 @@
 
     /* ── Visual (Preview) ─────────────────────────────────── */
     function Visual({ rows, edges, subject, design, accentColor, previewRef }) {
-      const cfg = DESIGNS.find(d => d.id === design) || DESIGNS[0];
-
-      // Auto-prepended fixed rows (always shown above user chain)
-      const allahRow   = { id: "allah-row",   narrators: [{ id: "__allah__",   name: "Allāh ﷻ",            role: "divine", color: "#b45309" }] };
-      const lawhRow    = { id: "lawh-row",     narrators: [{ id: "__lawh__",    name: "Al-Lawḥ al-Maḥfūẓ", role: "divine", color: "#b45309" }] };
-      const jibRow     = { id: "jibreel-row",  narrators: [{ id: "__jibreel__", name: "Jibrīl عليه السلام", role: "divine", color: "#b45309" }] };
-      const prophetRow = { id: "prophet-row",  narrators: [{ id: PROPHET_ID,   name: "Prophet Muhammad",   role: "prophet", color: "#b45309" }] };
-
-      const all = [allahRow, lawhRow, jibRow, prophetRow, ...rows];
-      const allE = new Set(edges);
-      allE.add(eKey("__allah__", "__lawh__"));
-      allE.add(eKey("__lawh__", "__jibreel__"));
-      allE.add(eKey("__jibreel__", PROPHET_ID));
-      rows[0].narrators.forEach(n => allE.add(eKey(PROPHET_ID, n.id)));
-      const L = ["A", "B", "C"];
-      const FIXED = 4;
-
+      const cfg=DESIGNS.find(d=>d.id===design)||DESIGNS[0];
+      const allahRow  ={id:"allah-row",  narrators:[{id:"__allah__",  name:"Allāh ﷻ",           role:"divine",color:"#b45309"}]};
+      const lawhRow   ={id:"lawh-row",   narrators:[{id:"__lawh__",   name:"Al-Lawḥ al-Maḥfūẓ", role:"divine",color:"#b45309"}]};
+      const jibRow    ={id:"jibreel-row",narrators:[{id:"__jibreel__",name:"Jibrīl عليه السلام", role:"divine",color:"#b45309"}]};
+      const prophetRow={id:"prophet-row",narrators:[{id:PROPHET_ID,  name:"Prophet Muhammad",   role:"prophet",color:"#b45309"}]};
+      const all=[allahRow,lawhRow,jibRow,prophetRow,...rows];
+      const allE=new Set(edges);
+      allE.add(eKey("__allah__","__lawh__"));
+      allE.add(eKey("__lawh__","__jibreel__"));
+      allE.add(eKey("__jibreel__",PROPHET_ID));
+      rows[0].narrators.forEach(n=>allE.add(eKey(PROPHET_ID,n.id)));
+      const L=["A","B","C"],FIXED=4;
       return (
-        <div ref={previewRef} style={{ background: cfg.bg, position: "relative", overflow: "hidden" }}>
-          <BgPattern design={design} />
-          {[[0, 0, null, null, 0], [0, null, 0, null, 90], [null, 0, null, 0, 180], [null, null, 0, 0, 270]].map(([t, r, b, l, rot], i) => (
-            <div key={i} style={{ position: "absolute", top: t ?? undefined, right: r ?? undefined, bottom: b ?? undefined, left: l ?? undefined, transform: `rotate(${rot}deg)`, pointerEvents: "none", zIndex: 1 }}>
-              <CornerOrn color={accentColor} />
+        <div ref={previewRef} style={{background:cfg.bg,position:"relative",overflow:"hidden"}}>
+          <BgPattern design={design}/>
+          {[[0,0,null,null,0],[0,null,0,null,90],[null,0,null,0,180],[null,null,0,0,270]].map(([t,r,b,l,rot],i)=>(
+            <div key={i} style={{position:"absolute",top:t??undefined,right:r??undefined,bottom:b??undefined,left:l??undefined,transform:`rotate(${rot}deg)`,pointerEvents:"none",zIndex:1}}>
+              <CornerOrn color={accentColor}/>
             </div>
           ))}
-          <div style={{ padding: "44px 28px 52px", display: "flex", flexDirection: "column", alignItems: "center", position: "relative", zIndex: 2 }}>
-            {/* Header */}
-            <div style={{ textAlign: "center", width: VW, marginBottom: 28 }}>
-              <div style={{ fontSize: 26, color: accentColor, letterSpacing: 5, fontFamily: "'EB Garamond',serif", lineHeight: 1 }}>سلسلة السند</div>
-              <div style={{ fontSize: 10, letterSpacing: 4, color: "#9ca3af", fontFamily: "system-ui", textTransform: "uppercase", marginTop: 5 }}>Chain of Transmission</div>
-              {subject && <div style={{ fontFamily: "'EB Garamond',serif", fontSize: 18, color: "#1f2937", marginTop: 6 }}>{subject}</div>}
-              <div style={{ display: "flex", alignItems: "center", gap: 10, margin: "14px auto 0", maxWidth: 340 }}>
-                <div style={{ flex: 1, height: 1, background: accentColor, opacity: .25 }} />
-                <svg width="14" height="14" viewBox="0 0 14 14"><polygon points="7,1 8.7,5 13,5 9.5,7.8 10.8,12 7,9.3 3.2,12 4.5,7.8 1,5 5.3,5" fill={accentColor} opacity=".6" /></svg>
-                <div style={{ flex: 1, height: 1, background: accentColor, opacity: .25 }} />
+          <div style={{padding:"44px 28px 52px",display:"flex",flexDirection:"column",alignItems:"center",position:"relative",zIndex:2}}>
+            <div style={{textAlign:"center",width:VW,marginBottom:28}}>
+              <div style={{fontSize:26,color:accentColor,letterSpacing:5,fontFamily:"'EB Garamond',serif",lineHeight:1}}>سلسلة السند</div>
+              <div style={{fontSize:10,letterSpacing:4,color:"#9ca3af",fontFamily:"system-ui",textTransform:"uppercase",marginTop:5}}>Chain of Transmission</div>
+              {subject&&<div style={{fontFamily:"'EB Garamond',serif",fontSize:18,color:"#1f2937",marginTop:6}}>{subject}</div>}
+              <div style={{display:"flex",alignItems:"center",gap:10,margin:"14px auto 0",maxWidth:340}}>
+                <div style={{flex:1,height:1,background:accentColor,opacity:.25}}/>
+                <svg width="14" height="14" viewBox="0 0 14 14"><polygon points="7,1 8.7,5 13,5 9.5,7.8 10.8,12 7,9.3 3.2,12 4.5,7.8 1,5 5.3,5" fill={accentColor} opacity=".6"/></svg>
+                <div style={{flex:1,height:1,background:accentColor,opacity:.25}}/>
               </div>
             </div>
-
-            <div style={{ width: VW }}>
-              {all.map((row, ri) => {
-                const isDivine  = ["allah-row", "lawh-row", "jibreel-row"].includes(row.id);
-                const isProphet = row.id === "prophet-row";
-                const isFixed   = isDivine || isProphet;
-                const isSahabi  = !isFixed && ri === FIXED;
-                const isYou     = !isFixed && ri === all.length - 1;
-                const isTpl     = !isFixed && !!row.fromTemplate;
-                const isAnchor  = !isFixed && row.narrators[0]?.role === "anchor";
-                const count     = row.narrators.length;
-                const ctrs      = rowCenters(count);
-                const nextRow   = ri < all.length - 1 ? all[ri + 1] : null;
-                const nCtrs     = nextRow ? rowCenters(nextRow.narrators.length) : [];
-                const lines     = [];
-                if (nextRow) {
-                  row.narrators.forEach((fn, fi) => nextRow.narrators.forEach((tn, ti) => {
-                    if (allE.has(eKey(fn.id, tn.id))) lines.push({ x1: ctrs[fi], x2: nCtrs[ti], color: fn.color || "#b45309" });
-                  }));
-                }
-                return (
+            <div style={{width:VW}}>
+              {all.map((row,ri)=>{
+                const isDivine =["allah-row","lawh-row","jibreel-row"].includes(row.id);
+                const isProphet=row.id==="prophet-row";
+                const isFixed  =isDivine||isProphet;
+                const isSahabi =!isFixed&&ri===FIXED;
+                const isYou    =!isFixed&&ri===all.length-1;
+                const isTpl    =!isFixed&&!!row.fromTemplate;
+                const isAnchor =!isFixed&&row.narrators[0]?.role==="anchor";
+                const count    =row.narrators.length;
+                const ctrs     =rowCenters(count);
+                const nextRow  =ri<all.length-1?all[ri+1]:null;
+                const nCtrs    =nextRow?rowCenters(nextRow.narrators.length):[];
+                const lines    =[];
+                if(nextRow){row.narrators.forEach((fn,fi)=>nextRow.narrators.forEach((tn,ti)=>{if(allE.has(eKey(fn.id,tn.id)))lines.push({x1:ctrs[fi],x2:nCtrs[ti],color:fn.color||"#b45309"});}))}
+                return(
                   <div key={row.id}>
-                    <div style={{ display: "flex", justifyContent: "center", gap: 20 }}>
-                      {row.narrators.map((nar, ni) => {
-                        const name = nar.name || (isProphet ? "Prophet Muhammad ﷺ" : nar.role === "sahabi" ? "Companion (Ṣaḥābī)" : nar.role === "self" ? "Your Name" : "…");
-                        const bc   = isFixed ? "#b45309" : nar.color;
-                        return (
-                          <div key={nar.id} style={{
-                            width: BW, minHeight: isFixed ? 96 : BH,
-                            background: isFixed ? "#fffbeb" : isAnchor ? `${bc}0d` : "#fff",
-                            border: `${isFixed || isAnchor ? 2 : 1.5}px solid ${bc}`,
-                            borderRadius: isFixed ? 14 : 10,
-                            display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
-                            padding: "14px", textAlign: "center", position: "relative",
-                            boxShadow: isFixed ? `0 4px 22px ${bc}28,0 0 0 1px ${bc}22` : `0 2px 12px rgba(0,0,0,.07)`,
-                          }}>
-                            {/* Badge label */}
-                            <div style={{ position: "absolute", top: -11, left: "50%", transform: "translateX(-50%)", background: cfg.bg, border: `1.5px solid ${bc}`, borderRadius: 10, padding: "1px 9px", fontSize: 9, letterSpacing: 1.5, color: bc, whiteSpace: "nowrap", fontFamily: "system-ui" }}>
-                              {row.id === "allah-row"   ? "الله ﷻ" :
-                               row.id === "lawh-row"    ? "اللوح المحفوظ" :
-                               row.id === "jibreel-row" ? "جبريل" :
-                               isProphet                ? "النبي ﷺ" :
-                               isSahabi                 ? `Ṣaḥābī${count > 1 ? " · " + L[ni] : ""}` :
-                               isYou                    ? `Student${count > 1 ? " · " + L[ni] : ""}` :
-                               isAnchor                 ? `Anchor${count > 1 ? " · " + L[ni] : ""}` :
-                               isTpl                    ? `Template${count > 1 ? " · " + L[ni] : ""}` :
-                               count > 1                ? L[ni] : `Level ${ri - FIXED + 1}`}
+                    <div style={{display:"flex",justifyContent:"center",gap:20}}>
+                      {row.narrators.map((nar,ni)=>{
+                        const name=nar.name||(isProphet?"Prophet Muhammad ﷺ":nar.role==="sahabi"?"Companion (Ṣaḥābī)":nar.role==="self"?"Your Name":"…");
+                        const bc=isFixed?"#b45309":nar.color;
+                        return(
+                          <div key={nar.id} style={{width:BW,minHeight:isFixed?96:BH,background:isFixed?"#fffbeb":isAnchor?`${bc}0d`:"#fff",border:`${isFixed||isAnchor?2:1.5}px solid ${bc}`,borderRadius:isFixed?14:10,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"14px",textAlign:"center",position:"relative",boxShadow:isFixed?`0 4px 22px ${bc}28,0 0 0 1px ${bc}22`:`0 2px 12px rgba(0,0,0,.07)`}}>
+                            <div style={{position:"absolute",top:-11,left:"50%",transform:"translateX(-50%)",background:cfg.bg,border:`1.5px solid ${bc}`,borderRadius:10,padding:"1px 9px",fontSize:9,letterSpacing:1.5,color:bc,whiteSpace:"nowrap",fontFamily:"system-ui"}}>
+                              {row.id==="allah-row"?"الله ﷻ":row.id==="lawh-row"?"اللوح المحفوظ":row.id==="jibreel-row"?"جبريل":isProphet?"النبي ﷺ":isSahabi?`Ṣaḥābī${count>1?" · "+L[ni]:""}`:isYou?`Student${count>1?" · "+L[ni]:""}`:isAnchor?`Anchor${count>1?" · "+L[ni]:""}`:isTpl?`Template${count>1?" · "+L[ni]:""}`:count>1?L[ni]:`Level ${ri-FIXED+1}`}
                             </div>
-                            {/* Decorative glyphs for fixed rows */}
-                            {row.id === "allah-row"    && <div style={{ fontFamily: "'EB Garamond',serif", fontSize: 20, color: "#b45309", marginBottom: 3 }}>ﷻ</div>}
-                            {row.id === "jibreel-row"  && <div style={{ fontFamily: "'EB Garamond',serif", fontSize: 12, color: "#b45309", letterSpacing: 2, marginBottom: 4 }}>عليه السلام</div>}
-                            {isProphet                 && <div style={{ fontFamily: "'EB Garamond',serif", fontSize: 13, color: "#b45309", letterSpacing: 4, marginBottom: 5 }}>ﷺ   ﷺ</div>}
-                            {/* Name */}
-                            <div style={{ fontFamily: "'EB Garamond',serif", fontWeight: 700, fontSize: isFixed ? 17 : 14, color: isFixed ? "#92400e" : isYou || isAnchor ? bc : "#1f2937", lineHeight: 1.3 }}>{name}</div>
-                            {/* Subtitle */}
-                            {row.id === "allah-row"    && <div style={{ fontFamily: "'EB Garamond',serif", fontSize: 11, color: "#b45309", marginTop: 3 }}>تَبَارَكَ وَتَعَالَى</div>}
-                            {row.id === "lawh-row"     && <div style={{ fontFamily: "'EB Garamond',serif", fontSize: 11, color: "#b45309", marginTop: 3 }}>The Preserved Tablet</div>}
-                            {row.id === "jibreel-row"  && <div style={{ fontFamily: "'EB Garamond',serif", fontSize: 11, color: "#b45309", marginTop: 3 }}>The Trustworthy Angel</div>}
-                            {isProphet                 && <div style={{ fontFamily: "'EB Garamond',serif", fontSize: 11, color: "#b45309", marginTop: 3 }}>Muhammad ibn ʿAbdillāh</div>}
-                            {isTpl && !isAnchor        && <div style={{ position: "absolute", top: 4, right: 6, fontSize: 8, color: bc, opacity: .5, fontFamily: "system-ui" }}>⬡</div>}
-                            {isAnchor                  && <div style={{ position: "absolute", top: 4, right: 6, fontSize: 8, color: bc, opacity: .7, fontFamily: "system-ui" }}>★</div>}
+                            {row.id==="allah-row"   &&<div style={{fontFamily:"'EB Garamond',serif",fontSize:20,color:"#b45309",marginBottom:3}}>ﷻ</div>}
+                            {row.id==="jibreel-row" &&<div style={{fontFamily:"'EB Garamond',serif",fontSize:12,color:"#b45309",letterSpacing:2,marginBottom:4}}>عليه السلام</div>}
+                            {isProphet             &&<div style={{fontFamily:"'EB Garamond',serif",fontSize:13,color:"#b45309",letterSpacing:4,marginBottom:5}}>ﷺ   ﷺ</div>}
+                            <div style={{fontFamily:"'EB Garamond',serif",fontWeight:700,fontSize:isFixed?17:14,color:isFixed?"#92400e":isYou||isAnchor?bc:"#1f2937",lineHeight:1.3}}>{name}</div>
+                            {row.id==="allah-row"   &&<div style={{fontFamily:"'EB Garamond',serif",fontSize:11,color:"#b45309",marginTop:3}}>تَبَارَكَ وَتَعَالَى</div>}
+                            {row.id==="lawh-row"    &&<div style={{fontFamily:"'EB Garamond',serif",fontSize:11,color:"#b45309",marginTop:3}}>The Preserved Tablet</div>}
+                            {row.id==="jibreel-row" &&<div style={{fontFamily:"'EB Garamond',serif",fontSize:11,color:"#b45309",marginTop:3}}>The Trustworthy Angel</div>}
+                            {isProphet             &&<div style={{fontFamily:"'EB Garamond',serif",fontSize:11,color:"#b45309",marginTop:3}}>Muhammad ibn ʿAbdillāh</div>}
+                            {isTpl&&!isAnchor&&<div style={{position:"absolute",top:4,right:6,fontSize:8,color:bc,opacity:.5,fontFamily:"system-ui"}}>⬡</div>}
+                            {isAnchor            &&<div style={{position:"absolute",top:4,right:6,fontSize:8,color:bc,opacity:.7,fontFamily:"system-ui"}}>★</div>}
                           </div>
                         );
                       })}
                     </div>
-                    {nextRow && (
-                      <svg width={VW} height={CONN_H} viewBox={`0 0 ${VW} ${CONN_H}`} style={{ display: "block" }}>
-                        {lines.map((l, i) => (
+                    {nextRow&&(
+                      <svg width={VW} height={CONN_H} viewBox={`0 0 ${VW} ${CONN_H}`} style={{display:"block"}}>
+                        {lines.map((l,i)=>(
                           <Fragment key={i}>
-                            <path d={bezier(l.x1, l.x2)} fill="none" stroke={l.color} strokeWidth="1.8" opacity=".6" strokeLinecap="round" />
-                            <polygon points={`${l.x2},${CONN_H} ${l.x2 - 4.5},${CONN_H - 8} ${l.x2 + 4.5},${CONN_H - 8}`} fill={l.color} opacity=".75" />
+                            <path d={bezier(l.x1,l.x2)} fill="none" stroke={l.color} strokeWidth="1.8" opacity=".6" strokeLinecap="round"/>
+                            <polygon points={`${l.x2},${CONN_H} ${l.x2-4.5},${CONN_H-8} ${l.x2+4.5},${CONN_H-8}`} fill={l.color} opacity=".75"/>
                           </Fragment>
                         ))}
                       </svg>
@@ -525,14 +622,13 @@
                 );
               })}
             </div>
-
-            <div style={{ width: VW, marginTop: 22, textAlign: "center" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 10, maxWidth: 340, margin: "0 auto 14px" }}>
-                <div style={{ flex: 1, height: 1, background: accentColor, opacity: .25 }} />
-                <svg width="14" height="14" viewBox="0 0 14 14"><polygon points="7,1 8.7,5 13,5 9.5,7.8 10.8,12 7,9.3 3.2,12 4.5,7.8 1,5 5.3,5" fill={accentColor} opacity=".6" /></svg>
-                <div style={{ flex: 1, height: 1, background: accentColor, opacity: .25 }} />
+            <div style={{width:VW,marginTop:22,textAlign:"center"}}>
+              <div style={{display:"flex",alignItems:"center",gap:10,maxWidth:340,margin:"0 auto 14px"}}>
+                <div style={{flex:1,height:1,background:accentColor,opacity:.25}}/>
+                <svg width="14" height="14" viewBox="0 0 14 14"><polygon points="7,1 8.7,5 13,5 9.5,7.8 10.8,12 7,9.3 3.2,12 4.5,7.8 1,5 5.3,5" fill={accentColor} opacity=".6"/></svg>
+                <div style={{flex:1,height:1,background:accentColor,opacity:.25}}/>
               </div>
-              <div style={{ fontFamily: "'EB Garamond',serif", fontSize: 17, color: "#9ca3af", letterSpacing: 2 }}>بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</div>
+              <div style={{fontFamily:"'EB Garamond',serif",fontSize:17,color:"#9ca3af",letterSpacing:2}}>بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</div>
             </div>
           </div>
         </div>
@@ -541,210 +637,279 @@
 
     /* ── Main App ─────────────────────────────────────────── */
     function App() {
-      const [chain, setChain]          = useState(init);
-      const [tab, setTab]              = useState("build");
-      const [design, setDesign]        = useState("flowers");
-      const [accent, setAccent]        = useState("#b45309");
-      const [showTplModal, setTplModal]= useState(false);
-      const [appliedTpl, setAppliedTpl]= useState(null);
-      const [pdfStatus, setPdfStatus]  = useState("idle");
+      const [chain,setChain]           = useState(init);
+      const [tab,setTab]               = useState("build");
+      const [design,setDesign]         = useState("flowers");
+      const [accent,setAccent]         = useState("#b45309");
+      const [showTplModal,setTplModal] = useState(false);
+      const [appliedTpl,setAppliedTpl] = useState(null);
+      const [pdfStatus,setPdfStatus]   = useState("idle");
       const previewRef = useRef(null);
 
-      const upd = fn => setChain(c => fn(c));
-      const setSubject   = v       => upd(c => ({ ...c, subject: v }));
-      const setNarName   = (ri, ni, v) => upd(c => ({ ...c, rows: c.rows.map((r, i) => i !== ri ? r : { ...r, narrators: r.narrators.map((n, j) => j !== ni ? n : { ...n, name: v }) }) }));
-      const setNarColor  = (ri, ni, v) => upd(c => ({ ...c, rows: c.rows.map((r, i) => i !== ri ? r : { ...r, narrators: r.narrators.map((n, j) => j !== ni ? n : { ...n, color: v }) }) }));
+      /* new state */
+      const [savedSanads,setSavedSanads]     = useState(loadSavedSanads);
+      const [customTpls,setCustomTpls]       = useState(loadCustomTpls);
+      const [showSaveModal,setShowSaveModal] = useState(false);
+      const [showSaveTplModal,setShowSaveTpl]= useState(false);
+      const [folderCat,setFolderCat]         = useState('all');
+      const [saveTplDone,setSaveTplDone]     = useState(false);
+
+      const upd = fn => setChain(c=>fn(c));
+      const setSubject  = v       => upd(c=>({...c,subject:v}));
+      const setNarName  = (ri,ni,v)=>upd(c=>({...c,rows:c.rows.map((r,i)=>i!==ri?r:{...r,narrators:r.narrators.map((n,j)=>j!==ni?n:{...n,name:v})})}));
+      const setNarColor = (ri,ni,v)=>upd(c=>({...c,rows:c.rows.map((r,i)=>i!==ri?r:{...r,narrators:r.narrators.map((n,j)=>j!==ni?n:{...n,color:v})})}));
 
       const applyTemplate = tpl => { setChain(buildFromTemplate(tpl)); setAppliedTpl(tpl); setTplModal(false); setAccent(tpl.color); };
       const clearTemplate = () => { setChain(init()); setAppliedTpl(null); };
 
-      const addBranch = ri => upd(c => {
-        const row = c.rows[ri]; if (row.narrators.length >= 3) return c;
-        const base = row.narrators[0], newId = uid();
-        let E = new Set(c.edges);
-        tgts(E, base.id).forEach(t => { E = addE(E, newId, t); });
-        srcs(E, base.id).forEach(s => { E = addE(E, s, newId); });
-        const ci = (PALETTE.indexOf(row.narrators[row.narrators.length - 1].color) + 4) % PALETTE.length;
-        return { ...c, rows: c.rows.map((r, i) => i !== ri ? r : { ...r, narrators: [...r.narrators, { id: newId, name: "", role: base.role, color: PALETTE[ci] }] }), edges: E };
+      const addBranch = ri=>upd(c=>{
+        const row=c.rows[ri]; if(row.narrators.length>=3) return c;
+        const base=row.narrators[0],newId=uid();
+        let E=new Set(c.edges);
+        tgts(E,base.id).forEach(t=>{E=addE(E,newId,t);});
+        srcs(E,base.id).forEach(s=>{E=addE(E,s,newId);});
+        const ci=(PALETTE.indexOf(row.narrators[row.narrators.length-1].color)+4)%PALETTE.length;
+        return{...c,rows:c.rows.map((r,i)=>i!==ri?r:{...r,narrators:[...r.narrators,{id:newId,name:"",role:base.role,color:PALETTE[ci]}]}),edges:E};
       });
-      const remBranch = ri => upd(c => {
-        const row = c.rows[ri]; if (row.narrators.length <= 1) return c;
-        const rid = row.narrators[row.narrators.length - 1].id;
-        return { ...c, rows: c.rows.map((r, i) => i !== ri ? r : { ...r, narrators: r.narrators.slice(0, -1) }), edges: new Set([...c.edges].filter(e => !e.startsWith(`${rid}|`) && !e.endsWith(`|${rid}`))) };
+      const remBranch = ri=>upd(c=>{
+        const row=c.rows[ri]; if(row.narrators.length<=1) return c;
+        const rid=row.narrators[row.narrators.length-1].id;
+        return{...c,rows:c.rows.map((r,i)=>i!==ri?r:{...r,narrators:r.narrators.slice(0,-1)}),edges:new Set([...c.edges].filter(e=>!e.startsWith(`${rid}|`)&&!e.endsWith(`|${rid}`)))};
       });
-      const addLevel = ri => upd(c => {
-        const newId = uid();
-        const prev = c.rows[ri].narrators.map(n => n.id);
-        const nxt  = ri + 1 < c.rows.length ? c.rows[ri + 1].narrators.map(n => n.id) : [];
-        let E = new Set(c.edges);
-        prev.forEach(p => nxt.forEach(n => { E = delE(E, p, n); }));
-        prev.forEach(p => { E = addE(E, p, newId); }); nxt.forEach(n => { E = addE(E, newId, n); });
-        const ci = Math.floor(Math.random() * PALETTE.length);
-        const rows = [...c.rows]; rows.splice(ri + 1, 0, { id: uid(), fromTemplate: false, narrators: [{ id: newId, name: "", role: "", color: PALETTE[ci] }] });
-        return { ...c, rows, edges: E };
+      const addLevel = ri=>upd(c=>{
+        const newId=uid();
+        const prev=c.rows[ri].narrators.map(n=>n.id);
+        const nxt=ri+1<c.rows.length?c.rows[ri+1].narrators.map(n=>n.id):[];
+        let E=new Set(c.edges);
+        prev.forEach(p=>nxt.forEach(n=>{E=delE(E,p,n);}));
+        prev.forEach(p=>{E=addE(E,p,newId);}); nxt.forEach(n=>{E=addE(E,newId,n);});
+        const ci=Math.floor(Math.random()*PALETTE.length);
+        const rows=[...c.rows]; rows.splice(ri+1,0,{id:uid(),fromTemplate:false,narrators:[{id:newId,name:"",role:"",color:PALETTE[ci]}]});
+        return{...c,rows,edges:E};
       });
-      const remLevel = ri => upd(c => {
-        if (c.rows.length <= 2) return c;
-        const removed = c.rows[ri].narrators.map(n => n.id);
-        let E = new Set(c.edges);
-        removed.forEach(id => {
-          const ss = srcs(E, id), ts = tgts(E, id);
-          ss.forEach(s => ts.forEach(t => { E = addE(E, s, t); }));
-          E = new Set([...E].filter(e => !e.startsWith(`${id}|`) && !e.endsWith(`|${id}`)));
+      const remLevel = ri=>upd(c=>{
+        if(c.rows.length<=2) return c;
+        const removed=c.rows[ri].narrators.map(n=>n.id);
+        let E=new Set(c.edges);
+        removed.forEach(id=>{
+          const ss=srcs(E,id),ts=tgts(E,id);
+          ss.forEach(s=>ts.forEach(t=>{E=addE(E,s,t);}));
+          E=new Set([...E].filter(e=>!e.startsWith(`${id}|`)&&!e.endsWith(`|${id}`)));
         });
-        return { ...c, rows: c.rows.filter((_, i) => i !== ri), edges: E };
+        return{...c,rows:c.rows.filter((_,i)=>i!==ri),edges:E};
       });
-      const togConn = (a, b) => upd(c => ({ ...c, edges: togE(c.edges, a, b) }));
+      const togConn=(a,b)=>upd(c=>({...c,edges:togE(c.edges,a,b)}));
 
-      const downloadPDF = useCallback(async () => {
-        if (!previewRef.current) return;
+      /* ── Save / load sanads ── */
+      const handleSaveSanad = (title, category) => {
+        const entry = {
+          id: Date.now().toString(),
+          title, category,
+          subject: chain.subject,
+          rows: chain.rows,
+          edges: [...chain.edges],
+          design, accent,
+          date: new Date().toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'}),
+        };
+        const updated = [entry, ...savedSanads];
+        setSavedSanads(updated);
+        localStorage.setItem(SANADS_KEY, JSON.stringify(updated));
+        setShowSaveModal(false);
+        setFolderCat(category);
+        setTab('sanads');
+      };
+      const handleDeleteSanad = id => {
+        const updated = savedSanads.filter(s => s.id !== id);
+        setSavedSanads(updated);
+        localStorage.setItem(SANADS_KEY, JSON.stringify(updated));
+      };
+      const handleLoadSanad = sanad => {
+        setChain({ subject: sanad.subject||'', rows: sanad.rows, edges: new Set(sanad.edges||[]) });
+        if (sanad.design) setDesign(sanad.design);
+        if (sanad.accent) setAccent(sanad.accent);
+        setAppliedTpl(null);
+        setTab('build');
+      };
+
+      /* ── Save / delete custom templates ── */
+      const handleSaveCustomTpl = (name, field, badge, color, category, validRows) => {
+        const narrators = validRows.map((row, i, arr) => ({
+          name:  row.narrators[0].name.trim(),
+          role:  row.narrators[0].role || (i===0?'sahabi': i===arr.length-1?'anchor':''),
+          color,
+        }));
+        const entry = {
+          id: `ct_${Date.now()}`,
+          name, field: field||name, badge: badge||name.slice(0,8), color, category, narrators,
+          date: new Date().toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'}),
+        };
+        const updated = [entry, ...customTpls];
+        setCustomTpls(updated);
+        localStorage.setItem(CUSTOM_TPL_KEY, JSON.stringify(updated));
+        setShowSaveTpl(false);
+        setSaveTplDone(true);
+        setTimeout(()=>setSaveTplDone(false), 2500);
+      };
+      const handleDeleteCustomTpl = id => {
+        const updated = customTpls.filter(t => t.id !== id);
+        setCustomTpls(updated);
+        localStorage.setItem(CUSTOM_TPL_KEY, JSON.stringify(updated));
+      };
+
+      const downloadPDF = useCallback(async()=>{
+        if(!previewRef.current) return;
         setPdfStatus("loading");
-        try {
-          await new Promise((res, rej) => { if (window.html2canvas) return res(); const s = document.createElement("script"); s.src = "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"; s.onload = res; s.onerror = rej; document.head.appendChild(s); });
-          await new Promise((res, rej) => { if (window.jspdf) return res(); const s = document.createElement("script"); s.src = "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"; s.onload = res; s.onerror = rej; document.head.appendChild(s); });
-          const canvas = await window.html2canvas(previewRef.current, { scale: 2, useCORS: true, backgroundColor: null, logging: false, allowTaint: true });
-          const imgData = canvas.toDataURL("image/png");
-          const { jsPDF } = window.jspdf;
-          const W = canvas.width / 2, H = canvas.height / 2;
-          const pdf = new jsPDF({ orientation: H > W ? "portrait" : "landscape", unit: "px", format: [W, H] });
-          pdf.addImage(imgData, "PNG", 0, 0, W, H);
-          pdf.save(chain.subject ? `Sanad-${chain.subject.replace(/\s+/g, "-")}.pdf` : "Sanad-Chain.pdf");
-          setPdfStatus("done"); setTimeout(() => setPdfStatus("idle"), 2500);
-        } catch (e) { console.error(e); setPdfStatus("idle"); alert("PDF failed — please try again."); }
-      }, [chain.subject]);
+        try{
+          await new Promise((res,rej)=>{if(window.html2canvas)return res();const s=document.createElement("script");s.src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js";s.onload=res;s.onerror=rej;document.head.appendChild(s);});
+          await new Promise((res,rej)=>{if(window.jspdf)return res();const s=document.createElement("script");s.src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js";s.onload=res;s.onerror=rej;document.head.appendChild(s);});
+          const canvas=await window.html2canvas(previewRef.current,{scale:2,useCORS:true,backgroundColor:null,logging:false,allowTaint:true});
+          const imgData=canvas.toDataURL("image/png");
+          const{jsPDF}=window.jspdf;
+          const W=canvas.width/2,H=canvas.height/2;
+          const pdf=new jsPDF({orientation:H>W?"portrait":"landscape",unit:"px",format:[W,H]});
+          pdf.addImage(imgData,"PNG",0,0,W,H);
+          pdf.save(chain.subject?`Sanad-${chain.subject.replace(/\s+/g,"-")}.pdf`:"Sanad-Chain.pdf");
+          setPdfStatus("done"); setTimeout(()=>setPdfStatus("idle"),2500);
+        }catch(e){console.error(e);setPdfStatus("idle");alert("PDF failed — please try again.");}
+      },[chain.subject]);
 
-      const { rows, edges, subject } = chain;
-      const L = ["A", "B", "C"];
-      const INP = (ex = {}) => ({ border: "1px solid #e5e7eb", borderRadius: 7, padding: "8px 11px", fontSize: 15, fontFamily: "'EB Garamond',serif", outline: "none", background: "#fff", color: "#1f2937", boxSizing: "border-box", width: "100%", ...ex });
-      const SMBTN = (bc = "#e5e7eb", tc = "#6b7280", bg = "#f9fafb") => ({ background: bg, border: `1px solid ${bc}`, borderRadius: 6, padding: "3px 10px", fontSize: 11, cursor: "pointer", color: tc, fontFamily: "system-ui", letterSpacing: .3, lineHeight: "18px" });
+      const {rows,edges,subject}=chain;
+      const L=["A","B","C"];
+      const INP=(ex={})=>({border:"1px solid #e5e7eb",borderRadius:7,padding:"8px 11px",fontSize:15,fontFamily:"'EB Garamond',serif",outline:"none",background:"#fff",color:"#1f2937",boxSizing:"border-box",width:"100%",...ex});
+      const SMBTN=(bc="#e5e7eb",tc="#6b7280",bg="#f9fafb")=>({background:bg,border:`1px solid ${bc}`,borderRadius:6,padding:"3px 10px",fontSize:11,cursor:"pointer",color:tc,fontFamily:"system-ui",letterSpacing:.3,lineHeight:"18px"});
+
+      const filteredSanads = folderCat==='all' ? savedSanads : savedSanads.filter(s=>s.category===folderCat);
 
       return (
-        <div style={{ minHeight: "60vh", background: "#f9fafb", fontFamily: "'EB Garamond',serif" }}>
-          {showTplModal && <TemplateModal onSelect={applyTemplate} onClose={() => setTplModal(false)} />}
+        <div style={{minHeight:"60vh",background:"#f9fafb",fontFamily:"'EB Garamond',serif"}}>
 
-          {/* Tabs */}
-          <div style={{ background: "#fff", borderBottom: "1px solid #f3f4f6", display: "flex", justifyContent: "center" }}>
-            {["build", "preview"].map(t => (
-              <button key={t} onClick={() => setTab(t)} style={{ padding: "11px 28px", background: "none", border: "none", cursor: "pointer", borderBottom: tab === t ? "2.5px solid #111827" : "2.5px solid transparent", color: tab === t ? "#111827" : "#9ca3af", fontFamily: "'EB Garamond',serif", fontSize: 16, fontWeight: tab === t ? 700 : 400, marginBottom: -1 }}>
-                {t === "build" ? "✏ Build Chain" : "⛓ Preview"}
+          {/* ── Modals ── */}
+          {showTplModal && <TemplateModal onSelect={applyTemplate} onClose={()=>setTplModal(false)} customTemplates={customTpls} onDeleteCustom={handleDeleteCustomTpl}/>}
+          {showSaveModal && <SaveSanadModal subject={subject} onSave={handleSaveSanad} onClose={()=>setShowSaveModal(false)}/>}
+          {showSaveTplModal && <SaveTemplateModal rows={rows} onSave={handleSaveCustomTpl} onClose={()=>setShowSaveTpl(false)}/>}
+
+          {/* ── Tabs ── */}
+          <div style={{background:"#fff",borderBottom:"1px solid #f3f4f6",display:"flex",justifyContent:"center"}}>
+            {["build","preview","sanads"].map(t=>(
+              <button key={t} onClick={()=>setTab(t)} style={{padding:"11px 22px",background:"none",border:"none",cursor:"pointer",borderBottom:tab===t?"2.5px solid #111827":"2.5px solid transparent",color:tab===t?"#111827":"#9ca3af",fontFamily:"'EB Garamond',serif",fontSize:15,fontWeight:tab===t?700:400,marginBottom:-1,display:'flex',alignItems:'center',gap:6}}>
+                {t==="build"?"✏ Build Chain":t==="preview"?"⛓ Preview":"📁 My Sanads"}
+                {t==="sanads"&&savedSanads.length>0&&<span style={{background:tab==='sanads'?'#111827':'#e5e7eb',color:tab==='sanads'?'#fff':'#374151',borderRadius:10,padding:'1px 7px',fontSize:10,fontFamily:'system-ui',fontWeight:700}}>{savedSanads.length}</span>}
               </button>
             ))}
           </div>
 
-          <div style={{ maxWidth: 1200, margin: "0 auto", padding: "28px 20px 80px" }}>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(450px,1fr))", gap: 28, alignItems: "start" }}>
+          <div style={{maxWidth:1200,margin:"0 auto",padding:"28px 20px 80px"}}>
 
-              {/* ════ BUILDER ════ */}
-              <div className="build-col" style={{ display: tab === "preview" ? "none" : "block" }}>
+            {/* ════ BUILD + PREVIEW ════ */}
+            <div style={{display:tab==="sanads"?"none":"grid",gridTemplateColumns:"repeat(auto-fit,minmax(450px,1fr))",gap:28,alignItems:"start"}}>
+
+              {/* ── BUILDER ── */}
+              <div className="build-col" style={{display:tab==="preview"?"none":"block"}}>
+
+                {/* Save toolbar */}
+                <div style={{display:'flex',gap:8,justifyContent:'flex-end',marginBottom:12}}>
+                  <button onClick={()=>setShowSaveTpl(true)} style={{display:'flex',alignItems:'center',gap:5,padding:'7px 14px',borderRadius:8,border:'1.5px solid #d97706',background:saveTplDone?'#166534':'#fffbeb',color:saveTplDone?'#fff':'#92400e',cursor:'pointer',fontSize:12.5,fontFamily:'system-ui',fontWeight:600,transition:'all .2s'}}>
+                    {saveTplDone?'✓ Template Saved':'⭐ Save as Template'}
+                  </button>
+                  <button onClick={()=>setShowSaveModal(true)} style={{display:'flex',alignItems:'center',gap:5,padding:'7px 14px',borderRadius:8,border:'none',background:'#111827',color:'#fff',cursor:'pointer',fontSize:12.5,fontFamily:'system-ui',fontWeight:600}}>
+                    💾 Save Sanad
+                  </button>
+                </div>
 
                 {/* Template banner */}
-                {appliedTpl ? (
-                  <div style={{ background: `${appliedTpl.color}0d`, border: `1.5px solid ${appliedTpl.color}55`, borderRadius: 12, padding: "12px 16px", marginBottom: 14, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                      <div style={{ width: 10, height: 10, borderRadius: "50%", background: appliedTpl.color, flexShrink: 0 }} />
+                {appliedTpl?(
+                  <div style={{background:`${appliedTpl.color}0d`,border:`1.5px solid ${appliedTpl.color}55`,borderRadius:12,padding:"12px 16px",marginBottom:14,display:"flex",alignItems:"center",justifyContent:"space-between",gap:10}}>
+                    <div style={{display:"flex",alignItems:"center",gap:10}}>
+                      <div style={{width:10,height:10,borderRadius:"50%",background:appliedTpl.color,flexShrink:0}}/>
                       <div>
-                        <div style={{ fontSize: 13, fontWeight: 700, color: appliedTpl.color, fontFamily: "'EB Garamond',serif" }}>{appliedTpl.name} template applied</div>
-                        <div style={{ fontSize: 11, color: "#6b7280", fontFamily: "system-ui", marginTop: 1 }}>Template rows are pre-filled — add your own links below the ★ anchor</div>
+                        <div style={{fontSize:13,fontWeight:700,color:appliedTpl.color,fontFamily:"'EB Garamond',serif"}}>{appliedTpl.name} template applied</div>
+                        <div style={{fontSize:11,color:"#6b7280",fontFamily:"system-ui",marginTop:1}}>Template rows are pre-filled — add your own links below the ★ anchor</div>
                       </div>
                     </div>
-                    <div style={{ display: "flex", gap: 6, flexShrink: 0 }}>
-                      <button onClick={() => setTplModal(true)} style={SMBTN(appliedTpl.color, appliedTpl.color, `${appliedTpl.color}10`)}>Change</button>
-                      <button onClick={clearTemplate} style={SMBTN("#fecaca", "#ef4444", "#fef2f2")}>Clear</button>
+                    <div style={{display:"flex",gap:6,flexShrink:0}}>
+                      <button onClick={()=>setTplModal(true)} style={SMBTN(appliedTpl.color,appliedTpl.color,`${appliedTpl.color}10`)}>Change</button>
+                      <button onClick={clearTemplate} style={SMBTN("#fecaca","#ef4444","#fef2f2")}>Clear</button>
                     </div>
                   </div>
-                ) : (
-                  <button onClick={() => setTplModal(true)} style={{ width: "100%", marginBottom: 14, padding: "13px", background: "#fff", border: "2px dashed #d1d5db", borderRadius: 12, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 10, color: "#374151", fontFamily: "'EB Garamond',serif", fontSize: 16, transition: "all .18s" }}
-                    onMouseEnter={e => { e.currentTarget.style.borderColor = "#111827"; e.currentTarget.style.background = "#f9fafb"; }}
-                    onMouseLeave={e => { e.currentTarget.style.borderColor = "#d1d5db"; e.currentTarget.style.background = "#fff"; }}>
-                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="1" y="1" width="16" height="16" rx="3" stroke="#374151" strokeWidth="1.5" strokeDasharray="3 2" /><path d="M9 5v8M5 9h8" stroke="#374151" strokeWidth="1.5" strokeLinecap="round" /></svg>
-                    Use a Famous Chain Template
-                    <span style={{ fontSize: 12, color: "#9ca3af", fontFamily: "system-ui" }}>(Ibn al-Jazarī, al-Bukhārī, Mālik &amp; more)</span>
+                ):(
+                  <button onClick={()=>setTplModal(true)} style={{width:"100%",marginBottom:14,padding:"13px",background:"#fff",border:"2px dashed #d1d5db",borderRadius:12,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:10,color:"#374151",fontFamily:"'EB Garamond',serif",fontSize:15,transition:"all .18s"}}
+                    onMouseEnter={e=>{e.currentTarget.style.borderColor="#111827";e.currentTarget.style.background="#f9fafb";}}
+                    onMouseLeave={e=>{e.currentTarget.style.borderColor="#d1d5db";e.currentTarget.style.background="#fff";}}>
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="1" y="1" width="16" height="16" rx="3" stroke="#374151" strokeWidth="1.5" strokeDasharray="3 2"/><path d="M9 5v8M5 9h8" stroke="#374151" strokeWidth="1.5" strokeLinecap="round"/></svg>
+                    Use a Chain Template
+                    <span style={{fontSize:12,color:"#9ca3af",fontFamily:"system-ui"}}>(Famous chains &amp; your saved templates)</span>
                   </button>
                 )}
 
                 {/* Chain builder card */}
-                <div style={{ background: "#fff", border: "1px solid #f3f4f6", borderRadius: 16, padding: "26px 22px", boxShadow: "0 1px 8px rgba(0,0,0,.05)" }}>
-                  <div style={{ marginBottom: 22 }}>
-                    <label style={{ fontSize: 10, letterSpacing: 2, color: "#9ca3af", display: "block", marginBottom: 6, fontFamily: "system-ui", textTransform: "uppercase" }}>Subject / Field of Transmission</label>
-                    <input style={INP()} value={subject} onChange={e => setSubject(e.target.value)} placeholder="e.g. Ṣaḥīḥ al-Bukhārī, Ḥafs ʿan ʿĀṣim…" />
+                <div style={{background:"#fff",border:"1px solid #f3f4f6",borderRadius:16,padding:"26px 22px",boxShadow:"0 1px 8px rgba(0,0,0,.05)"}}>
+                  <div style={{marginBottom:22}}>
+                    <label style={{fontSize:10,letterSpacing:2,color:"#9ca3af",display:"block",marginBottom:6,fontFamily:"system-ui",textTransform:"uppercase"}}>Subject / Field of Transmission</label>
+                    <input style={INP()} value={subject} onChange={e=>setSubject(e.target.value)} placeholder="e.g. Ḥafs ʿan ʿĀṣim, Ṣaḥīḥ al-Bukhārī…"/>
                   </div>
-                  <div style={{ height: 1, background: "#f3f4f6", marginBottom: 22 }} />
+                  <div style={{height:1,background:"#f3f4f6",marginBottom:22}}/>
 
-                  {/* Fixed header: Allah → Lawh → Jibreel → Prophet (auto-added) */}
-                  <div style={{ border: "2px solid #b45309", borderRadius: 12, padding: "12px 16px", background: "#fffbeb", marginBottom: 0, boxShadow: "0 2px 12px #b4530914" }}>
-                    <div style={{ fontSize: 9, color: "#92400e", fontFamily: "system-ui", letterSpacing: 1.5, textTransform: "uppercase", textAlign: "center", marginBottom: 8, fontWeight: 600 }}>Auto-added · Start of every chain</div>
-                    {[
-                      { name: "Allāh ﷻ",             sub: "تَبَارَكَ وَتَعَالَى" },
-                      { name: "Al-Lawḥ al-Maḥfūẓ",  sub: "The Preserved Tablet"  },
-                      { name: "Jibrīl عليه السلام", sub: "The Trustworthy Angel" },
-                      { name: "Prophet Muḥammad ﷺ", sub: "The Final Messenger"   },
-                    ].map((h, i) => (
+                  {/* Fixed header */}
+                  <div style={{border:"2px solid #b45309",borderRadius:12,padding:"12px 16px",background:"#fffbeb",marginBottom:0,boxShadow:"0 2px 12px #b4530914"}}>
+                    <div style={{fontSize:9,color:"#92400e",fontFamily:"system-ui",letterSpacing:1.5,textTransform:"uppercase",textAlign:"center",marginBottom:8,fontWeight:600}}>Auto-added · Start of every chain</div>
+                    {[{name:"Allāh ﷻ",sub:"تَبَارَكَ وَتَعَالَى"},{name:"Al-Lawḥ al-Maḥfūẓ",sub:"The Preserved Tablet"},{name:"Jibrīl عليه السلام",sub:"The Trustworthy Angel"},{name:"Prophet Muḥammad ﷺ",sub:"The Final Messenger"}].map((h,i)=>(
                       <Fragment key={i}>
-                        <div style={{ textAlign: "center", padding: "4px 0" }}>
-                          <div style={{ fontSize: 13, color: "#92400e", fontFamily: "'EB Garamond',serif", fontWeight: 700, lineHeight: 1.3 }}>{h.name}</div>
-                          <div style={{ fontSize: 9.5, color: "#b45309", fontFamily: "system-ui", opacity: .85 }}>{h.sub}</div>
+                        <div style={{textAlign:"center",padding:"4px 0"}}>
+                          <div style={{fontSize:13,color:"#92400e",fontFamily:"'EB Garamond',serif",fontWeight:700,lineHeight:1.3}}>{h.name}</div>
+                          <div style={{fontSize:9.5,color:"#b45309",fontFamily:"system-ui",opacity:.85}}>{h.sub}</div>
                         </div>
-                        {i < 3 && <div style={{ display: "flex", justifyContent: "center" }}><div style={{ width: 2, height: 10, background: "#d97706", opacity: .45 }} /></div>}
+                        {i<3&&<div style={{display:"flex",justifyContent:"center"}}><div style={{width:2,height:10,background:"#d97706",opacity:.45}}/></div>}
                       </Fragment>
                     ))}
                   </div>
-                  <div style={{ display: "flex", justifyContent: "center", padding: "3px 0" }}>
-                    <div style={{ width: 2, height: 18, background: "#e5e7eb" }} />
-                  </div>
+                  <div style={{display:"flex",justifyContent:"center",padding:"3px 0"}}><div style={{width:2,height:18,background:"#e5e7eb"}}/></div>
 
-                  {rows.map((row, ri) => {
-                    const isFirst  = ri === 0, isLast = ri === rows.length - 1;
-                    const isTpl    = !!row.fromTemplate;
-                    const isAnchor = row.narrators[0]?.role === "anchor";
-                    const count    = row.narrators.length;
-                    const nextRow  = isLast ? null : rows[ri + 1];
-                    const showMtrx = nextRow && (count > 1 || nextRow.narrators.length > 1);
-                    const rowLabel = isFirst ? "Companion (Ṣaḥābī)" : isLast ? "You (Student)" : isAnchor ? `★ ${appliedTpl?.name || "Anchor"} (template end)` : isTpl ? "Template Narrator" : `Level ${ri}`;
-                    const bc = row.narrators[0].color;
-
-                    return (
+                  {rows.map((row,ri)=>{
+                    const isFirst=ri===0,isLast=ri===rows.length-1;
+                    const isTpl=!!row.fromTemplate,isAnchor=row.narrators[0]?.role==="anchor";
+                    const count=row.narrators.length,nextRow=isLast?null:rows[ri+1];
+                    const showMtrx=nextRow&&(count>1||nextRow.narrators.length>1);
+                    const rowLabel=isFirst?"Companion (Ṣaḥābī)":isLast?"You (Student)":isAnchor?`★ ${appliedTpl?.name||"Anchor"} (template end)`:isTpl?"Template Narrator":`Level ${ri}`;
+                    const bc=row.narrators[0].color;
+                    return(
                       <div key={row.id}>
-                        <div style={{ borderLeft: `3px solid ${isTpl ? bc + "99" : bc}`, border: "1px solid #e5e7eb", borderLeftWidth: 3, borderRadius: "0 10px 10px 0", padding: "13px 14px", background: "#fafafa", opacity: 1 }}>
-                          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 11 }}>
-                            <span style={{ fontSize: 10, letterSpacing: 1.5, color: isTpl ? bc + "aa" : "#6b7280", textTransform: "uppercase", fontFamily: "system-ui", display: "flex", alignItems: "center", gap: 5 }}>
-                              {isTpl && <span style={{ fontSize: 9, background: `${bc}18`, border: `1px solid ${bc}44`, color: bc, borderRadius: 10, padding: "1px 6px" }}>template</span>}
+                        <div style={{borderLeft:`3px solid ${isTpl?bc+"99":bc}`,border:"1px solid #e5e7eb",borderLeftWidth:3,borderRadius:"0 10px 10px 0",padding:"13px 14px",background:"#fafafa"}}>
+                          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:11}}>
+                            <span style={{fontSize:10,letterSpacing:1.5,color:isTpl?bc+"aa":"#6b7280",textTransform:"uppercase",fontFamily:"system-ui",display:"flex",alignItems:"center",gap:5}}>
+                              {isTpl&&<span style={{fontSize:9,background:`${bc}18`,border:`1px solid ${bc}44`,color:bc,borderRadius:10,padding:"1px 6px"}}>template</span>}
                               {rowLabel}
-                              {count > 1 && <span style={{ color: "#d1d5db", marginLeft: 4 }}>· {count} branches</span>}
+                              {count>1&&<span style={{color:"#d1d5db",marginLeft:4}}>· {count} branches</span>}
                             </span>
-                            <div style={{ display: "flex", gap: 5 }}>
-                              {count < 3 && !isTpl && <button onClick={() => addBranch(ri)} style={SMBTN()}>+ Branch</button>}
-                              {count > 1 && !isTpl && <button onClick={() => remBranch(ri)} style={SMBTN()}>− Branch</button>}
-                              {!isFirst && !isLast && !isTpl && <button onClick={() => remLevel(ri)} style={SMBTN("#fecaca", "#ef4444", "#fef2f2")}>✕</button>}
+                            <div style={{display:"flex",gap:5}}>
+                              {count<3&&!isTpl&&<button onClick={()=>addBranch(ri)} style={SMBTN()}>+ Branch</button>}
+                              {count>1&&!isTpl&&<button onClick={()=>remBranch(ri)} style={SMBTN()}>− Branch</button>}
+                              {!isFirst&&!isLast&&!isTpl&&<button onClick={()=>remLevel(ri)} style={SMBTN("#fecaca","#ef4444","#fef2f2")}>✕</button>}
                             </div>
                           </div>
-                          <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
-                            {row.narrators.map((nar, ni) => (
-                              <div key={nar.id} style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                                {!isTpl && <Swatch color={nar.color} onChange={c => setNarColor(ri, ni, c)} />}
-                                {isTpl  && <div style={{ width: 22, height: 22, borderRadius: "50%", background: nar.color, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 9, color: "#fff", fontWeight: 700 }}>{isAnchor ? "★" : "⬡"}</div>}
-                                {count > 1 && <span style={{ fontSize: 11, fontWeight: 700, color: nar.color, width: 13, textAlign: "center", fontFamily: "system-ui" }}>{L[ni]}</span>}
-                                <input
-                                  style={{ ...INP({ border: `1.5px solid ${nar.color}${isTpl ? "55" : "38"}`, flex: 1, background: isTpl ? "#f9faffa0" : "#fff", fontWeight: isTpl ? 600 : 400 }) }}
-                                  value={nar.name}
-                                  onChange={e => setNarName(ri, ni, e.target.value)}
-                                  readOnly={isTpl}
-                                  placeholder={isFirst ? "Companion's name…" : isLast ? "Your name…" : count > 1 ? `Narrator ${L[ni]}…` : "Narrator's name…"}
-                                  onFocus={e => { if (!isTpl) { e.target.style.borderColor = nar.color; e.target.style.boxShadow = `0 0 0 2px ${nar.color}20`; } }}
-                                  onBlur={e => { e.target.style.borderColor = `${nar.color}${isTpl ? "55" : "38"}`; e.target.style.boxShadow = "none"; }}
+                          <div style={{display:"flex",flexDirection:"column",gap:9}}>
+                            {row.narrators.map((nar,ni)=>(
+                              <div key={nar.id} style={{display:"flex",alignItems:"center",gap:8}}>
+                                {!isTpl&&<Swatch color={nar.color} onChange={c=>setNarColor(ri,ni,c)}/>}
+                                {isTpl&&<div style={{width:22,height:22,borderRadius:"50%",background:nar.color,flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:9,color:"#fff",fontWeight:700}}>{isAnchor?"★":"⬡"}</div>}
+                                {count>1&&<span style={{fontSize:11,fontWeight:700,color:nar.color,width:13,textAlign:"center",fontFamily:"system-ui"}}>{L[ni]}</span>}
+                                <input style={{...INP({border:`1.5px solid ${nar.color}${isTpl?"55":"38"}`,flex:1,background:isTpl?"#f9faffa0":"#fff",fontWeight:isTpl?600:400})}} value={nar.name} onChange={e=>setNarName(ri,ni,e.target.value)} readOnly={isTpl}
+                                  placeholder={isFirst?"Companion's name…":isLast?"Your name…":count>1?`Narrator ${L[ni]}…`:"Narrator's name…"}
+                                  onFocus={e=>{if(!isTpl){e.target.style.borderColor=nar.color;e.target.style.boxShadow=`0 0 0 2px ${nar.color}20`;}}}
+                                  onBlur={e=>{e.target.style.borderColor=`${nar.color}${isTpl?"55":"38"}`;e.target.style.boxShadow="none";}}
                                 />
                               </div>
                             ))}
                           </div>
                         </div>
-                        {!isLast && (
-                          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "4px 0", gap: 0 }}>
-                            <div style={{ width: 2, height: 9, background: "#e5e7eb" }} />
-                            {showMtrx && nextRow && <div style={{ margin: "5px 0" }}><ConnMatrix fromRow={row} toRow={nextRow} edges={edges} onToggle={togConn} /></div>}
-                            {(!isTpl && !(rows[ri + 1]?.fromTemplate)) && (
-                              <button onClick={() => addLevel(ri)} style={{ background: "#fff", border: "1px dashed #d1d5db", borderRadius: 6, padding: "2px 18px", fontSize: 11, cursor: "pointer", color: "#9ca3af", fontFamily: "system-ui", margin: "3px 0", letterSpacing: .3 }}>+ Add Level</button>
+                        {!isLast&&(
+                          <div style={{display:"flex",flexDirection:"column",alignItems:"center",padding:"4px 0",gap:0}}>
+                            <div style={{width:2,height:9,background:"#e5e7eb"}}/>
+                            {showMtrx&&nextRow&&<div style={{margin:"5px 0"}}><ConnMatrix fromRow={row} toRow={nextRow} edges={edges} onToggle={togConn}/></div>}
+                            {(!isTpl&&!(rows[ri+1]?.fromTemplate))&&(
+                              <button onClick={()=>addLevel(ri)} style={{background:"#fff",border:"1px dashed #d1d5db",borderRadius:6,padding:"2px 18px",fontSize:11,cursor:"pointer",color:"#9ca3af",fontFamily:"system-ui",margin:"3px 0",letterSpacing:.3}}>+ Add Level</button>
                             )}
-                            {isAnchor && <div style={{ fontSize: 10, color: bc, fontFamily: "system-ui", letterSpacing: 1, margin: "3px 0", opacity: .75 }}>▼ your chain continues below</div>}
-                            <div style={{ width: 2, height: 9, background: "#e5e7eb" }} />
+                            {isAnchor&&<div style={{fontSize:10,color:bc,fontFamily:"system-ui",letterSpacing:1,margin:"3px 0",opacity:.75}}>▼ your chain continues below</div>}
+                            <div style={{width:2,height:9,background:"#e5e7eb"}}/>
                           </div>
                         )}
                       </div>
@@ -753,49 +918,126 @@
                 </div>
               </div>
 
-              {/* ════ PREVIEW ════ */}
-              <div className="preview-col" style={{ display: tab === "build" ? "none" : "block", position: "sticky", top: 16 }}>
-                <div style={{ background: "#fff", border: "1px solid #f3f4f6", borderRadius: 14, padding: "16px 18px", marginBottom: 16, boxShadow: "0 1px 6px rgba(0,0,0,.04)" }}>
-                  <div style={{ display: "flex", gap: 20, alignItems: "flex-start", flexWrap: "wrap" }}>
-                    <div style={{ flex: 1, minWidth: 220 }}>
-                      <div style={{ fontSize: 10, letterSpacing: 2, color: "#9ca3af", fontFamily: "system-ui", textTransform: "uppercase", marginBottom: 9 }}>Background Design</div>
-                      <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
-                        {DESIGNS.map(d => (
-                          <button key={d.id} onClick={() => setDesign(d.id)} style={{ padding: "5px 11px", borderRadius: 20, fontSize: 11, cursor: "pointer", fontFamily: "system-ui", letterSpacing: .3, transition: "all .15s", border: `1.5px solid ${design === d.id ? "#111827" : "#e5e7eb"}`, background: design === d.id ? "#111827" : d.bg, color: design === d.id ? "#fff" : "#374151", display: "flex", alignItems: "center", gap: 5 }}>
-                            <span style={{ width: 9, height: 9, borderRadius: "50%", background: d.bg, border: "1px solid #d1d5db", display: "inline-block", flexShrink: 0 }} />
+              {/* ── PREVIEW ── */}
+              <div className="preview-col" style={{display:tab==="build"?"none":"block",position:"sticky",top:16}}>
+                <div style={{background:"#fff",border:"1px solid #f3f4f6",borderRadius:14,padding:"16px 18px",marginBottom:16,boxShadow:"0 1px 6px rgba(0,0,0,.04)"}}>
+                  <div style={{display:"flex",gap:20,alignItems:"flex-start",flexWrap:"wrap"}}>
+                    <div style={{flex:1,minWidth:220}}>
+                      <div style={{fontSize:10,letterSpacing:2,color:"#9ca3af",fontFamily:"system-ui",textTransform:"uppercase",marginBottom:9}}>Background Design</div>
+                      <div style={{display:"flex",flexWrap:"wrap",gap:6}}>
+                        {DESIGNS.map(d=>(
+                          <button key={d.id} onClick={()=>setDesign(d.id)} style={{padding:"5px 11px",borderRadius:20,fontSize:11,cursor:"pointer",fontFamily:"system-ui",letterSpacing:.3,transition:"all .15s",border:`1.5px solid ${design===d.id?"#111827":"#e5e7eb"}`,background:design===d.id?"#111827":d.bg,color:design===d.id?"#fff":"#374151",display:"flex",alignItems:"center",gap:5}}>
+                            <span style={{width:9,height:9,borderRadius:"50%",background:d.bg,border:"1px solid #d1d5db",display:"inline-block",flexShrink:0}}/>
                             {d.label}
                           </button>
                         ))}
                       </div>
                     </div>
-                    <div style={{ flexShrink: 0 }}>
-                      <div style={{ fontSize: 10, letterSpacing: 2, color: "#9ca3af", fontFamily: "system-ui", textTransform: "uppercase", marginBottom: 9 }}>Accent</div>
-                      <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
-                        {["#b45309", "#166534", "#1e40af", "#991b1b", "#5b21b6", "#374151"].map(c => (
-                          <button key={c} onClick={() => setAccent(c)} style={{ width: 26, height: 26, borderRadius: "50%", background: c, padding: 0, cursor: "pointer", border: accent === c ? "3px solid #111" : "2.5px solid #fff", boxShadow: `0 0 0 1.5px ${c}88` }} />
+                    <div style={{flexShrink:0}}>
+                      <div style={{fontSize:10,letterSpacing:2,color:"#9ca3af",fontFamily:"system-ui",textTransform:"uppercase",marginBottom:9}}>Accent</div>
+                      <div style={{display:"flex",flexWrap:"wrap",gap:6}}>
+                        {["#b45309","#166534","#1e40af","#991b1b","#5b21b6","#374151"].map(c=>(
+                          <button key={c} onClick={()=>setAccent(c)} style={{width:26,height:26,borderRadius:"50%",background:c,padding:0,cursor:"pointer",border:accent===c?"3px solid #111":"2.5px solid #fff",boxShadow:`0 0 0 1.5px ${c}88`}}/>
                         ))}
                       </div>
                     </div>
                   </div>
-                  <div style={{ marginTop: 14, display: "flex", justifyContent: "flex-end" }}>
-                    <button onClick={downloadPDF} disabled={pdfStatus === "loading"} style={{ display: "flex", alignItems: "center", gap: 7, background: pdfStatus === "done" ? "#166534" : pdfStatus === "loading" ? "#9ca3af" : "#111827", color: "#fff", border: "none", borderRadius: 8, padding: "9px 20px", fontSize: 13, cursor: pdfStatus === "loading" ? "wait" : "pointer", fontFamily: "system-ui", letterSpacing: .3, fontWeight: 600, boxShadow: "0 2px 8px rgba(0,0,0,.15)", transition: "background .2s" }}>
-                      {pdfStatus === "loading" ? <><span style={{ display: "inline-block", width: 13, height: 13, border: "2px solid #fff", borderTopColor: "transparent", borderRadius: "50%", animation: "spin .7s linear infinite" }} />Generating…</> : pdfStatus === "done" ? "✓ Downloaded!" : <><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M7.5 10L3 5.5h3V1h3v4.5h3L7.5 10Z" fill="#fff" /><path d="M1 13h13" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" /></svg>Download PDF</>}
+                  <div style={{marginTop:14,display:"flex",justifyContent:"flex-end"}}>
+                    <button onClick={downloadPDF} disabled={pdfStatus==="loading"} style={{display:"flex",alignItems:"center",gap:7,background:pdfStatus==="done"?"#166534":pdfStatus==="loading"?"#9ca3af":"#111827",color:"#fff",border:"none",borderRadius:8,padding:"9px 20px",fontSize:13,cursor:pdfStatus==="loading"?"wait":"pointer",fontFamily:"system-ui",letterSpacing:.3,fontWeight:600,boxShadow:"0 2px 8px rgba(0,0,0,.15)",transition:"background .2s"}}>
+                      {pdfStatus==="loading"?<><span style={{display:"inline-block",width:13,height:13,border:"2px solid #fff",borderTopColor:"transparent",borderRadius:"50%",animation:"spin .7s linear infinite"}}/>Generating…</>:pdfStatus==="done"?"✓ Downloaded!":<><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M7.5 10L3 5.5h3V1h3v4.5h3L7.5 10Z" fill="#fff"/><path d="M1 13h13" stroke="#fff" strokeWidth="1.5" strokeLinecap="round"/></svg>Download PDF</>}
                     </button>
                   </div>
                 </div>
-                <div style={{ border: "1px solid #e5e7eb", borderRadius: 16, overflow: "auto", maxHeight: "78vh", boxShadow: "0 4px 24px rgba(0,0,0,.07)" }}>
-                  <Visual rows={rows} edges={edges} subject={subject} design={design} accentColor={accent} previewRef={previewRef} />
+                <div style={{border:"1px solid #e5e7eb",borderRadius:16,overflow:"auto",maxHeight:"78vh",boxShadow:"0 4px 24px rgba(0,0,0,.07)"}}>
+                  <Visual rows={rows} edges={edges} subject={subject} design={design} accentColor={accent} previewRef={previewRef}/>
                 </div>
               </div>
 
             </div>
+
+            {/* ════ MY SANADS ════ */}
+            {tab === 'sanads' && (
+              <div>
+                {/* Folder tabs */}
+                <div style={{display:'flex',gap:8,flexWrap:'wrap',marginBottom:28}}>
+                  {CATS.map(cat=>{
+                    const count = cat.id==='all' ? savedSanads.length : savedSanads.filter(s=>s.category===cat.id).length;
+                    const active = folderCat===cat.id;
+                    return(
+                      <button key={cat.id} onClick={()=>setFolderCat(cat.id)} style={{display:'flex',alignItems:'center',gap:8,padding:'9px 20px',borderRadius:28,fontSize:14,cursor:'pointer',fontFamily:"'EB Garamond',serif",fontWeight:active?700:400,border:`2px solid ${active?cat.color:'#e5e7eb'}`,background:active?`${cat.color}10`:'#fff',color:active?cat.color:'#6b7280',transition:'all .15s',boxShadow:active?`0 2px 12px ${cat.color}22`:'none'}}>
+                        {cat.arabic&&<span style={{fontSize:12,fontFamily:"'EB Garamond',serif"}}>{cat.arabic}</span>}
+                        {cat.label}
+                        <span style={{background:active?cat.color:'#e5e7eb',color:active?'#fff':'#9ca3af',borderRadius:10,padding:'1px 8px',fontSize:11,fontFamily:'system-ui',fontWeight:700,minWidth:20,textAlign:'center'}}>{count}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Sanad grid */}
+                {filteredSanads.length===0?(
+                  <div style={{textAlign:'center',padding:'90px 20px',color:'#9ca3af'}}>
+                    <div style={{fontSize:42,marginBottom:16}}>📂</div>
+                    <div style={{fontSize:20,fontFamily:"'EB Garamond',serif",color:'#374151',marginBottom:10}}>
+                      {folderCat==='all'?'No saved sanads yet':`No sanads in the ${CATS.find(c=>c.id===folderCat)?.label} folder`}
+                    </div>
+                    <div style={{fontSize:13,fontFamily:'system-ui',color:'#9ca3af',maxWidth:320,margin:'0 auto 24px',lineHeight:1.6}}>
+                      Build a chain in the builder, then click <strong>💾 Save Sanad</strong> to add it here.
+                    </div>
+                    <button onClick={()=>setTab('build')} style={{padding:'10px 24px',borderRadius:10,border:'none',background:'#111827',color:'#fff',cursor:'pointer',fontSize:14,fontFamily:"'EB Garamond',serif",fontWeight:700}}>Start Building →</button>
+                  </div>
+                ):(
+                  <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(300px,1fr))',gap:18}}>
+                    {filteredSanads.map(sanad=>{
+                      const catObj = CATS.find(c=>c.id===sanad.category)||CATS[CATS.length-1];
+                      const narratorCount = sanad.rows?.length||0;
+                      return(
+                        <div key={sanad.id} style={{background:'#fff',border:`1.5px solid ${catObj.color}30`,borderRadius:16,padding:'18px',boxShadow:'0 2px 14px rgba(0,0,0,.06)',position:'relative',overflow:'hidden',transition:'box-shadow .15s'}}
+                          onMouseEnter={e=>e.currentTarget.style.boxShadow=`0 6px 24px ${catObj.color}22`}
+                          onMouseLeave={e=>e.currentTarget.style.boxShadow='0 2px 14px rgba(0,0,0,.06)'}>
+                          {/* Top color stripe */}
+                          <div style={{position:'absolute',top:0,left:0,right:0,height:3,background:catObj.color,borderRadius:'16px 16px 0 0'}}/>
+                          <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',marginTop:6,marginBottom:8}}>
+                            <div style={{flex:1,minWidth:0,paddingRight:10}}>
+                              <div style={{fontSize:17,fontWeight:700,color:'#111827',fontFamily:"'EB Garamond',serif",lineHeight:1.3,marginBottom:sanad.subject?4:0}}>{sanad.title}</div>
+                              {sanad.subject&&<div style={{fontSize:12.5,color:'#6b7280',fontFamily:"'EB Garamond',serif",fontStyle:'italic',lineHeight:1.4}}>{sanad.subject}</div>}
+                            </div>
+                            <span style={{flexShrink:0,background:`${catObj.color}14`,border:`1px solid ${catObj.color}44`,color:catObj.color,borderRadius:20,padding:'3px 11px',fontSize:10.5,fontFamily:'system-ui',fontWeight:600,letterSpacing:.3}}>
+                              {catObj.arabic&&<span style={{marginRight:4,fontFamily:"'EB Garamond',serif"}}>{catObj.arabic}</span>}{catObj.label}
+                            </span>
+                          </div>
+                          {/* Narrator preview chips */}
+                          {sanad.rows&&sanad.rows.length>0&&(
+                            <div style={{display:'flex',flexWrap:'wrap',gap:4,marginBottom:12}}>
+                              {sanad.rows.slice(0,4).map((row,i)=>row.narrators[0]?.name?(
+                                <span key={i} style={{fontSize:10,background:'#f3f4f6',borderRadius:6,padding:'2px 8px',color:'#374151',fontFamily:"'EB Garamond',serif",maxWidth:110,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{row.narrators[0].name}</span>
+                              ):null)}
+                              {sanad.rows.length>4&&<span style={{fontSize:10,color:'#9ca3af',fontFamily:'system-ui',padding:'2px 0'}}>+{sanad.rows.length-4} more</span>}
+                            </div>
+                          )}
+                          <div style={{fontSize:11.5,color:'#9ca3af',fontFamily:'system-ui',marginBottom:14,display:'flex',gap:10,alignItems:'center'}}>
+                            <span>{narratorCount} narrator{narratorCount!==1?'s':''}</span>
+                            <span style={{width:3,height:3,borderRadius:'50%',background:'#d1d5db',display:'inline-block'}}/>
+                            <span>{sanad.date}</span>
+                          </div>
+                          <div style={{display:'flex',gap:8}}>
+                            <button onClick={()=>handleLoadSanad(sanad)} style={{flex:1,padding:'8px',borderRadius:8,border:'none',background:catObj.color,color:'#fff',cursor:'pointer',fontSize:13,fontFamily:'system-ui',fontWeight:600,transition:'opacity .15s'}}>Load Chain</button>
+                            <button onClick={()=>handleDeleteSanad(sanad.id)} style={{padding:'8px 14px',borderRadius:8,border:'1px solid #fecaca',background:'#fef2f2',color:'#ef4444',cursor:'pointer',fontSize:12,fontFamily:'system-ui',flexShrink:0}}>Delete</button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            )}
+
           </div>
 
           <style>{`
             @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,700;1,400&display=swap');
             * { box-sizing: border-box; }
             input::placeholder { color:#d1d5db!important; }
-            button:hover { opacity:.82; }
+            button:hover { opacity:.84; }
             ::-webkit-scrollbar{width:4px;height:4px;}
             ::-webkit-scrollbar-thumb{background:#e5e7eb;border-radius:3px;}
             @keyframes spin{to{transform:rotate(360deg);}}
@@ -808,7 +1050,7 @@
       );
     }
 
-    ReactDOM.createRoot(document.getElementById('chain-builder-root')).render(<App />);
+    ReactDOM.createRoot(document.getElementById('chain-builder-root')).render(<App/>);
   </script>
 </body>
 </html>
