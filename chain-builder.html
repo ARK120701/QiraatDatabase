@@ -959,6 +959,74 @@
       );
     }
 
+    /* ── RowEditor ──────────────────────────────────────────── */
+    function RowEditor({ row, ri, isFirst, isLast, nextRow, edges, appliedTpl,
+                         onAddBranch, onAddMultiBranch, onRemBranch, onRemLevel, onAddLevel,
+                         onTogConn, onSetNarColor, onSetNarName, onRemBranchAt }) {
+      const [multiN, setMultiN] = useState(5);
+      const isTpl    = !!row.fromTemplate;
+      const isAnchor = row.narrators[0]?.role === "anchor";
+      const count    = row.narrators.length;
+      const nextCount= nextRow?.narrators.length || 0;
+      const showMtrx = nextRow && (count > 1 || nextCount > 1) && count <= 6 && nextCount <= 6;
+      const rowLabel = isFirst ? "Companion (Ṣaḥābī)" : isLast ? "You (Student)"
+                     : isAnchor ? `★ ${appliedTpl?.name || "Anchor"} (template end)`
+                     : isTpl ? "Template Narrator" : `Level ${ri}`;
+      const bc = row.narrators[0].color;
+      return (
+        <div>
+          <div style={{borderLeft:`3px solid ${isTpl?bc+"99":bc}`,border:"1px solid #e5e7eb",borderLeftWidth:3,borderRadius:"0 10px 10px 0",padding:"13px 14px",background:"#fafafa"}}>
+            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:11,flexWrap:'wrap',gap:6}}>
+              <span style={{fontSize:10,letterSpacing:1.5,color:isTpl?bc+"aa":"#6b7280",textTransform:"uppercase",fontFamily:"system-ui",display:"flex",alignItems:"center",gap:5}}>
+                {isTpl&&<span style={{fontSize:9,background:`${bc}18`,border:`1px solid ${bc}44`,color:bc,borderRadius:10,padding:"1px 6px"}}>template</span>}
+                {rowLabel}
+                {count>1&&<span style={{color:"#9ca3af",marginLeft:4}}>· {count} branches</span>}
+              </span>
+              <div style={{display:"flex",gap:5,flexWrap:'wrap'}}>
+                {!isTpl&&count<50&&(
+                  <>
+                    <button onClick={onAddBranch} style={SMBTN()}>+ Branch</button>
+                    <div style={{display:'flex',alignItems:'center',gap:3}}>
+                      <input type="number" min="1" max={50-count} value={multiN} onChange={e=>setMultiN(Math.max(1,Math.min(50-count,+e.target.value||1)))} style={{width:40,border:'1px solid #e5e7eb',borderRadius:5,padding:'2px 5px',fontSize:11,fontFamily:'system-ui',textAlign:'center',outline:'none'}}/>
+                      <button onClick={()=>onAddMultiBranch(multiN)} style={SMBTN("#6366f1","#6366f1","#eef2ff")}>+ {multiN}</button>
+                    </div>
+                  </>
+                )}
+                {count>1&&!isTpl&&<button onClick={onRemBranch} style={SMBTN()}>− Last</button>}
+                {!isFirst&&!isLast&&!isTpl&&<button onClick={onRemLevel} style={SMBTN("#fecaca","#ef4444","#fef2f2")}>✕</button>}
+              </div>
+            </div>
+            <div style={{display:"flex",flexDirection:"column",gap:7,maxHeight:count>8?260:undefined,overflowY:count>8?'auto':'visible',paddingRight:count>8?4:0}}>
+              {row.narrators.map((nar,ni)=>(
+                <div key={nar.id} style={{display:"flex",alignItems:"center",gap:6}}>
+                  {!isTpl&&<Swatch color={nar.color} onChange={c=>onSetNarColor(ni,c)}/>}
+                  {isTpl&&<div style={{width:20,height:20,borderRadius:"50%",background:nar.color,flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:8,color:"#fff",fontWeight:700}}>{isAnchor?"★":"⬡"}</div>}
+                  <span style={{fontSize:10,fontWeight:700,color:nar.color,width:count>1?22:0,textAlign:"center",fontFamily:"system-ui",flexShrink:0,overflow:'hidden'}}>{count>1?L50[ni]:''}</span>
+                  <input style={{...INP({border:`1.5px solid ${nar.color}${isTpl?"55":"38"}`,flex:1,background:isTpl?"#f9faffa0":"#fff",fontWeight:isTpl?600:400,fontSize:13,padding:'6px 9px'})}} value={nar.name} onChange={e=>onSetNarName(ni,e.target.value)} readOnly={isTpl}
+                    placeholder={isFirst?"Companion's name…":isLast?"Your name…":count>1?`Narrator ${L50[ni]}…`:"Narrator's name…"}
+                    onFocus={e=>{if(!isTpl){e.target.style.borderColor=nar.color;e.target.style.boxShadow=`0 0 0 2px ${nar.color}20`;}}}
+                    onBlur={e=>{e.target.style.borderColor=`${nar.color}${isTpl?"55":"38"}`;e.target.style.boxShadow="none";}}
+                  />
+                  {!isTpl&&count>1&&<button onClick={()=>onRemBranchAt(ni)} style={{flexShrink:0,width:18,height:18,borderRadius:'50%',border:'1px solid #fecaca',background:'#fef2f2',color:'#ef4444',cursor:'pointer',fontSize:10,padding:0,lineHeight:'16px',fontFamily:'system-ui'}}>×</button>}
+                </div>
+              ))}
+            </div>
+          </div>
+          {!isLast&&(
+            <div style={{display:"flex",flexDirection:"column",alignItems:"center",padding:"4px 0",gap:0}}>
+              <div style={{width:2,height:9,background:"#e5e7eb"}}/>
+              {showMtrx&&nextRow&&<div style={{margin:"5px 0"}}><ConnMatrix fromRow={row} toRow={nextRow} edges={edges} onToggle={onTogConn}/></div>}
+              {(!isTpl&&!(nextRow?.fromTemplate))&&(
+                <button onClick={onAddLevel} style={{background:"#fff",border:"1px dashed #d1d5db",borderRadius:6,padding:"2px 18px",fontSize:11,cursor:"pointer",color:"#9ca3af",fontFamily:"system-ui",margin:"3px 0",letterSpacing:.3}}>+ Add Level</button>
+              )}
+              {isAnchor&&<div style={{fontSize:10,color:bc,fontFamily:"system-ui",letterSpacing:1,margin:"3px 0",opacity:.75}}>▼ your chain continues below</div>}
+              <div style={{width:2,height:9,background:"#e5e7eb"}}/>
+            </div>
+          )}
+        </div>
+      );
+    }
+
     /* ── Main App ─────────────────────────────────────────── */
     function App() {
       const [chain,setChain]           = useState(init);
@@ -1070,7 +1138,8 @@
         localStorage.setItem(SANADS_KEY, JSON.stringify(updated));
       };
       const handleLoadSanad = sanad => {
-        setChain({ subject: sanad.subject||'', rows: sanad.rows, edges: new Set(sanad.edges||[]) });
+        const editableRows = (sanad.rows||[]).map(r=>({...r, fromTemplate: false}));
+        setChain({ subject: sanad.subject||'', rows: editableRows, edges: new Set(sanad.edges||[]) });
         if (sanad.design) setDesign(sanad.design);
         if (sanad.accent) setAccent(sanad.accent);
         setAppliedTpl(null);
@@ -1379,69 +1448,25 @@
                   </div>
                   <div style={{display:"flex",justifyContent:"center",padding:"3px 0"}}><div style={{width:2,height:18,background:"#e5e7eb"}}/></div>
 
-                  {rows.map((row,ri)=>{
-                    const isFirst=ri===0,isLast=ri===rows.length-1;
-                    const isTpl=!!row.fromTemplate,isAnchor=row.narrators[0]?.role==="anchor";
-                    const count=row.narrators.length,nextRow=isLast?null:rows[ri+1];
-                    const nextCount=nextRow?.narrators.length||0;
-                    const showMtrx=nextRow&&(count>1||nextCount>1)&&count<=6&&nextCount<=6;
-                    const rowLabel=isFirst?"Companion (Ṣaḥābī)":isLast?"You (Student)":isAnchor?`★ ${appliedTpl?.name||"Anchor"} (template end)`:isTpl?"Template Narrator":`Level ${ri}`;
-                    const bc=row.narrators[0].color;
-                    const [multiN,setMultiN]=React.useState(5);
-                    return(
-                      <div key={row.id}>
-                        <div style={{borderLeft:`3px solid ${isTpl?bc+"99":bc}`,border:"1px solid #e5e7eb",borderLeftWidth:3,borderRadius:"0 10px 10px 0",padding:"13px 14px",background:"#fafafa"}}>
-                          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:11,flexWrap:'wrap',gap:6}}>
-                            <span style={{fontSize:10,letterSpacing:1.5,color:isTpl?bc+"aa":"#6b7280",textTransform:"uppercase",fontFamily:"system-ui",display:"flex",alignItems:"center",gap:5}}>
-                              {isTpl&&<span style={{fontSize:9,background:`${bc}18`,border:`1px solid ${bc}44`,color:bc,borderRadius:10,padding:"1px 6px"}}>template</span>}
-                              {rowLabel}
-                              {count>1&&<span style={{color:"#9ca3af",marginLeft:4}}>· {count} branches</span>}
-                            </span>
-                            <div style={{display:"flex",gap:5,flexWrap:'wrap'}}>
-                              {!isTpl&&count<50&&(
-                                <>
-                                  <button onClick={()=>addBranch(ri)} style={SMBTN()}>+ Branch</button>
-                                  <div style={{display:'flex',alignItems:'center',gap:3}}>
-                                    <input type="number" min="1" max={50-count} value={multiN} onChange={e=>setMultiN(Math.max(1,Math.min(50-count,+e.target.value||1)))} style={{width:40,border:'1px solid #e5e7eb',borderRadius:5,padding:'2px 5px',fontSize:11,fontFamily:'system-ui',textAlign:'center',outline:'none'}}/>
-                                    <button onClick={()=>addMultiBranch(ri,multiN)} style={SMBTN("#6366f1","#6366f1","#eef2ff")}>+ {multiN}</button>
-                                  </div>
-                                </>
-                              )}
-                              {count>1&&!isTpl&&<button onClick={()=>remBranch(ri)} style={SMBTN()}>− Last</button>}
-                              {!isFirst&&!isLast&&!isTpl&&<button onClick={()=>remLevel(ri)} style={SMBTN("#fecaca","#ef4444","#fef2f2")}>✕</button>}
-                            </div>
-                          </div>
-                          {/* Narrator inputs — scrollable when many */}
-                          <div style={{display:"flex",flexDirection:"column",gap:7,maxHeight:count>8?260:undefined,overflowY:count>8?'auto':'visible',paddingRight:count>8?4:0}}>
-                            {row.narrators.map((nar,ni)=>(
-                              <div key={nar.id} style={{display:"flex",alignItems:"center",gap:6}}>
-                                {!isTpl&&<Swatch color={nar.color} onChange={c=>setNarColor(ri,ni,c)}/>}
-                                {isTpl&&<div style={{width:20,height:20,borderRadius:"50%",background:nar.color,flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:8,color:"#fff",fontWeight:700}}>{isAnchor?"★":"⬡"}</div>}
-                                <span style={{fontSize:10,fontWeight:700,color:nar.color,width:count>1?22:0,textAlign:"center",fontFamily:"system-ui",flexShrink:0,overflow:'hidden'}}>{count>1?L50[ni]:''}</span>
-                                <input style={{...INP({border:`1.5px solid ${nar.color}${isTpl?"55":"38"}`,flex:1,background:isTpl?"#f9faffa0":"#fff",fontWeight:isTpl?600:400,fontSize:13,padding:'6px 9px'})}} value={nar.name} onChange={e=>setNarName(ri,ni,e.target.value)} readOnly={isTpl}
-                                  placeholder={isFirst?"Companion's name…":isLast?"Your name…":count>1?`Narrator ${L50[ni]}…`:"Narrator's name…"}
-                                  onFocus={e=>{if(!isTpl){e.target.style.borderColor=nar.color;e.target.style.boxShadow=`0 0 0 2px ${nar.color}20`;}}}
-                                  onBlur={e=>{e.target.style.borderColor=`${nar.color}${isTpl?"55":"38"}`;e.target.style.boxShadow="none";}}
-                                />
-                                {!isTpl&&count>1&&<button onClick={()=>remBranchAt(ri,ni)} style={{flexShrink:0,width:18,height:18,borderRadius:'50%',border:'1px solid #fecaca',background:'#fef2f2',color:'#ef4444',cursor:'pointer',fontSize:10,padding:0,lineHeight:'16px',fontFamily:'system-ui'}}>×</button>}
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                        {!isLast&&(
-                          <div style={{display:"flex",flexDirection:"column",alignItems:"center",padding:"4px 0",gap:0}}>
-                            <div style={{width:2,height:9,background:"#e5e7eb"}}/>
-                            {showMtrx&&nextRow&&<div style={{margin:"5px 0"}}><ConnMatrix fromRow={row} toRow={nextRow} edges={edges} onToggle={togConn}/></div>}
-                            {(!isTpl&&!(rows[ri+1]?.fromTemplate))&&(
-                              <button onClick={()=>addLevel(ri)} style={{background:"#fff",border:"1px dashed #d1d5db",borderRadius:6,padding:"2px 18px",fontSize:11,cursor:"pointer",color:"#9ca3af",fontFamily:"system-ui",margin:"3px 0",letterSpacing:.3}}>+ Add Level</button>
-                            )}
-                            {isAnchor&&<div style={{fontSize:10,color:bc,fontFamily:"system-ui",letterSpacing:1,margin:"3px 0",opacity:.75}}>▼ your chain continues below</div>}
-                            <div style={{width:2,height:9,background:"#e5e7eb"}}/>
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
+                  {rows.map((row,ri)=>(
+                    <RowEditor
+                      key={row.id}
+                      row={row} ri={ri}
+                      isFirst={ri===0} isLast={ri===rows.length-1}
+                      nextRow={rows[ri+1]||null}
+                      edges={edges}
+                      appliedTpl={appliedTpl}
+                      onAddBranch={()=>addBranch(ri)}
+                      onAddMultiBranch={n=>addMultiBranch(ri,n)}
+                      onRemBranch={()=>remBranch(ri)}
+                      onRemLevel={()=>remLevel(ri)}
+                      onAddLevel={()=>addLevel(ri)}
+                      onTogConn={togConn}
+                      onSetNarColor={(ni,c)=>setNarColor(ri,ni,c)}
+                      onSetNarName={(ni,v)=>setNarName(ri,ni,v)}
+                      onRemBranchAt={ni=>remBranchAt(ri,ni)}
+                    />
+                  ))}
                   <JumpConnPanel rows={rows} edges={edges} onToggle={togConn}/>
                 </div>
               </div>
