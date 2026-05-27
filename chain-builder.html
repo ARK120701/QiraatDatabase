@@ -339,9 +339,25 @@
       );
     }
 
+    /* ── Labels (up to 50) ─────────────────────────────────── */
+    const L50=Array.from({length:50},(_,i)=>i<26?String.fromCharCode(65+i):'A'+String.fromCharCode(65+(i-26)));
+
     /* ── Geometry ─────────────────────────────────────────── */
     const VW=620, BW=176, BH=62, CONN_H=44;
-    function rowCenters(count){const gap=20,tot=BW*count+gap*(count-1),l=(VW-tot)/2;return Array.from({length:count},(_,i)=>l+BW/2+i*(BW+gap));}
+    // Dynamic box width: shrinks as count grows, minimum 78px
+    function getBoxW(count){
+      if(count<=3) return BW;
+      const gap=count<=6?10:6,perLine=Math.min(count,Math.floor((VW+gap)/(78+gap)));
+      return Math.max(78,Math.floor((VW-gap*(perLine-1))/perLine));
+    }
+    // Returns the X-center (within VW) of each narrator in a row
+    function rowCenters(count){
+      if(count<=3){const gap=20,tot=BW*count+gap*(count-1),l=(VW-tot)/2;return Array.from({length:count},(_,i)=>l+BW/2+i*(BW+gap));}
+      const gap=count<=6?10:6,perLine=Math.min(count,Math.floor((VW+gap)/(78+gap)));
+      const bw=getBoxW(count);
+      const tot=bw*Math.min(count,perLine)+gap*(Math.min(count,perLine)-1),l=(VW-tot)/2;
+      return Array.from({length:count},(_,i)=>{const col=i%perLine;return l+bw/2+col*(bw+gap);});
+    }
     function bezier(x1,x2,h=CONN_H){const cp=h*.44;return `M ${x1} 0 C ${x1} ${cp}, ${x2} ${h-cp}, ${x2} ${h}`;}
 
     /* ── Edge helpers ─────────────────────────────────────── */
@@ -394,15 +410,14 @@
     function ConnMatrix({fromRow,toRow,edges,onToggle}){
       const F=fromRow.narrators,T=toRow.narrators;
       if(F.length===1&&T.length===1) return null;
-      const L=["A","B","C"];
       return(
         <div style={{display:"inline-flex",flexDirection:"column",alignItems:"center",background:"#fafafa",border:"1px dashed #d1d5db",borderRadius:8,padding:"7px 12px 9px",gap:5}}>
           <span style={{fontSize:9,letterSpacing:1.5,color:"#9ca3af",fontFamily:"system-ui",textTransform:"uppercase"}}>Who connects to whom?</span>
           <table style={{borderCollapse:"separate",borderSpacing:4}}>
-            <thead><tr><th/>{T.map((n,ti)=><th key={n.id} style={{fontSize:10,fontWeight:700,color:n.color,textAlign:"center",fontFamily:"system-ui",paddingBottom:2}}>{T.length>1?L[ti]:"↓"}</th>)}</tr></thead>
+            <thead><tr><th/>{T.map((n,ti)=><th key={n.id} style={{fontSize:10,fontWeight:700,color:n.color,textAlign:"center",fontFamily:"system-ui",paddingBottom:2}}>{T.length>1?L50[ti]:"↓"}</th>)}</tr></thead>
             <tbody>{F.map((fn,fi)=>(
               <tr key={fn.id}>
-                <td style={{fontSize:10,fontWeight:700,color:fn.color,fontFamily:"system-ui",paddingRight:4,textAlign:"right"}}>{F.length>1?L[fi]:"↑"}</td>
+                <td style={{fontSize:10,fontWeight:700,color:fn.color,fontFamily:"system-ui",paddingRight:4,textAlign:"right"}}>{F.length>1?L50[fi]:"↑"}</td>
                 {T.map(tn=>{const on=hasE(edges,fn.id,tn.id);return(
                   <td key={tn.id}><button onClick={()=>onToggle(fn.id,tn.id)} style={{width:26,height:22,borderRadius:5,cursor:"pointer",fontSize:13,border:`1.5px solid ${on?fn.color:"#e5e7eb"}`,background:on?`${fn.color}1a`:"#fff",color:on?fn.color:"#d1d5db",display:"flex",alignItems:"center",justifyContent:"center",transition:"all .15s"}}>{on?"✓":"·"}</button></td>
                 );})}
@@ -626,7 +641,7 @@
       allE.add(eKey("__lawh__","__jibreel__"));
       allE.add(eKey("__jibreel__",PROPHET_ID));
       rows[0].narrators.forEach(n=>allE.add(eKey(PROPHET_ID,n.id)));
-      const L=["A","B","C"],FIXED=4;
+      const FIXED=4;
 
       // narrator id → row index
       const narToRowIdx={};
@@ -727,10 +742,16 @@
                 if(nextRow){row.narrators.forEach((fn,fi)=>nextRow.narrators.forEach((tn,ti)=>{if(allE.has(eKey(fn.id,tn.id)))lines.push({x1:ctrs[fi],x2:nCtrs[ti],color:fn.color||"#b45309"});}))}
                 return(
                   <div key={row.id}>
-                    <div style={{position:'relative',display:"flex",justifyContent:"center",gap:20}}>
+                    {(()=>{
+                      const boxW=isFixed?BW:getBoxW(count);
+                      const boxGap=count<=3?20:count<=6?10:6;
+                      const perLine=count<=3?count:Math.min(count,Math.floor((VW+boxGap)/(78+boxGap)));
+                      const wrapStyle=count>3?{flexWrap:'wrap',justifyContent:'flex-start',gap:boxGap,maxWidth:VW}:{justifyContent:"center",gap:boxGap};
+                      return(
+                    <div style={{position:'relative',display:"flex",...wrapStyle}}>
                       {/* Generation counter badge */}
                       {!isFixed&&(
-                        <div style={{position:'absolute',left:2,top:'50%',transform:'translateY(-50%)',zIndex:3,width:26,height:26,borderRadius:'50%',background:isSahabi?'#1e3a5f':'#374151',color:'#fff',display:'flex',alignItems:'center',justifyContent:'center',fontSize:11,fontFamily:'system-ui',fontWeight:700,boxShadow:'0 2px 8px rgba(0,0,0,.22)',flexShrink:0}}>
+                        <div style={{position:'absolute',left:count>3?-4:2,top:count>3?4:'50%',transform:count>3?'none':'translateY(-50%)',zIndex:3,width:24,height:24,borderRadius:'50%',background:isSahabi?'#1e3a5f':'#374151',color:'#fff',display:'flex',alignItems:'center',justifyContent:'center',fontSize:10,fontFamily:'system-ui',fontWeight:700,boxShadow:'0 2px 8px rgba(0,0,0,.22)',flexShrink:0}}>
                           {genNum}
                         </div>
                       )}
@@ -738,11 +759,12 @@
                         const name=nar.name||(isProphet?"Prophet Muhammad ﷺ":nar.role==="sahabi"?"Companion (Ṣaḥābī)":nar.role==="self"?"Your Name":"…");
                         const arabicName=!isFixed?lookupArabic(nar.name):'';
                         const bc=isFixed?"#b45309":nar.color;
+                        const isCompact=count>3;
                         return(
                           <div key={nar.id} ref={el=>narBoxRefs.current[`${ri}-${ni}`]=el}
-                            style={{width:BW,minHeight:isFixed?78:BH,background:isFixed?"#fffbeb":isAnchor?`${bc}0d`:"#fff",border:`${isFixed||isAnchor?2:1.5}px solid ${bc}`,borderRadius:isFixed?14:10,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"8px 14px",textAlign:"center",position:"relative",boxShadow:isFixed?`0 4px 22px ${bc}28,0 0 0 1px ${bc}22`:`0 2px 12px rgba(0,0,0,.07)`}}>
-                            <div style={{position:"absolute",top:-11,left:"50%",transform:"translateX(-50%)",background:cfg.bg,border:`1.5px solid ${bc}`,borderRadius:10,padding:"1px 9px",fontSize:9,letterSpacing:1.5,color:bc,whiteSpace:"nowrap",fontFamily:"system-ui"}}>
-                              {row.id==="allah-row"?"الله ﷻ":row.id==="lawh-row"?"اللوح المحفوظ":row.id==="jibreel-row"?"جبريل":isProphet?"النبي ﷺ":isSahabi?`Ṣaḥābī${count>1?" · "+L[ni]:""}`:isYou?`Student${count>1?" · "+L[ni]:""}`:isAnchor?`Anchor${count>1?" · "+L[ni]:""}`:isTpl?`Template${count>1?" · "+L[ni]:""}`:count>1?L[ni]:`Gen ${genNum}`}
+                            style={{width:isFixed?BW:boxW,minHeight:isFixed?78:isCompact?50:BH,background:isFixed?"#fffbeb":isAnchor?`${bc}0d`:"#fff",border:`${isFixed||isAnchor?2:1.5}px solid ${bc}`,borderRadius:isFixed?14:8,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:isCompact?"5px 8px":"8px 14px",textAlign:"center",position:"relative",boxShadow:isFixed?`0 4px 22px ${bc}28,0 0 0 1px ${bc}22`:`0 2px 8px rgba(0,0,0,.06)`,flexShrink:0}}>
+                            <div style={{position:"absolute",top:-9,left:"50%",transform:"translateX(-50%)",background:cfg.bg,border:`1.5px solid ${bc}`,borderRadius:8,padding:"1px 6px",fontSize:8,letterSpacing:.8,color:bc,whiteSpace:"nowrap",fontFamily:"system-ui",maxWidth:'90%',overflow:'hidden',textOverflow:'ellipsis'}}>
+                              {row.id==="allah-row"?"الله ﷻ":row.id==="lawh-row"?"اللوح المحفوظ":row.id==="jibreel-row"?"جبريل":isProphet?"النبي ﷺ":isSahabi?`Ṣaḥābī${count>1?" · "+L50[ni]:""}`:isYou?`Student${count>1?" · "+L50[ni]:""}`:isAnchor?`Anchor${count>1?" · "+L50[ni]:""}`:isTpl?`Template${count>1?" · "+L50[ni]:""}`:count>1?L50[ni]:`Gen ${genNum}`}
                             </div>
                             {row.id==="allah-row"   &&<div style={{fontFamily:"'EB Garamond',serif",fontSize:20,color:"#b45309",marginBottom:2}}>ﷻ</div>}
                             {row.id==="jibreel-row" &&<div style={{fontFamily:"'EB Garamond',serif",fontSize:12,color:"#b45309",letterSpacing:2,marginBottom:3}}>عليه السلام</div>}
@@ -753,12 +775,13 @@
                             {row.id==="lawh-row"    &&<div style={{fontFamily:"'EB Garamond',serif",fontSize:10,color:"#b45309",marginTop:2}}>The Preserved Tablet</div>}
                             {row.id==="jibreel-row" &&<div style={{fontFamily:"'EB Garamond',serif",fontSize:10,color:"#b45309",marginTop:2}}>The Trustworthy Angel</div>}
                             {isProphet             &&<div style={{fontFamily:"'EB Garamond',serif",fontSize:10,color:"#b45309",marginTop:2}}>Muhammad ibn ʿAbdillāh</div>}
-                            {isTpl&&!isAnchor&&<div style={{position:"absolute",top:4,right:6,fontSize:8,color:bc,opacity:.5,fontFamily:"system-ui"}}>⬡</div>}
-                            {isAnchor            &&<div style={{position:"absolute",top:4,right:6,fontSize:8,color:bc,opacity:.7,fontFamily:"system-ui"}}>★</div>}
+                            {isTpl&&!isAnchor&&<div style={{position:"absolute",top:3,right:4,fontSize:7,color:bc,opacity:.5,fontFamily:"system-ui"}}>⬡</div>}
+                            {isAnchor            &&<div style={{position:"absolute",top:3,right:4,fontSize:7,color:bc,opacity:.7,fontFamily:"system-ui"}}>★</div>}
                           </div>
                         );
                       })}
                     </div>
+                      );})()}
                     {nextRow&&(
                       <svg width={VW} height={CONN_H} viewBox={`0 0 ${VW} ${CONN_H}`} style={{display:"block"}}>
                         {lines.map((l,i)=>(
@@ -889,7 +912,7 @@
       const clearTemplate = () => { setChain(init()); setAppliedTpl(null); setEditingTpl(null); };
 
       const addBranch = ri=>upd(c=>{
-        const row=c.rows[ri]; if(row.narrators.length>=3) return c;
+        const row=c.rows[ri]; if(row.narrators.length>=50) return c;
         const base=row.narrators[0],newId=uid();
         let E=new Set(c.edges);
         tgts(E,base.id).forEach(t=>{E=addE(E,newId,t);});
@@ -897,10 +920,29 @@
         const ci=(PALETTE.indexOf(row.narrators[row.narrators.length-1].color)+4)%PALETTE.length;
         return{...c,rows:c.rows.map((r,i)=>i!==ri?r:{...r,narrators:[...r.narrators,{id:newId,name:"",role:base.role,color:PALETTE[ci]}]}),edges:E};
       });
+      const addMultiBranch = (ri,n)=>upd(c=>{
+        const row=c.rows[ri];
+        const toAdd=Math.min(n,50-row.narrators.length); if(toAdd<=0) return c;
+        const base=row.narrators[0];
+        let E=new Set(c.edges),lastCi=PALETTE.indexOf(row.narrators[row.narrators.length-1].color);
+        const newNars=Array.from({length:toAdd},()=>{
+          const newId=uid();
+          tgts(E,base.id).forEach(t=>{E=addE(E,newId,t);});
+          srcs(E,base.id).forEach(s=>{E=addE(E,s,newId);});
+          lastCi=(lastCi+4)%PALETTE.length;
+          return{id:newId,name:"",role:base.role,color:PALETTE[lastCi]};
+        });
+        return{...c,rows:c.rows.map((r,i)=>i!==ri?r:{...r,narrators:[...r.narrators,...newNars]}),edges:E};
+      });
       const remBranch = ri=>upd(c=>{
         const row=c.rows[ri]; if(row.narrators.length<=1) return c;
         const rid=row.narrators[row.narrators.length-1].id;
         return{...c,rows:c.rows.map((r,i)=>i!==ri?r:{...r,narrators:r.narrators.slice(0,-1)}),edges:new Set([...c.edges].filter(e=>!e.startsWith(`${rid}|`)&&!e.endsWith(`|${rid}`)))};
+      });
+      const remBranchAt = (ri,ni)=>upd(c=>{
+        const row=c.rows[ri]; if(row.narrators.length<=1) return c;
+        const rid=row.narrators[ni].id;
+        return{...c,rows:c.rows.map((r,i)=>i!==ri?r:{...r,narrators:r.narrators.filter((_,j)=>j!==ni)}),edges:new Set([...c.edges].filter(e=>!e.startsWith(`${rid}|`)&&!e.endsWith(`|${rid}`)))};
       });
       const addLevel = ri=>upd(c=>{
         const newId=uid();
@@ -1041,7 +1083,6 @@
       },[chain.subject]);
 
       const {rows,edges,subject}=chain;
-      const L=["A","B","C"];
       const INP=(ex={})=>({border:"1px solid #e5e7eb",borderRadius:7,padding:"8px 11px",fontSize:15,fontFamily:"'EB Garamond',serif",outline:"none",background:"#fff",color:"#1f2937",boxSizing:"border-box",width:"100%",...ex});
       const SMBTN=(bc="#e5e7eb",tc="#6b7280",bg="#f9fafb")=>({background:bg,border:`1px solid ${bc}`,borderRadius:6,padding:"3px 10px",fontSize:11,cursor:"pointer",color:tc,fontFamily:"system-ui",letterSpacing:.3,lineHeight:"18px"});
 
@@ -1220,35 +1261,47 @@
                     const isFirst=ri===0,isLast=ri===rows.length-1;
                     const isTpl=!!row.fromTemplate,isAnchor=row.narrators[0]?.role==="anchor";
                     const count=row.narrators.length,nextRow=isLast?null:rows[ri+1];
-                    const showMtrx=nextRow&&(count>1||nextRow.narrators.length>1);
+                    const nextCount=nextRow?.narrators.length||0;
+                    const showMtrx=nextRow&&(count>1||nextCount>1)&&count<=6&&nextCount<=6;
                     const rowLabel=isFirst?"Companion (Ṣaḥābī)":isLast?"You (Student)":isAnchor?`★ ${appliedTpl?.name||"Anchor"} (template end)`:isTpl?"Template Narrator":`Level ${ri}`;
                     const bc=row.narrators[0].color;
+                    const [multiN,setMultiN]=React.useState(5);
                     return(
                       <div key={row.id}>
                         <div style={{borderLeft:`3px solid ${isTpl?bc+"99":bc}`,border:"1px solid #e5e7eb",borderLeftWidth:3,borderRadius:"0 10px 10px 0",padding:"13px 14px",background:"#fafafa"}}>
-                          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:11}}>
+                          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:11,flexWrap:'wrap',gap:6}}>
                             <span style={{fontSize:10,letterSpacing:1.5,color:isTpl?bc+"aa":"#6b7280",textTransform:"uppercase",fontFamily:"system-ui",display:"flex",alignItems:"center",gap:5}}>
                               {isTpl&&<span style={{fontSize:9,background:`${bc}18`,border:`1px solid ${bc}44`,color:bc,borderRadius:10,padding:"1px 6px"}}>template</span>}
                               {rowLabel}
-                              {count>1&&<span style={{color:"#d1d5db",marginLeft:4}}>· {count} branches</span>}
+                              {count>1&&<span style={{color:"#9ca3af",marginLeft:4}}>· {count} branches</span>}
                             </span>
-                            <div style={{display:"flex",gap:5}}>
-                              {count<3&&!isTpl&&<button onClick={()=>addBranch(ri)} style={SMBTN()}>+ Branch</button>}
-                              {count>1&&!isTpl&&<button onClick={()=>remBranch(ri)} style={SMBTN()}>− Branch</button>}
+                            <div style={{display:"flex",gap:5,flexWrap:'wrap'}}>
+                              {!isTpl&&count<50&&(
+                                <>
+                                  <button onClick={()=>addBranch(ri)} style={SMBTN()}>+ Branch</button>
+                                  <div style={{display:'flex',alignItems:'center',gap:3}}>
+                                    <input type="number" min="1" max={50-count} value={multiN} onChange={e=>setMultiN(Math.max(1,Math.min(50-count,+e.target.value||1)))} style={{width:40,border:'1px solid #e5e7eb',borderRadius:5,padding:'2px 5px',fontSize:11,fontFamily:'system-ui',textAlign:'center',outline:'none'}}/>
+                                    <button onClick={()=>addMultiBranch(ri,multiN)} style={SMBTN("#6366f1","#6366f1","#eef2ff")}>+ {multiN}</button>
+                                  </div>
+                                </>
+                              )}
+                              {count>1&&!isTpl&&<button onClick={()=>remBranch(ri)} style={SMBTN()}>− Last</button>}
                               {!isFirst&&!isLast&&!isTpl&&<button onClick={()=>remLevel(ri)} style={SMBTN("#fecaca","#ef4444","#fef2f2")}>✕</button>}
                             </div>
                           </div>
-                          <div style={{display:"flex",flexDirection:"column",gap:9}}>
+                          {/* Narrator inputs — scrollable when many */}
+                          <div style={{display:"flex",flexDirection:"column",gap:7,maxHeight:count>8?260:undefined,overflowY:count>8?'auto':'visible',paddingRight:count>8?4:0}}>
                             {row.narrators.map((nar,ni)=>(
-                              <div key={nar.id} style={{display:"flex",alignItems:"center",gap:8}}>
+                              <div key={nar.id} style={{display:"flex",alignItems:"center",gap:6}}>
                                 {!isTpl&&<Swatch color={nar.color} onChange={c=>setNarColor(ri,ni,c)}/>}
-                                {isTpl&&<div style={{width:22,height:22,borderRadius:"50%",background:nar.color,flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:9,color:"#fff",fontWeight:700}}>{isAnchor?"★":"⬡"}</div>}
-                                {count>1&&<span style={{fontSize:11,fontWeight:700,color:nar.color,width:13,textAlign:"center",fontFamily:"system-ui"}}>{L[ni]}</span>}
-                                <input style={{...INP({border:`1.5px solid ${nar.color}${isTpl?"55":"38"}`,flex:1,background:isTpl?"#f9faffa0":"#fff",fontWeight:isTpl?600:400})}} value={nar.name} onChange={e=>setNarName(ri,ni,e.target.value)} readOnly={isTpl}
-                                  placeholder={isFirst?"Companion's name…":isLast?"Your name…":count>1?`Narrator ${L[ni]}…`:"Narrator's name…"}
+                                {isTpl&&<div style={{width:20,height:20,borderRadius:"50%",background:nar.color,flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:8,color:"#fff",fontWeight:700}}>{isAnchor?"★":"⬡"}</div>}
+                                <span style={{fontSize:10,fontWeight:700,color:nar.color,width:count>1?22:0,textAlign:"center",fontFamily:"system-ui",flexShrink:0,overflow:'hidden'}}>{count>1?L50[ni]:''}</span>
+                                <input style={{...INP({border:`1.5px solid ${nar.color}${isTpl?"55":"38"}`,flex:1,background:isTpl?"#f9faffa0":"#fff",fontWeight:isTpl?600:400,fontSize:13,padding:'6px 9px'})}} value={nar.name} onChange={e=>setNarName(ri,ni,e.target.value)} readOnly={isTpl}
+                                  placeholder={isFirst?"Companion's name…":isLast?"Your name…":count>1?`Narrator ${L50[ni]}…`:"Narrator's name…"}
                                   onFocus={e=>{if(!isTpl){e.target.style.borderColor=nar.color;e.target.style.boxShadow=`0 0 0 2px ${nar.color}20`;}}}
                                   onBlur={e=>{e.target.style.borderColor=`${nar.color}${isTpl?"55":"38"}`;e.target.style.boxShadow="none";}}
                                 />
+                                {!isTpl&&count>1&&<button onClick={()=>remBranchAt(ri,ni)} style={{flexShrink:0,width:18,height:18,borderRadius:'50%',border:'1px solid #fecaca',background:'#fef2f2',color:'#ef4444',cursor:'pointer',fontSize:10,padding:0,lineHeight:'16px',fontFamily:'system-ui'}}>×</button>}
                               </div>
                             ))}
                           </div>
