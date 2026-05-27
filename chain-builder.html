@@ -891,7 +891,9 @@
     /* ── Jump Connection Panel ───────────────────────────── */
     function JumpConnPanel({ rows, edges, onToggle }) {
       const [fromRi, setFromRi] = useState('');
+      const [fromNi, setFromNi] = useState(0);
       const [toRi,   setToRi]   = useState('');
+      const [toNi,   setToNi]   = useState(0);
 
       // collect existing jump edges among user-entered rows
       const seen = new Set();
@@ -910,20 +912,24 @@
 
       const fN = +fromRi, tN = +toRi;
       const canAdd = fromRi !== '' && toRi !== '' && fN !== tN && Math.abs(fN - tN) > 1;
+      const fromRow = canAdd ? rows[fN] : null;
+      const toRow   = canAdd ? rows[tN] : null;
 
       const handleAdd = () => {
-        if (!canAdd) return;
-        const fromRow = rows[fN], toRow = rows[tN];
-        if (fromRow && toRow) onToggle(fromRow.narrators[0].id, toRow.narrators[0].id);
-        setFromRi(''); setToRi('');
+        if (!canAdd || !fromRow || !toRow) return;
+        const fNarId = fromRow.narrators[fromNi]?.id || fromRow.narrators[0].id;
+        const tNarId = toRow.narrators[toNi]?.id   || toRow.narrators[0].id;
+        onToggle(fNarId, tNarId);
+        setFromRi(''); setFromNi(0); setToRi(''); setToNi(0);
       };
 
       const SEL = { border:'1.5px solid #a5b4fc',borderRadius:6,padding:'6px 9px',fontSize:12,fontFamily:"'EB Garamond',serif",color:'#374151',background:'#fff',flex:1,minWidth:110,outline:'none' };
+      const SEL2 = { ...SEL, minWidth:80, background:'#f5f3ff', fontStyle:'italic' };
 
       return (
         <div style={{marginTop:18,background:'#f5f3ff',border:'1px dashed #a5b4fc',borderRadius:10,padding:'13px 16px'}}>
           <div style={{fontSize:10,letterSpacing:2,color:'#6366f1',fontFamily:'system-ui',textTransform:'uppercase',marginBottom:7,fontWeight:700}}>⚡ Jump Connections</div>
-          <div style={{fontSize:11,color:'#6b7280',fontFamily:'system-ui',marginBottom:10,lineHeight:1.5}}>Connect narrators across non-adjacent levels — e.g. a scholar who received directly from a Ṣaḥābī, bypassing intermediate links.</div>
+          <div style={{fontSize:11,color:'#6b7280',fontFamily:'system-ui',marginBottom:10,lineHeight:1.5}}>Connect narrators across non-adjacent levels — including specific branches within a generation.</div>
           {existing.length > 0 && (
             <div style={{marginBottom:11,display:'flex',flexDirection:'column',gap:5}}>
               {existing.map((j, i) => (
@@ -939,19 +945,35 @@
             </div>
           )}
           <div style={{display:'flex',alignItems:'center',gap:6,flexWrap:'wrap'}}>
-            <select value={fromRi} onChange={e=>setFromRi(e.target.value)} style={SEL}>
+            {/* From side */}
+            <select value={fromRi} onChange={e=>{setFromRi(e.target.value);setFromNi(0);}} style={SEL}>
               <option value="">From gen…</option>
               {rows.map((row,ri)=>(
-                <option key={ri} value={ri}>Gen {ri+1}{row.narrators[0]?.name?' — '+row.narrators[0].name.slice(0,22):''}</option>
+                <option key={ri} value={ri}>Gen {ri+1}{row.narrators[0]?.name?' — '+row.narrators[0].name.slice(0,18):''}</option>
               ))}
             </select>
+            {fromRi!==''&&rows[fN]?.narrators.length>1&&(
+              <select value={fromNi} onChange={e=>setFromNi(+e.target.value)} style={SEL2}>
+                {rows[fN].narrators.map((n,ni)=>(
+                  <option key={ni} value={ni}>{L50[ni]}{n.name?' — '+n.name.slice(0,14):''}</option>
+                ))}
+              </select>
+            )}
             <span style={{color:'#6366f1',fontSize:15,fontWeight:700,flexShrink:0}}>⚡→</span>
-            <select value={toRi} onChange={e=>setToRi(e.target.value)} style={SEL}>
+            {/* To side */}
+            <select value={toRi} onChange={e=>{setToRi(e.target.value);setToNi(0);}} style={SEL}>
               <option value="">To gen…</option>
               {rows.map((row,ri)=>(
-                <option key={ri} value={ri}>Gen {ri+1}{row.narrators[0]?.name?' — '+row.narrators[0].name.slice(0,22):''}</option>
+                <option key={ri} value={ri}>Gen {ri+1}{row.narrators[0]?.name?' — '+row.narrators[0].name.slice(0,18):''}</option>
               ))}
             </select>
+            {toRi!==''&&rows[tN]?.narrators.length>1&&(
+              <select value={toNi} onChange={e=>setToNi(+e.target.value)} style={SEL2}>
+                {rows[tN].narrators.map((n,ni)=>(
+                  <option key={ni} value={ni}>{L50[ni]}{n.name?' — '+n.name.slice(0,14):''}</option>
+                ))}
+              </select>
+            )}
             <button onClick={handleAdd} disabled={!canAdd} style={{padding:'7px 14px',borderRadius:6,border:'none',background:canAdd?'#6366f1':'#d1d5db',color:'#fff',cursor:canAdd?'pointer':'default',fontSize:12,fontFamily:'system-ui',fontWeight:600,flexShrink:0}}>
               Add Jump
             </button>
